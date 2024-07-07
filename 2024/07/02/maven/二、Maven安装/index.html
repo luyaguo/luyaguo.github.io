@@ -500,14 +500,14 @@ bin 目录：mvn.bat （以run方式运行项目）、 mvnDebu">
                 
                 <div class="info-break-policy">
                     <i class="far fa-file-word fa-fw"></i>Word Count:&nbsp;&nbsp;
-                    1.6k
+                    1.8k
                 </div>
                 
 
                 
                 <div class="info-break-policy">
                     <i class="far fa-clock fa-fw"></i>Read Times:&nbsp;&nbsp;
-                    6 Min
+                    7 Min
                 </div>
                 
 
@@ -570,7 +570,17 @@ bin 目录：mvn.bat （以run方式运行项目）、 mvnDebu">
 <blockquote>
 <p>注意：本地仓库本身也需要使用一个非中文、没有空格的目录。</p>
 </blockquote>
-<h3 id="加入我们的配置"><a href="#加入我们的配置" class="headerlink" title="加入我们的配置"></a>加入我们的配置</h3><p>将下面 mirror 标签整体复制到 settings.xml 文件的 mirrors 标签的内部。</p>
+<h3 id="配置阿里云提供的镜像仓库"><a href="#配置阿里云提供的镜像仓库" class="headerlink" title="配置阿里云提供的镜像仓库"></a>配置阿里云提供的镜像仓库</h3><p>Maven 下载 jar 包默认访问境外的中央仓库，而国外网站速度很慢。改成阿里云提供的镜像仓库，访问国内网站，可以让 Maven 下载 jar 包的时候速度更快。配置的方式是：</p>
+<h4 id="将原有的例子配置注释掉"><a href="#将原有的例子配置注释掉" class="headerlink" title="将原有的例子配置注释掉"></a>将原有的例子配置注释掉</h4><pre class="line-numbers language-markup" data-language="markup"><code class="language-markup"><span class="token comment">&lt;!-- &lt;mirror>
+  &lt;id>maven-default-http-blocker&lt;/id>
+  &lt;mirrorOf>external:http:*&lt;/mirrorOf>
+  &lt;name>Pseudo repository to mirror external repositories initially using HTTP.&lt;/name>
+  &lt;url>http://0.0.0.0/&lt;/url>
+  &lt;blocked>true&lt;/blocked>
+&lt;/mirror> --></span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<p><img src="/medias/loading.gif" data-original="https://raw.githubusercontent.com/luyaguo/pictures-guo/main/maven-base/202407071619031.png"></p>
+<h4 id="加入我们的配置"><a href="#加入我们的配置" class="headerlink" title="加入我们的配置"></a>加入我们的配置</h4><p>将下面 mirror 标签整体复制到 settings.xml 文件的 mirrors 标签的内部。</p>
 <pre class="line-numbers language-markup" data-language="markup"><code class="language-markup"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>mirror</span><span class="token punctuation">></span></span>
    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>id</span><span class="token punctuation">></span></span>nexus-aliyun<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>id</span><span class="token punctuation">></span></span>
    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>mirrorOf</span><span class="token punctuation">></span></span>central<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>mirrorOf</span><span class="token punctuation">></span></span> <span class="token comment">&lt;!-- 表示是中央仓库的镜像 --></span>
@@ -593,18 +603,36 @@ bin 目录：mvn.bat （以run方式运行项目）、 mvnDebu">
 <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>profile</span><span class="token punctuation">></span></span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
 
 <p><img src="/medias/loading.gif" data-original="https://raw.githubusercontent.com/luyaguo/pictures-guo/main/maven-base/202407061904237.png"></p>
-<h2 id="2、环境变量配置"><a href="#2、环境变量配置" class="headerlink" title="2、环境变量配置"></a>2、环境变量配置</h2><ul>
-<li><p>Maven 环境配置，增加一个环境变量 <code>M2_HOME</code>, 值是 Maven 的安装路径:<code>C:\Program Files\apache-Maven-3.5.0-bin\apache-Maven-3.5.0</code> </p>
+<h2 id="2、环境变量配置"><a href="#2、环境变量配置" class="headerlink" title="2、环境变量配置"></a>2、环境变量配置</h2><h3 id="检查-JAVA-HOME-配置是否正确"><a href="#检查-JAVA-HOME-配置是否正确" class="headerlink" title="检查 JAVA_HOME 配置是否正确"></a>检查 JAVA_HOME 配置是否正确</h3><p>Maven 是一个用 Java 语言开发的程序，它必须基于 JDK 来运行，需要通过 JAVA_HOME 来找到 JDK 的安装位置。</p>
+<p><img src="/medias/loading.gif" data-original="https://raw.githubusercontent.com/luyaguo/pictures-guo/main/maven-base/202407071620175.png"></p>
+<p>可以使用下面的命令验证：</p>
+<pre class="line-numbers language-cmd" data-language="cmd"><code class="language-cmd">C:\Users\Administrator&gt;echo %JAVA_HOME%
+D:\software\Java
+
+C:\Users\Administrator&gt;java -version
+java version &quot;1.8.0_141&quot;
+Java(TM) SE Runtime Environment (build 1.8.0_141-b15)
+Java HotSpot(TM) 64-Bit Server VM (build 25.141-b15, mixed mode)<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<p><img src="/medias/loading.gif" data-original="https://raw.githubusercontent.com/luyaguo/pictures-guo/main/maven-base/202407071621500.png"></p>
+<h3 id="配置-MAVEN-HOME"><a href="#配置-MAVEN-HOME" class="headerlink" title="配置 MAVEN_HOME"></a>配置 MAVEN_HOME</h3><p>Maven 环境配置，增加一个环境变量 <code>M2_HOME</code>, 值是 Maven 的安装路径:<code>X:\xxx\apache-Maven-xxx</code> </p>
+<blockquote>
+<p>XXXX_HOME 通常为bin目录的上一级</p>
+</blockquote>
+<p><img src="/medias/loading.gif" data-original="https://raw.githubusercontent.com/luyaguo/pictures-guo/main/maven-base/202407071622337.png"></p>
+<p><img src="/medias/loading.gif" data-original="https://raw.githubusercontent.com/luyaguo/pictures-guo/main/maven-base/202407071624692.png"></p>
 <p><img src="/medias/loading.gif" data-original="https://raw.githubusercontent.com/luyaguo/pictures-guo/main/maven-base/202407020032052.png" alt="6"></p>
-</li>
-<li><p>修改 path 则是在 path 最后面添加： <code>;%M2_HOME%\bin</code>。</p>
+<h3 id="配置PATH"><a href="#配置PATH" class="headerlink" title="配置PATH"></a>配置PATH</h3><p>修改 path 则是在 path 最后面添加： <code>;%M2_HOME%\bin</code>。</p>
+<blockquote>
+<p>PATH 指的是bin目录</p>
+</blockquote>
+<p><img src="/medias/loading.gif" data-original="https://raw.githubusercontent.com/luyaguo/pictures-guo/main/maven-base/202407071626648.png"></p>
+<p><img src="/medias/loading.gif" data-original="https://raw.githubusercontent.com/luyaguo/pictures-guo/main/maven-base/202407071627269.png"></p>
+<p><img src="/medias/loading.gif" data-original="https://raw.githubusercontent.com/luyaguo/pictures-guo/main/maven-base/202407071628634.png"></p>
 <p><img src="/medias/loading.gif" data-original="https://raw.githubusercontent.com/luyaguo/pictures-guo/main/maven-base/202407020032729.png" alt="7"></p>
-</li>
-<li><p>通过 mvn -v 命令检查 Maven 是否安装成功，看到 Maven 的版本为3.3.9及Java版本为1.8即为安装成功。</p>
-</li>
-</ul>
+<h3 id="验证"><a href="#验证" class="headerlink" title="验证"></a>验证</h3><p>通过 <code>mvn -v</code> 命令检查 Maven 是否安装成功，看到 Maven 的版本为3.3.9及Java版本为1.8即为安装成功。</p>
 <p><img src="/medias/loading.gif" data-original="https://raw.githubusercontent.com/luyaguo/pictures-guo/main/maven-base/202407020032731.png" alt="8"></p>
-<h2 id="3、Maven仓库"><a href="#3、Maven仓库" class="headerlink" title="3、Maven仓库"></a>3、Maven仓库</h2><h3 id="3-1-仓库有三种"><a href="#3-1-仓库有三种" class="headerlink" title="3.1 仓库有三种"></a>3.1 仓库有三种</h3><h4 id="本地仓库"><a href="#本地仓库" class="headerlink" title="本地仓库"></a>本地仓库</h4><ul>
+<h2 id="3、Maven仓库"><a href="#3、Maven仓库" class="headerlink" title="3、Maven仓库"></a>3、Maven仓库</h2><h3 id="3-1-Maven三类仓库"><a href="#3-1-Maven三类仓库" class="headerlink" title="3.1 Maven三类仓库"></a>3.1 Maven三类仓库</h3><h4 id="本地仓库"><a href="#本地仓库" class="headerlink" title="本地仓库"></a>本地仓库</h4><ul>
 <li><p>本地仓库的默认路径为用户 .m2\repository</p>
 </li>
 <li><p>我们可以在 <code>setting.xml</code> 中修改本地仓库的路径</p>
@@ -1111,7 +1139,7 @@ bin 目录：mvn.bat （以run方式运行项目）、 mvnDebu">
             <br>
             
                 &nbsp;<i class="fas fa-chart-area"></i>&nbsp;Total Words:&nbsp;<span
-                        class="white-color">64.1k</span>
+                        class="white-color">76.2k</span>
             
             
             

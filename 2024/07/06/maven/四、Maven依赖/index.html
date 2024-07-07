@@ -496,14 +496,14 @@
                 
                 <div class="info-break-policy">
                     <i class="far fa-file-word fa-fw"></i>Word Count:&nbsp;&nbsp;
-                    1.9k
+                    2.4k
                 </div>
                 
 
                 
                 <div class="info-break-policy">
                     <i class="far fa-clock fa-fw"></i>Read Times:&nbsp;&nbsp;
-                    7 Min
+                    9 Min
                 </div>
                 
 
@@ -555,9 +555,8 @@
 <h4 id="方法二：从中央仓库搜索"><a href="#方法二：从中央仓库搜索" class="headerlink" title="方法二：从中央仓库搜索"></a>方法二：从中央仓库搜索</h4><p><a target="_blank" rel="noopener" href="http://mvnrepository.com/">http://mvnrepository.com/</a></p>
 <p>网站搜索示例：</p>
 <p><img src="/medias/loading.gif" data-original="https://raw.githubusercontent.com/luyaguo/pictures-guo/main/maven-base/202407061818895.png" alt="38"></p>
-<h2 id="2、传递依赖"><a href="#2、传递依赖" class="headerlink" title="2、传递依赖"></a>2、传递依赖</h2><h3 id="2-1-什么是传递依赖？"><a href="#2-1-什么是传递依赖？" class="headerlink" title="2.1 什么是传递依赖？"></a>2.1 什么是传递依赖？</h3><p>当 A 依赖 B、B 依赖 C，在 A 中导入 B 后会自动导入 C，C 是 A 的传递依赖。</p>
-<p>举例 : junit-&gt;hmcrest</p>
-<h3 id="2-2-依赖范围对传递依赖的影响（了解）"><a href="#2-2-依赖范围对传递依赖的影响（了解）" class="headerlink" title="2.2 依赖范围对传递依赖的影响（了解）"></a>2.2 依赖范围对传递依赖的影响（了解）</h3><p>依赖会有依赖范围，依赖范围对传递依赖也有影响，有 A、B、C，A 依赖B，B 依赖 C，C 可能是 A 的传递依赖，如下图：</p>
+<h2 id="2、传递依赖"><a href="#2、传递依赖" class="headerlink" title="2、传递依赖"></a>2、传递依赖</h2><h3 id="什么是传递依赖？"><a href="#什么是传递依赖？" class="headerlink" title="什么是传递依赖？"></a>什么是传递依赖？</h3><p>当 A 依赖 B、B 依赖 C，在 A 中导入 B 后会自动导入 C，C 是 A 的传递依赖。</p>
+<h3 id="依赖范围对传递依赖的影响（了解）"><a href="#依赖范围对传递依赖的影响（了解）" class="headerlink" title="依赖范围对传递依赖的影响（了解）"></a>依赖范围对传递依赖的影响（了解）</h3><p>依赖会有依赖范围，依赖范围对传递依赖也有影响，有 A、B、C，A 依赖B，B 依赖 C，C 可能是 A 的传递依赖，如下图：</p>
 <p><img src="/medias/loading.gif" data-original="https://raw.githubusercontent.com/luyaguo/pictures-guo/main/maven-base/202407061815428.png" alt="39"></p>
 <p>最左边一列为直接依赖，理解为A依赖B的范围，最顶层一行为传递依赖，理解为B依赖C的范围，行与列的交叉即为A传递依赖C的范围。</p>
 <p>举例：</p>
@@ -567,11 +566,20 @@
 <p>所以 Maven-ﬁrst 所依赖的 junit 的 Jar 没有加入到 Maven-web 工程。</p>
 <p>如果修改 Maven-ﬁrst 依赖 junit 的 scope 为 compile，Maven-ﬁrst所依赖的junit 的 Jar 包会加入到 Maven-web 工程 中，符合上边表格所示，查看下图红色框内所示：</p>
 <p><img src="/medias/loading.gif" data-original="https://raw.githubusercontent.com/luyaguo/pictures-guo/main/maven-base/202407061822234.png" alt="41"></p>
-<h2 id="3、依赖冲突"><a href="#3、依赖冲突" class="headerlink" title="3、依赖冲突"></a>3、依赖冲突</h2><h3 id="3-0-什么是传递依赖？"><a href="#3-0-什么是传递依赖？" class="headerlink" title="3.0 什么是传递依赖？"></a>3.0 什么是传递依赖？</h3><ul>
-<li>当 A 依赖 B、B 依赖 C（v1.0），</li>
-<li>当 A 依赖 M、M 依赖 C (v2.0)</li>
+<h3 id="传递的原则"><a href="#传递的原则" class="headerlink" title="传递的原则"></a>传递的原则</h3><p>在 A 依赖 B，B 依赖 C 的前提下，C 是否能够传递到 A，取决于 B 依赖 C 时使用的依赖范围。</p>
+<ul>
+<li>B 依赖 C 时使用 compile 范围：可以传递</li>
+<li>B 依赖 C 时使用 test 或 provided 范围：不能传递，所以需要这样的 jar 包时，就必须在需要的地方明确配置依赖才可以。</li>
 </ul>
-<p>同时加入以下依赖，观察依赖：</p>
+<blockquote>
+<p>工程依赖的jar包是从Maven仓库中查找到相应的jar包然后进行导入的，所以需要引入自己创建的jar包时，需要及时把最新版本的jar更新到本地仓库中。</p>
+</blockquote>
+<h2 id="3、依赖冲突"><a href="#3、依赖冲突" class="headerlink" title="3、依赖冲突"></a>3、依赖冲突</h2><h3 id="3-0-什么是依赖冲突？"><a href="#3-0-什么是依赖冲突？" class="headerlink" title="3.0 什么是依赖冲突？"></a>3.0 什么是依赖冲突？</h3><p><img src="/medias/loading.gif" data-original="https://raw.githubusercontent.com/luyaguo/pictures-guo/main/maven-base/202407071827786.png"></p>
+<ul>
+<li>当 A 依赖 B、B 依赖 X（v1.0），</li>
+<li>当 A 依赖 C、C 依赖 X (v2.0)</li>
+</ul>
+<p>所以配置依赖的排除其实就是阻止某些 jar 包的传递。因为这样的 jar 包传递过来会和其他 jar 包冲突。</p>
 <pre class="line-numbers language-markup" data-language="markup"><code class="language-markup"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>!‐‐</span> <span class="token attr-name">struts2‐spring‐plugin</span> <span class="token attr-name">依赖</span> <span class="token attr-name">spirng‐beans‐3.0.5</span> <span class="token attr-name">‐‐</span><span class="token punctuation">></span></span>
 <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>dependency</span><span class="token punctuation">></span></span>
     <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>groupId</span><span class="token punctuation">></span></span>org.apache.struts<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>groupId</span><span class="token punctuation">></span></span>
@@ -602,24 +610,24 @@
 
 
 <h3 id="3-2-排除依赖"><a href="#3-2-排除依赖" class="headerlink" title="3.2 排除依赖"></a>3.2 排除依赖</h3><p>上边的问题也可以通过排除依赖方法辅助依赖调解，如下：</p>
-<p>比如在依赖 struts2-spring-plugin 的设置中添加排除依赖，排除 spring-beans，下边的配置表示：依赖 struts2-spring-plugin，但排除 struts2-spring-plugin 所依赖的 spring-beans。</p>
-<pre class="line-numbers language-XML" data-language="XML"><code class="language-XML">&lt;!‐‐ struts2‐spring‐plugin 依赖 spirng‐beans‐3.0.5 ‐‐&gt;
-&lt;dependency&gt;
-  &lt;groupId&gt;org.apache.struts&lt;&#x2F;groupId&gt;
-  &lt;artifactId&gt;struts2‐spring‐plugin&lt;&#x2F;artifactId&gt;
-  &lt;version&gt;2.3.24&lt;&#x2F;version&gt;
-  &lt;!‐‐ 排除 spring‐beans ‐‐&gt;
+<pre class="line-numbers language-XML" data-language="XML"><code class="language-XML">&lt;dependency&gt;
+  &lt;groupId&gt;com.atguigu.maven&lt;&#x2F;groupId&gt;
+  &lt;artifactId&gt;pro01-maven-java&lt;&#x2F;artifactId&gt;
+  &lt;version&gt;1.0-SNAPSHOT&lt;&#x2F;version&gt;
+  &lt;scope&gt;compile&lt;&#x2F;scope&gt;
+  &lt;!-- 使用excludes标签配置依赖的排除  --&gt;
+  &lt;!-- 排除com.atguigu.maven:pro01-maven-java:1.0-SNAPSHOT中不需要的依赖 --&gt;
   &lt;exclusions&gt;
-      &lt;exclusion&gt;
-          &lt;groupId&gt;org.springframework&lt;&#x2F;groupId&gt;
-          &lt;artifactId&gt;spring‐beans&lt;&#x2F;artifactId&gt;
-      &lt;&#x2F;exclusion&gt;
-      &lt;exclusion&gt;
-          &lt;groupId&gt;org.springframework&lt;&#x2F;groupId&gt;
-          &lt;artifactId&gt;spring‐context&lt;&#x2F;artifactId&gt;
-      &lt;&#x2F;exclusion&gt;
+    &lt;!-- 在exclude标签中配置一个具体的排除 --&gt;
+    &lt;exclusion&gt;
+      &lt;!-- 指定要排除的依赖的坐标（不需要写version） --&gt;
+      &lt;!-- 不管哪个版本都会被排除 --&gt;
+      &lt;groupId&gt;commons-logging&lt;&#x2F;groupId&gt;
+      &lt;artifactId&gt;commons-logging&lt;&#x2F;artifactId&gt;
+    &lt;&#x2F;exclusion&gt;
   &lt;&#x2F;exclusions&gt;
-&lt;&#x2F;dependency&gt;<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+&lt;&#x2F;dependency&gt;
+<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
 
 
 
@@ -664,8 +672,68 @@
 <li><strong>system</strong>：system范围依赖与provided类似，但是你必须显式的提供一个对于本地系统中Jar文件的路径，需 要指定systemPath磁盘路径，system依赖不推荐使用。</li>
 <li><strong>import</strong>: 导入范围，他只是用在 dependencyManagement 中，表示从其他的 pom 中导入 dependecy 的配置。（以下引用官网案例并不难理解。）</li>
 </ul>
-<p><img src="/medias/loading.gif" data-original="E:\mycode\maven-guo\Maven\Maven笔记\img\42.png" alt="42"></p>
-<p>在 Maven-web 工程中测试各各 scope。</p>
+<p><img src="/medias/loading.gif" data-original="https://raw.githubusercontent.com/luyaguo/pictures-guo/main/maven-base/202407071836055.png"></p>
+<h3 id="对比"><a href="#对比" class="headerlink" title="对比"></a>对比</h3><ul>
+<li>标签的位置：dependencies&#x2F;dependency&#x2F;scope</li>
+<li>标签的可选值：compile&#x2F;test&#x2F;provided&#x2F;system&#x2F;runtime&#x2F;import</li>
+<li>compile 为默认值</li>
+</ul>
+<h4 id="compile-和-test-对比"><a href="#compile-和-test-对比" class="headerlink" title="compile 和 test 对比"></a>compile 和 test 对比</h4><table>
+<thead>
+<tr>
+<th></th>
+<th>main目录（空间）</th>
+<th>test目录（空间）</th>
+<th>开发过程（时间）</th>
+<th>部署到服务器（时间）</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>compile</td>
+<td>有效</td>
+<td>有效</td>
+<td>有效</td>
+<td>有效</td>
+</tr>
+<tr>
+<td>test</td>
+<td>无效</td>
+<td>有效</td>
+<td>有效</td>
+<td>无效</td>
+</tr>
+</tbody></table>
+<h4 id="compile-和-provided-对比"><a href="#compile-和-provided-对比" class="headerlink" title="compile 和 provided 对比"></a>compile 和 provided 对比</h4><table>
+<thead>
+<tr>
+<th></th>
+<th>main目录（空间）</th>
+<th>test目录（空间）</th>
+<th>开发过程（时间）</th>
+<th>部署到服务器（时间）</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>compile</td>
+<td>有效</td>
+<td>有效</td>
+<td>有效</td>
+<td>有效</td>
+</tr>
+<tr>
+<td>provided</td>
+<td>有效</td>
+<td>有效</td>
+<td>有效</td>
+<td>无效</td>
+</tr>
+</tbody></table>
+<blockquote>
+<p>provided 已提供的，项目部署到服务器，服务器中已经提供了的jar包，就不需要进行额外的打包到服务器</p>
+</blockquote>
+<p>compile：通常使用的第三方框架的 jar 包这样在项目实际运行时真正要用到的 jar 包都是以 compile 范围进行依赖的。比如 SSM 框架所需jar包。</p>
+<p>test：测试过程中使用的 jar 包，以 test 范围依赖进来。比如 junit。</p>
+<p>provided：在开发过程中需要用到的“服务器上的 jar 包”通常以 provided 范围依赖进来。比如 servlet-api、jsp-api。而这个范围的 jar 包之所以不参与部署、不放进 war 包，就是避免和服务器上已有的同类 jar 包产生冲突，同时减轻服务器的负担。说白了就是：“服务器上已经有了，你就别带啦！”</p>
 <h3 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h3><ul>
 <li>默认引入 的Jar包——- compile 【默认范围 可以不写】（编译、测试、运行 都有效 ）</li>
 <li>servlet-api 、jsp-api——- provided （编译、测试 有效， 运行时无效 防止和tomcat下Jar冲突）</li>
@@ -1126,7 +1194,7 @@
             <br>
             
                 &nbsp;<i class="fas fa-chart-area"></i>&nbsp;Total Words:&nbsp;<span
-                        class="white-color">64.1k</span>
+                        class="white-color">76.2k</span>
             
             
             

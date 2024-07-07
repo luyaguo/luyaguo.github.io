@@ -505,14 +505,14 @@ AssertionError
                 
                 <div class="info-break-policy">
                     <i class="far fa-file-word fa-fw"></i>Word Count:&nbsp;&nbsp;
-                    1.1k
+                    2.2k
                 </div>
                 
 
                 
                 <div class="info-break-policy">
                     <i class="far fa-clock fa-fw"></i>Read Times:&nbsp;&nbsp;
-                    4 Min
+                    8 Min
                 </div>
                 
 
@@ -610,7 +610,17 @@ AssertionError
 </tr>
 </tbody></table>
 <p>一旦程序发生异常，表明该程序在执行时出现了非正常的情况，无法再执行下去。默认情况下，程序会终止退出。</p>
-<h2 id="2、异常处理"><a href="#2、异常处理" class="headerlink" title="2、异常处理"></a>2、异常处理</h2><h3 id="try…except…else…finally…"><a href="#try…except…else…finally…" class="headerlink" title="try…except…else…finally…"></a>try…except…else…finally…</h3><h4 id="格式"><a href="#格式" class="headerlink" title="格式"></a>格式</h4><pre class="line-numbers language-python" data-language="python"><code class="language-python"><span class="token keyword">try</span><span class="token punctuation">:</span>
+<h2 id="2、exceptions-模块"><a href="#2、exceptions-模块" class="headerlink" title="2、exceptions 模块"></a>2、exceptions 模块</h2><p>Python在<code>exceptions</code>模块内建了很多的异常类型，通过使用<code>dir()</code>函数来查看<code>exceptions</code>中的异常类型，如下：</p>
+<pre class="line-numbers language-python" data-language="python"><code class="language-python"><span class="token keyword">import</span> exceptions
+
+<span class="token keyword">print</span> <span class="token builtin">dir</span><span class="token punctuation">(</span>exceptions<span class="token punctuation">)</span>
+<span class="token comment"># ['ArithmeticError', 'AssertionError'...]</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span></span></code></pre>
+
+<p>当然你也可以查阅Python的文档库进行更详细的了解。</p>
+<ul>
+<li>[<a target="_blank" rel="noopener" href="https://docs.python.org/2.7/l...]">https://docs.python.org/2.7/l...]</a>(</li>
+</ul>
+<h2 id="3、异常处理"><a href="#3、异常处理" class="headerlink" title="3、异常处理"></a>3、异常处理</h2><h3 id="try…except…else…finally…"><a href="#try…except…else…finally…" class="headerlink" title="try…except…else…finally…"></a>try…except…else…finally…</h3><h4 id="格式"><a href="#格式" class="headerlink" title="格式"></a>格式</h4><pre class="line-numbers language-python" data-language="python"><code class="language-python"><span class="token keyword">try</span><span class="token punctuation">:</span>
     <span class="token comment"># 可能产生异常的代码块</span>
 <span class="token keyword">except</span> <span class="token punctuation">[</span><span class="token punctuation">(</span>Error1<span class="token punctuation">,</span> Error2<span class="token punctuation">,</span> <span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">)</span> <span class="token punctuation">[</span> <span class="token keyword">as</span> e<span class="token punctuation">]</span> <span class="token punctuation">]</span><span class="token punctuation">:</span>
     <span class="token comment"># 处理异常的代码块2</span>
@@ -644,14 +654,106 @@ AssertionError
 <p>5、else 的代码块，只有当 try 的代码块没有出现异常时才会显现出来，否则 else 中的代码块不会执行。</p>
 <p>6、try 中是否出现异常，finally 中的代码都会执行。</p>
 <p>7、finally 中一般不使用 return 语句，如果 finally 中含有 return 语句，在 try代码块 return 之前，会执行 finally 中的语句，导致 try 中的 return 被忽略了，最终返回的值是 finally 中 return 的值。</p>
-<h2 id="3、raise-关键字"><a href="#3、raise-关键字" class="headerlink" title="3、raise 关键字"></a>3、raise 关键字</h2><p>如果需要在程序中自行引发异常，则应使用 raise 语句。raise 语句有如下三种常用的用法：</p>
+<h2 id="4、raise-关键字"><a href="#4、raise-关键字" class="headerlink" title="4、raise 关键字"></a>4、raise 关键字</h2><p>如果你需要自主抛出异常一个异常，可以使用<code>raise</code>关键字，等同于C#和Java中的<code>throw</code>，其语法规则如下：</p>
+<pre class="line-numbers language-python" data-language="python"><code class="language-python"><span class="token keyword">raise</span> NameError<span class="token punctuation">(</span><span class="token string">"bad name!"</span><span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+
+<h3 id="用法"><a href="#用法" class="headerlink" title="用法"></a>用法</h3><p>raise 语句有如下三种常用的用法：</p>
 <ol>
 <li>raise：单独一个 raise。该语句引发当前上下文中捕获的异常（比如在 except 块中），或默认引发 RuntimeError 异常。</li>
 <li>raise 异常类：raise 后带一个异常类。该语句引发指定异常类的默认实例。</li>
 <li>raise 异常对象：引发指定的异常对象。</li>
 </ol>
-<p>raise 语句每次只能引发一个异常实例。</p>
-<p>Todo…..</p>
+<h3 id="注意"><a href="#注意" class="headerlink" title="注意"></a>注意</h3><ul>
+<li>raise 语句每次只能引发一个异常实例</li>
+<li><code>raise</code>关键字后面可以指定你要抛出的异常实例，一般来说抛出的异常越详细越好</li>
+</ul>
+<h2 id="5、自定义异常类型"><a href="#5、自定义异常类型" class="headerlink" title="5、自定义异常类型"></a>5、自定义异常类型</h2><p>Python中自定义自己的异常类型非常简单，只需要要从<code>Exception</code>类继承即可(直接或间接)：</p>
+<pre class="line-numbers language-python" data-language="python"><code class="language-python"><span class="token keyword">class</span> <span class="token class-name">SomeCustomException</span><span class="token punctuation">(</span>Exception<span class="token punctuation">)</span><span class="token punctuation">:</span>
+    <span class="token keyword">pass</span>
+
+<span class="token keyword">class</span> <span class="token class-name">AnotherException</span><span class="token punctuation">(</span>SomeCustomException<span class="token punctuation">)</span><span class="token punctuation">:</span>
+    <span class="token keyword">pass</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<p>一般你在自定义异常类型时，需要考虑的问题应该是这个异常所应用的场景。如果内置异常已经包括了你需要的异常，建议考虑使用内置的异常类型。比如你希望在函数参数错误时抛出一个异常，你可能并不需要定义一个<code>InvalidArgumentError</code>，使用内置的<code>ValueError</code>即可。</p>
+<h2 id="6、经验案例"><a href="#6、经验案例" class="headerlink" title="6、经验案例"></a>6、经验案例</h2><h3 id="传递异常-re-raise-Exception"><a href="#传递异常-re-raise-Exception" class="headerlink" title="传递异常 re-raise Exception"></a>传递异常 re-raise Exception</h3><p>捕捉到了异常，但是又想重新抛出它（传递异常），使用不带参数的<code>raise</code>语句即可：</p>
+<pre class="line-numbers language-python" data-language="python"><code class="language-python"><span class="token keyword">def</span> <span class="token function">f1</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">:</span>
+    <span class="token keyword">print</span><span class="token punctuation">(</span><span class="token number">1</span><span class="token operator">/</span><span class="token number">0</span><span class="token punctuation">)</span>
+
+<span class="token keyword">def</span> <span class="token function">f2</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">:</span>
+    <span class="token keyword">try</span><span class="token punctuation">:</span>
+        f1<span class="token punctuation">(</span><span class="token punctuation">)</span>
+    <span class="token keyword">except</span> Exception <span class="token keyword">as</span> e<span class="token punctuation">:</span>
+        <span class="token keyword">raise</span>  <span class="token comment"># don't raise e !!!</span>
+
+f2<span class="token punctuation">(</span><span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<p>在Python2中，为了保持异常的完整信息，那么你捕获后再次抛出时千万不能在<code>raise</code>后面加上异常对象，否则你的**<code>trace</code>信息就会从此处截断**。以上是最简单的重新抛出异常的做法，也是推荐的做法。</p>
+<p>还有一些技巧可以考虑，比如抛出异常前你希望对异常的信息进行更新。</p>
+<pre class="line-numbers language-python" data-language="python"><code class="language-python"><span class="token keyword">def</span> <span class="token function">f2</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">:</span>
+    <span class="token keyword">try</span><span class="token punctuation">:</span>
+        f1<span class="token punctuation">(</span><span class="token punctuation">)</span>
+    <span class="token keyword">except</span> Exception <span class="token keyword">as</span> e<span class="token punctuation">:</span>
+        e<span class="token punctuation">.</span>args <span class="token operator">+=</span> <span class="token punctuation">(</span><span class="token string">'more info'</span><span class="token punctuation">,</span><span class="token punctuation">)</span>
+        <span class="token keyword">raise</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<p>Python3对重复传递异常有所改进，你可以自己尝试一下，不过建议还是遵循以上规则。</p>
+<h3 id="Exception-和-BaseException"><a href="#Exception-和-BaseException" class="headerlink" title="Exception 和 BaseException"></a>Exception 和 BaseException</h3><p>当我们要捕获一个通用异常时，应该用<code>Exception</code>还是<code>BaseException</code>？我建议你还是看一下<a target="_blank" rel="noopener" href="https://link.segmentfault.com/?enc=LW0zBRA6217YxqPNNpnRHw==.d1ODSL+UfDyMePF9fpGouuycqD74EfhKcnsZ1bX5sfhrwknqhPhx/08x9Hzd/K+okp6qOHfAUKMgMm0pHxTWtaKrCsEDv10URdg93AMfIOw="> 官方文档说明</a>，这两个异常到底有啥区别呢？ 请看它们之间的继承关系。</p>
+<pre class="line-numbers language-ada" data-language="ada"><code class="language-ada"><span class="token variable">BaseException</span>
+ <span class="token operator">+</span><span class="token comment">-- SystemExit</span>
+ <span class="token operator">+</span><span class="token comment">-- KeyboardInterrupt</span>
+ <span class="token operator">+</span><span class="token comment">-- GeneratorExit</span>
+ <span class="token operator">+</span><span class="token comment">-- Exception</span>
+      <span class="token operator">+</span><span class="token comment">-- StopIteration...</span>
+      <span class="token operator">+</span><span class="token comment">-- StandardError...</span>
+      <span class="token operator">+</span><span class="token comment">-- Warning...</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<p>从<code>Exception</code>的层级结构来看，<code>BaseException</code>是最基础的异常类，<code>Exception</code>继承了它。<code>BaseException</code>除了包含所有的<code>Exception</code>外还包含了<code>SystemExit</code>，<code>KeyboardInterrupt</code>和<code>GeneratorExit</code>三个异常。</p>
+<p>由此看来你的程序在捕获所有异常时更应该使用<code>Exception</code>而不是<code>BaseException</code>，因为被排除的三个异常属于更高级别的异常，合理的做法应该是交给Python的解释器处理。</p>
+<h3 id="except-Exception-as-e和-except-Exception-e"><a href="#except-Exception-as-e和-except-Exception-e" class="headerlink" title="except Exception as e和 except Exception, e"></a>except Exception as e和 except Exception, e</h3><pre class="line-numbers language-python" data-language="python"><code class="language-python"><span class="token keyword">try</span><span class="token punctuation">:</span>
+    do_something<span class="token punctuation">(</span><span class="token punctuation">)</span>
+<span class="token keyword">except</span> NameError <span class="token keyword">as</span> e<span class="token punctuation">:</span>  <span class="token comment"># should</span>
+    <span class="token keyword">pass</span>
+<span class="token keyword">except</span> KeyError<span class="token punctuation">,</span> e<span class="token punctuation">:</span>  <span class="token comment"># should not</span>
+    <span class="token keyword">pass</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<p>在Python2的时代，你可以使用以上两种写法中的任意一种。在Python3中你只能使用第一种写法，第二种写法已经不再支持。第一个种写法可读性更好，而且为了程序的兼容性和后期移植的成本，请你果断抛弃第二种写法。</p>
+<h3 id="raise-“Exception-string”"><a href="#raise-“Exception-string”" class="headerlink" title="raise “Exception string”"></a>raise “Exception string”</h3><p>把字符串当成异常抛出看上去是一个非常简洁的办法，但其实是一个非常不好的习惯。</p>
+<pre class="line-numbers language-python" data-language="python"><code class="language-python"><span class="token keyword">if</span> is_work_done<span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">:</span>
+    <span class="token keyword">pass</span>
+<span class="token keyword">else</span><span class="token punctuation">:</span>
+    <span class="token keyword">raise</span> <span class="token string">"Work is not done!"</span> <span class="token comment"># not cool</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span></span></code></pre>
+
+<p>上面的语句如果抛出异常，那么会是这样的：</p>
+<pre class="line-numbers language-python" data-language="python"><code class="language-python">Traceback <span class="token punctuation">(</span>most recent call last<span class="token punctuation">)</span><span class="token punctuation">:</span>
+  File <span class="token string">"/demo/exception_hanlding.py"</span><span class="token punctuation">,</span> line <span class="token number">48</span><span class="token punctuation">,</span> <span class="token keyword">in</span> <span class="token operator">&lt;</span>module<span class="token operator">></span>
+    <span class="token keyword">raise</span> <span class="token string">"Work is not done!"</span>
+TypeError<span class="token punctuation">:</span> exceptions must be old<span class="token operator">-</span>style classes <span class="token keyword">or</span> derived <span class="token keyword">from</span> BaseException<span class="token punctuation">,</span> <span class="token keyword">not</span> <span class="token builtin">str</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span></span></code></pre>
+
+<p>这在 Python2.4 以前是可以接受的做法，但是没有指定异常类型有可能会让下游没办法正确捕获并处理这个异常，从而导致你的程序难以维护。简单说，这种写法是是封建时代的陋习，应该扔了。</p>
+<h3 id="使用内置的语法范式代替try-except"><a href="#使用内置的语法范式代替try-except" class="headerlink" title="使用内置的语法范式代替try&#x2F;except"></a>使用内置的语法范式代替try&#x2F;except</h3><p>Python 本身提供了很多的语法范式简化了异常的处理，比如<code>for</code>语句就处理了的<code>StopIteration</code>异常，让你很流畅地写出一个循环。</p>
+<p><code>with</code>语句在打开文件后会自动调用<code>finally</code>并关闭文件。</p>
+<p>我们在写 Python 代码时应该尽量避免在遇到这种情况时还使用try&#x2F;except&#x2F;finally的思维来处理。</p>
+<pre class="line-numbers language-python" data-language="python"><code class="language-python"><span class="token comment"># should not</span>
+<span class="token keyword">try</span><span class="token punctuation">:</span>
+    f <span class="token operator">=</span> <span class="token builtin">open</span><span class="token punctuation">(</span>a_file<span class="token punctuation">)</span>
+    do_something<span class="token punctuation">(</span>f<span class="token punctuation">)</span>
+<span class="token keyword">finally</span><span class="token punctuation">:</span>
+    f<span class="token punctuation">.</span>close<span class="token punctuation">(</span><span class="token punctuation">)</span>
+
+<span class="token comment"># should </span>
+<span class="token keyword">with</span> <span class="token builtin">open</span><span class="token punctuation">(</span>a_file<span class="token punctuation">)</span> <span class="token keyword">as</span> f<span class="token punctuation">:</span>
+    do_something<span class="token punctuation">(</span>f<span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<p>再比如，当我们需要访问一个不确定的属性时，有可能你会写出这样的代码：</p>
+<pre class="line-numbers language-python" data-language="python"><code class="language-python"><span class="token keyword">try</span><span class="token punctuation">:</span>
+    test <span class="token operator">=</span> Test<span class="token punctuation">(</span><span class="token punctuation">)</span>
+    name <span class="token operator">=</span> test<span class="token punctuation">.</span>name  <span class="token comment"># not sure if we can get its name</span>
+<span class="token keyword">except</span> AttributeError<span class="token punctuation">:</span>
+    name <span class="token operator">=</span> <span class="token string">'default'</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<p>其实你可以使用更简单的<code>getattr()</code>来达到你的目的。</p>
+<pre class="line-numbers language-python" data-language="python"><code class="language-python">name <span class="token operator">=</span> <span class="token builtin">getattr</span><span class="token punctuation">(</span>test<span class="token punctuation">,</span> <span class="token string">'name'</span><span class="token punctuation">,</span> <span class="token string">'default'</span><span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+
 
                 
             </div>
@@ -1117,7 +1219,7 @@ AssertionError
             <br>
             
                 &nbsp;<i class="fas fa-chart-area"></i>&nbsp;Total Words:&nbsp;<span
-                        class="white-color">64.1k</span>
+                        class="white-color">76.2k</span>
             
             
             
