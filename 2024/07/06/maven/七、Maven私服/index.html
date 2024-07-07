@@ -5,7 +5,13 @@
 <head>
     <meta charset="utf-8">
     <meta name="keywords" content="七、Maven私服, LuYa Guo">
-    <meta name="description" content="Todo…">
+    <meta name="description" content="七、Maven私服正式开发，不同的项目组开发不同的工程。
+
+dao 工程开发完毕，发布到私服。
+service 从私服下载 dao
+
+1、需求
+问题：项目组编写了一个通用的工具类，其它项目组将类拷贝过去使用，当工具类修改bug后通过邮件发送">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
     <meta name="renderer" content="webkit|ie-stand|ie-comp">
@@ -495,14 +501,14 @@
                 
                 <div class="info-break-policy">
                     <i class="far fa-file-word fa-fw"></i>Word Count:&nbsp;&nbsp;
-                    1
+                    1.6k
                 </div>
                 
 
                 
                 <div class="info-break-policy">
                     <i class="far fa-clock fa-fw"></i>Read Times:&nbsp;&nbsp;
-                    1 Min
+                    6 Min
                 </div>
                 
 
@@ -530,7 +536,147 @@
 
         <div class="card-content article-card-content">
             <div id="articleContent">
-                <h1 id="Todo…"><a href="#Todo…" class="headerlink" title="Todo…"></a>Todo…</h1>
+                <h1 id="七、Maven私服"><a href="#七、Maven私服" class="headerlink" title="七、Maven私服"></a>七、Maven私服</h1><p>正式开发，不同的项目组开发不同的工程。</p>
+<ul>
+<li>dao 工程开发完毕，发布到私服。</li>
+<li>service 从私服下载 dao</li>
+</ul>
+<h2 id="1、需求"><a href="#1、需求" class="headerlink" title="1、需求"></a>1、需求</h2><ul>
+<li>问题：项目组编写了一个通用的工具类，其它项目组将类拷贝过去使用，当工具类修改bug后通过邮件发送给各各项目组，这种分发机制不规范可能导致工具类版本不统一。</li>
+<li>解决方案：项目组将写的工具类通过 Maven 构建，打成 Jar，将 Jar 包发布到公司的 Maven 仓库中，公司其它项目通过 Maven 依赖管理从仓库自动下载 Jar 包。</li>
+</ul>
+<h2 id="2、分析"><a href="#2、分析" class="headerlink" title="2、分析"></a>2、分析</h2><ul>
+<li><p><strong>公司在自己的局域网内搭建自己的远程仓库服务器，称为私服</strong>，私服服务器即是公司内部的 Maven 远程仓库，每个员工的电脑上安装 Maven 软件并且连接私服服务器，员工将自己开发的项目打成 Jar 并发布到私服服务器，其它项目组从私服服务器下载所依赖的构件（Jar）。</p>
+</li>
+<li><p>私服还充当一个代理服务器，当私服上没有 Jar 包会从互联网中央仓库自动下载，如下图：</p>
+</li>
+</ul>
+<p><img src="/medias/loading.gif" data-original="E:/mycode/maven-guo/Maven/Maven笔记/img/43.png" alt="43"></p>
+<h2 id="3、搭建私服环境"><a href="#3、搭建私服环境" class="headerlink" title="3、搭建私服环境"></a>3、搭建私服环境</h2><pre class="line-numbers language-bash" data-language="bash"><code class="language-bash"><span class="token comment">## 查找nexus3镜像</span>
+<span class="token function">docker</span> search nexus3
+<span class="token comment">## 拉取nexus3镜像</span>
+<span class="token function">docker</span> pull docker.io/sonatype/nexus3
+<span class="token comment">## 查看镜像</span>
+<span class="token function">docker</span> images
+<span class="token comment">## 创建目录</span>
+<span class="token function">mkdir</span> <span class="token parameter variable">-p</span> /root/docker/nexus3/data
+<span class="token comment">## 运行nexus容器</span>
+<span class="token function">docker</span> run <span class="token parameter variable">-id</span> <span class="token parameter variable">--privileged</span><span class="token operator">=</span>true <span class="token parameter variable">--name</span><span class="token operator">=</span>nexus3 <span class="token parameter variable">--restart</span><span class="token operator">=</span>always <span class="token parameter variable">-p</span> <span class="token number">8081</span>:8081 <span class="token parameter variable">-p</span> <span class="token number">8082</span>:8082 <span class="token parameter variable">-p</span> <span class="token number">8083</span>:8083 <span class="token parameter variable">-v</span> /root/docker/nexus3/data:/nexus-data sonatype/nexus3 
+<span class="token comment">## 访问</span>
+http://192.168.100.205:8081
+<span class="token comment">## 右上角登录，用户名 admin</span>
+<span class="token comment">## 密码，进入查看</span>
+<span class="token function">docker</span> <span class="token builtin class-name">exec</span> <span class="token parameter variable">-it</span> nexus3 /bin/bash
+<span class="token function">vi</span> /nexus-data/admin.password<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+
+
+<h2 id="4、将项目发布到私服"><a href="#4、将项目发布到私服" class="headerlink" title="4、将项目发布到私服"></a>4、将项目发布到私服</h2><h3 id="4-1-需求"><a href="#4-1-需求" class="headerlink" title="4.1 需求"></a>4.1 需求</h3><ul>
+<li>企业中多个团队协作开发通常会将一些公用的组件、开发模块等发布到私服供其它团队或模块开发人员使用。</li>
+<li>团队分别开发dao、service、web，某个团队开发完在dao会将dao发布到私服供service团队使用， 本例子会将dao工程打成 Jar 包发布到私服。</li>
+</ul>
+<p><img src="/medias/loading.gif" data-original="E:/mycode/maven-guo/Maven/Maven笔记/img/44.png" alt="44"></p>
+<h3 id="4-2-配置"><a href="#4-2-配置" class="headerlink" title="4.2 配置"></a>4.2 配置</h3><ul>
+<li><p>第一步： 需要在客户端即部署dao工程的电脑上配置 Maven环境，并修改 settings.xml 文件，配置连接私服的用户和密码 。</p>
+<p>此用户名和密码用于私服校验，因为私服需要知道上传都 的账号和密码是否和私服中的账号和密码一致。</p>
+</li>
+</ul>
+<pre class="line-numbers language-markup" data-language="markup"><code class="language-markup"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>server</span><span class="token punctuation">></span></span>  
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>id</span><span class="token punctuation">></span></span>Maven-releases<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>id</span><span class="token punctuation">></span></span>  
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>username</span><span class="token punctuation">></span></span>admin<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>username</span><span class="token punctuation">></span></span>  
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>password</span><span class="token punctuation">></span></span>admin<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>password</span><span class="token punctuation">></span></span>  
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>server</span><span class="token punctuation">></span></span>  
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>server</span><span class="token punctuation">></span></span>  
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>id</span><span class="token punctuation">></span></span>Maven-snapshots<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>id</span><span class="token punctuation">></span></span>  
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>username</span><span class="token punctuation">></span></span>admin<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>username</span><span class="token punctuation">></span></span>  
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>password</span><span class="token punctuation">></span></span>admin<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>password</span><span class="token punctuation">></span></span>  
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>server</span><span class="token punctuation">></span></span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<p>releases 连接发布版本项目仓库</p>
+<p>snapshots 连接测试版本项目仓库</p>
+<p><img src="/medias/loading.gif" data-original="E:/mycode/maven-guo/Maven/Maven笔记/img/45.png" alt="45"></p>
+<ul>
+<li><p>第二步： 配置项目 pom.xml</p>
+<p>配置私服仓库的地址，本公司的自己的 Jar 包会上传到私服的宿主仓库，根据工程的版本号决定上传到哪个宿主仓库，如果版本为 release 则上传到私服的 release 仓库，如果版本为 snapshot 则上传到私服的 snapshot 仓库</p>
+</li>
+</ul>
+<pre class="line-numbers language-markup" data-language="markup"><code class="language-markup"><span class="token comment">&lt;!--发布到私服仓库--></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>distributionManagement</span><span class="token punctuation">></span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>repository</span><span class="token punctuation">></span></span>
+        <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>id</span><span class="token punctuation">></span></span>Maven-releases<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>id</span><span class="token punctuation">></span></span>
+        <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>name</span><span class="token punctuation">></span></span>Nexus Release Repository<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>name</span><span class="token punctuation">></span></span>
+        <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>url</span><span class="token punctuation">></span></span>http://192.168.100.205:8081/repository/Maven-releases/<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>url</span><span class="token punctuation">></span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>repository</span><span class="token punctuation">></span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>snapshotRepository</span><span class="token punctuation">></span></span>
+        <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>id</span><span class="token punctuation">></span></span>Maven-snapshots<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>id</span><span class="token punctuation">></span></span>
+        <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>name</span><span class="token punctuation">></span></span>Nexus Snapshot Repository<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>name</span><span class="token punctuation">></span></span>
+        <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>url</span><span class="token punctuation">></span></span>http://192.168.100.205:8081/repository/Maven-snapshots/<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>url</span><span class="token punctuation">></span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>snapshotRepository</span><span class="token punctuation">></span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>distributionManagement</span><span class="token punctuation">></span></span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<ul>
+<li>注意：pom.xml这里 和 settings.xml 配置 对应！</li>
+</ul>
+<h3 id="4-3-操作命令"><a href="#4-3-操作命令" class="headerlink" title="4.3 操作命令"></a>4.3 操作命令</h3><p>将项目dao工程打成Jar包发布到私服：</p>
+<ol>
+<li>首先启动nexus</li>
+<li>对dao工程执行deploy命令</li>
+</ol>
+<p>根据本项目pom.xml中version定义决定发布到哪个仓库，如果version定义为snapshot，执行deploy后查看nexus 的snapshot仓库，如果version定义为release则项目将发布到nexus的release仓库，本项目将发布到snapshot仓 库</p>
+<h2 id="5、从私服下载-Jar-包"><a href="#5、从私服下载-Jar-包" class="headerlink" title="5、从私服下载 Jar 包"></a>5、从私服下载 Jar 包</h2><h3 id="5-1-需求"><a href="#5-1-需求" class="headerlink" title="5.1 需求"></a>5.1 需求</h3><ul>
+<li>没有配置nexus之前，如果本地仓库没有，去中央仓库下载，通常在企业中会在局域网内部署一台私服服务器，有了私服本地项目首先去本地仓库找 Jar，如果没有找到则连接私服从私服下载 Jar 包，如果私服没有 Jar 包，私服同时作为代理服务器从中央仓库下载 Jar 包，这样做的好处是一方面由私服对公司项目的依赖 Jar 包统一管理，一方面提高下载速度，项目连接私服下载 Jar 包的速度要比项目连接中央仓库的速度快的多。</li>
+</ul>
+<h3 id="5-2-管理仓库组"><a href="#5-2-管理仓库组" class="headerlink" title="5.2 管理仓库组"></a>5.2 管理仓库组</h3><ul>
+<li>nexus 中包括很多仓库，hosted 中存放的是企业自己发布的 Jar 包及第三方公司的 Jar 包，proxy 中存放的是中央仓库的 Jar，为了方便从私服下载 Jar 包可以将多个仓库组成一个仓库组，每个工程需要连接私服的仓库组下载Jar包。</li>
+</ul>
+<p><img src="/medias/loading.gif" data-original="E:/mycode/maven-guo/Maven/Maven笔记/img/46.png" alt="46"></p>
+<p>上图中仓库组包括了本地仓库、代理仓库等。</p>
+<h3 id="5-3-两种方式"><a href="#5-3-两种方式" class="headerlink" title="5.3 两种方式"></a>5.3 两种方式</h3><h4 id="5-3-1-pom-xml中配置"><a href="#5-3-1-pom-xml中配置" class="headerlink" title="5.3.1 pom.xml中配置"></a>5.3.1 pom.xml中配置</h4><pre class="line-numbers language-markup" data-language="markup"><code class="language-markup"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>repositories</span><span class="token punctuation">></span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>repository</span><span class="token punctuation">></span></span>
+        <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>id</span><span class="token punctuation">></span></span>nexus_public<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>id</span><span class="token punctuation">></span></span>
+        <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>name</span><span class="token punctuation">></span></span>Nexus_public<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>name</span><span class="token punctuation">></span></span>
+        <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>url</span><span class="token punctuation">></span></span>http://192.168.100.205:8081/repository/Maven-public/<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>url</span><span class="token punctuation">></span></span>
+        <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>releases</span><span class="token punctuation">></span></span>
+            <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>enabled</span><span class="token punctuation">></span></span>true<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>enabled</span><span class="token punctuation">></span></span>
+        <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>releases</span><span class="token punctuation">></span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>repository</span><span class="token punctuation">></span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>repositories</span><span class="token punctuation">></span></span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<h4 id="5-3-2-在setting-xml中配置仓库（全局）"><a href="#5-3-2-在setting-xml中配置仓库（全局）" class="headerlink" title="5.3.2 在setting.xml中配置仓库（全局）"></a>5.3.2 在setting.xml中配置仓库（全局）</h4><p>在客户端的setting.xml中配置私服的仓库，由于setting.xml中没有repositories的配置标签需要使用proﬁle定义仓 库。</p>
+<pre class="line-numbers language-markup" data-language="markup"><code class="language-markup"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>profile</span><span class="token punctuation">></span></span>  
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>id</span><span class="token punctuation">></span></span>dev<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>id</span><span class="token punctuation">></span></span>  
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>repositories</span><span class="token punctuation">></span></span>  
+        <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>repository</span><span class="token punctuation">></span></span>  
+            <span class="token comment">&lt;!--仓库id，repositories可以配置多个仓库，保证id不重复--></span>
+            <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>id</span><span class="token punctuation">></span></span>local-nexus<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>id</span><span class="token punctuation">></span></span>
+            <span class="token comment">&lt;!--仓库地址，即nexus仓库组的地址--></span>
+            <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>url</span><span class="token punctuation">></span></span>http://192.168.100.205:8081/repository/Maven-public/<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>url</span><span class="token punctuation">></span></span>  
+            <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>releases</span><span class="token punctuation">></span></span>  
+                <span class="token comment">&lt;!--是否下载releases构件--></span>	
+                <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>enabled</span><span class="token punctuation">></span></span>true<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>enabled</span><span class="token punctuation">></span></span>
+            <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>releases</span><span class="token punctuation">></span></span>  
+            <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>snapshots</span><span class="token punctuation">></span></span>  
+                <span class="token comment">&lt;!--是否下载snapshots构件--></span>
+                <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>enabled</span><span class="token punctuation">></span></span>true<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>enabled</span><span class="token punctuation">></span></span>  
+            <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>snapshots</span><span class="token punctuation">></span></span>  
+        <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>repository</span><span class="token punctuation">></span></span> 
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>repositories</span><span class="token punctuation">></span></span> 
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>pluginRepositories</span><span class="token punctuation">></span></span>
+        <span class="token comment">&lt;!--插件仓库，Maven的运行依赖插件，也需要从私服下载插件--></span>
+        <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>pluginRepository</span><span class="token punctuation">></span></span>
+            <span class="token comment">&lt;!--插件仓库的id不允许重复，如果重复后边配置会覆盖前边--></span>
+            <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>id</span><span class="token punctuation">></span></span>public<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>id</span><span class="token punctuation">></span></span>
+            <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>name</span><span class="token punctuation">></span></span>Public Repositories<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>name</span><span class="token punctuation">></span></span>
+            <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>url</span><span class="token punctuation">></span></span>http://192.168.100.205:8081/repository/Maven-public/<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>url</span><span class="token punctuation">></span></span>  
+        <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>pluginRepository</span><span class="token punctuation">></span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>pluginRepositories</span><span class="token punctuation">></span></span>		
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>profile</span><span class="token punctuation">></span></span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<p>使用proﬁle定义仓库需要激活才可生效。</p>
+<pre class="line-numbers language-markup" data-language="markup"><code class="language-markup"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>activeProfiles</span><span class="token punctuation">></span></span>  
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>activeProfile</span><span class="token punctuation">></span></span>dev<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>activeProfile</span><span class="token punctuation">></span></span>  
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>activeProfiles</span><span class="token punctuation">></span></span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span></span></code></pre>
+
                 
             </div>
             <hr/>
@@ -995,7 +1141,7 @@
             <br>
             
                 &nbsp;<i class="fas fa-chart-area"></i>&nbsp;Total Words:&nbsp;<span
-                        class="white-color">76.2k</span>
+                        class="white-color">77.8k</span>
             
             
             
