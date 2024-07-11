@@ -5,9 +5,8 @@
 <head>
     <meta charset="utf-8">
     <meta name="keywords" content="十六、Python装饰器, LuYa Guo">
-    <meta name="description" content="十六、Python装饰器装饰器概念Python 语言中，装饰器是“用一个函数装饰另外一个函数并为其提供额外的能力”的语法现象。
-装饰器本身是一个函数，它的参数是被装饰的函数，它的返回值是一个带有装饰功能的函数。
-装饰器是一个高阶函数，它的参">
+    <meta name="description" content="十六、Python装饰器1、闭包1.1 函数引用
+Python中定义的函数，也可以像变量一样，将一个函数名，赋值给另一个变量名，赋值后，此变量名就可以作为该函数的一个别名使用，进行调用函数，此功能与列表操作的sort()方法类似，sort(">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
     <meta name="renderer" content="webkit|ie-stand|ie-comp">
@@ -495,14 +494,14 @@
                 
                 <div class="info-break-policy">
                     <i class="far fa-file-word fa-fw"></i>Word Count:&nbsp;&nbsp;
-                    1.8k
+                    4.1k
                 </div>
                 
 
                 
                 <div class="info-break-policy">
                     <i class="far fa-clock fa-fw"></i>Read Times:&nbsp;&nbsp;
-                    7 Min
+                    15 Min
                 </div>
                 
 
@@ -530,10 +529,225 @@
 
         <div class="card-content article-card-content">
             <div id="articleContent">
-                <h1 id="十六、Python装饰器"><a href="#十六、Python装饰器" class="headerlink" title="十六、Python装饰器"></a>十六、Python装饰器</h1><h2 id="装饰器概念"><a href="#装饰器概念" class="headerlink" title="装饰器概念"></a>装饰器概念</h2><p>Python 语言中，装饰器是“<strong>用一个函数装饰另外一个函数并为其提供额外的能力</strong>”的语法现象。</p>
+                <h1 id="十六、Python装饰器"><a href="#十六、Python装饰器" class="headerlink" title="十六、Python装饰器"></a>十六、Python装饰器</h1><h2 id="1、闭包"><a href="#1、闭包" class="headerlink" title="1、闭包"></a>1、闭包</h2><h3 id="1-1-函数引用"><a href="#1-1-函数引用" class="headerlink" title="1.1 函数引用"></a>1.1 函数引用</h3><ul>
+<li>Python中定义的函数，也可以像变量一样，将一个函数名，赋值给另一个变量名，赋值后，此变量名就可以作为该函数的一个别名使用，进行调用函数，此功能与列表操作的<code>sort()</code>方法类似，<code>sort()</code>方法的key参数传入的就是一个函数名。</li>
+</ul>
+<pre class="line-numbers language-python" data-language="python"><code class="language-python"><span class="token keyword">def</span> <span class="token function">show</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">:</span>
+    <span class="token keyword">print</span><span class="token punctuation">(</span><span class="token string">"Show Run ..."</span><span class="token punctuation">)</span>
+
+show<span class="token punctuation">(</span><span class="token punctuation">)</span>
+a <span class="token operator">=</span> show<span class="token punctuation">(</span><span class="token punctuation">)</span>
+
+a<span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token comment"># 错误</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<p><img src="/medias/loading.gif" data-original="https://raw.githubusercontent.com/luyaguo/pictures-guo/main/python-base/202407102355300.png" alt="image-20240710235453105"></p>
+<blockquote>
+<p>注意：在将一个函数名（函数引用）赋值给一个变量时，函数名后不能添加括号。</p>
+</blockquote>
+<h3 id="1-2-闭包"><a href="#1-2-闭包" class="headerlink" title="1.2 闭包"></a>1.2 闭包</h3><h4 id="概念"><a href="#概念" class="headerlink" title="概念"></a>概念</h4><p>闭包（Closure）是指在一个嵌套的函数内部访问其外部函数中定义的变量或函数的能力。换句话说，闭包是一个函数对象，它可以记住并访问它创建时的上下文环境中的变量。</p>
+<h4 id="组成"><a href="#组成" class="headerlink" title="组成"></a>组成</h4><p>闭包通常由两个部分组成：内部函数和与其相关的环境变量。</p>
+<ul>
+<li>内部函数是在外部函数中定义的函数，它可以访问外部函数中的局部变量和参数，以及外部函数所在的作用域中的变量。</li>
+<li>环境变量是在外部函数中定义的变量或其他函数对象，它被内部函数引用并记住，即使外部函数执行完成后仍然存在。</li>
+</ul>
+<h4 id="闭包的特点"><a href="#闭包的特点" class="headerlink" title="闭包的特点"></a>闭包的特点</h4><ol>
+<li>内部函数可以访问外部函数中定义的变量和参数，即使外部函数已经执行完毕；</li>
+<li>闭包可以在外部函数的作用域之外被调用和执行；</li>
+<li>闭包可以访问并修改外部函数中的局部变量，使其具有持久性。</li>
+</ol>
+<h4 id="闭包的应用场景"><a href="#闭包的应用场景" class="headerlink" title="闭包的应用场景"></a>闭包的应用场景</h4><ol>
+<li>保护私有变量：可以使用闭包来创建私有变量和方法，通过内部函数的作用域和环境变量，可以实现对外部访问的限制；</li>
+<li>延迟执行：可以使用闭包来延迟某个函数的执行，即在函数外部创建一个闭包，将需要执行的函数作为内部函数，通过调用闭包来触发函数的执行；</li>
+<li>缓存数据：可以使用闭包来缓存一些昂贵的计算结果，以避免重复计算，提高程序的性能。</li>
+</ol>
+<blockquote>
+<p>需要注意的是：在使用闭包时，要注意管理内存，避免产生不必要的内存泄露问题。</p>
+</blockquote>
+<pre class="line-numbers language-python" data-language="python"><code class="language-python"><span class="token keyword">def</span> <span class="token function">out_func</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">:</span>
+    out_n <span class="token operator">=</span> <span class="token number">100</span>
+    <span class="token keyword">def</span> <span class="token function">inner_func</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">:</span>
+        <span class="token keyword">print</span><span class="token punctuation">(</span>out_n<span class="token punctuation">)</span>
+    <span class="token keyword">return</span> inner_func
+
+<span class="token keyword">if</span> __name__ <span class="token operator">==</span> <span class="token string">'__main__'</span><span class="token punctuation">:</span>
+    of1 <span class="token operator">=</span> out_func<span class="token punctuation">(</span><span class="token punctuation">)</span>
+    of2 <span class="token operator">=</span> out_func<span class="token punctuation">(</span><span class="token punctuation">)</span>
+
+    of1<span class="token punctuation">(</span><span class="token punctuation">)</span>
+    of2<span class="token punctuation">(</span><span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<h4 id="nonlocal"><a href="#nonlocal" class="headerlink" title="nonlocal"></a>nonlocal</h4><ul>
+<li>和全局变量一样，在函数内是不能直接修改函数外的变量的，如果修改全局变量需要使用<code>global</code>在函数内部声明变量为全局变量。闭包中要修改变量也是一样，内函数是不能直接修改外函数中定义的变量的，如果需要修改，要在内函数中使用<code>nonlocal</code>关键字声明该变量为外函数的变量。</li>
+</ul>
+<h5 id="不使用nonlocal修饰"><a href="#不使用nonlocal修饰" class="headerlink" title="不使用nonlocal修饰"></a>不使用nonlocal修饰</h5><pre class="line-numbers language-python" data-language="python"><code class="language-python"><span class="token keyword">def</span> <span class="token function">out_func</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">:</span>
+    out_n <span class="token operator">=</span> <span class="token number">100</span>
+    <span class="token keyword">def</span> <span class="token function">inner_func</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">:</span>
+        out_n <span class="token operator">=</span> <span class="token number">200</span>
+        <span class="token keyword">print</span><span class="token punctuation">(</span><span class="token string">"inner:"</span><span class="token punctuation">,</span> out_n<span class="token punctuation">)</span>
+    <span class="token keyword">print</span><span class="token punctuation">(</span><span class="token string">"outer1:"</span><span class="token punctuation">,</span> out_n<span class="token punctuation">)</span>
+    inner_func<span class="token punctuation">(</span><span class="token punctuation">)</span>
+    <span class="token keyword">print</span><span class="token punctuation">(</span><span class="token string">"outer2:"</span><span class="token punctuation">,</span> out_n<span class="token punctuation">)</span>
+    <span class="token keyword">return</span> inner_func
+
+<span class="token keyword">if</span> __name__ <span class="token operator">==</span> <span class="token string">'__main__'</span><span class="token punctuation">:</span>
+    of1 <span class="token operator">=</span> out_func<span class="token punctuation">(</span><span class="token punctuation">)</span>
+    of1<span class="token punctuation">(</span><span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<p><img src="/medias/loading.gif" data-original="https://raw.githubusercontent.com/luyaguo/pictures-guo/main/python-base/202407110004485.png" alt="image-20240711000412399"></p>
+<p><strong>使用nonlocal修饰</strong></p>
+<pre class="line-numbers language-python" data-language="python"><code class="language-python"><span class="token keyword">def</span> <span class="token function">out_func</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">:</span>
+    out_n <span class="token operator">=</span> <span class="token number">100</span>
+    <span class="token keyword">def</span> <span class="token function">inner_func</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">:</span>
+        <span class="token keyword">nonlocal</span> out_n
+        out_n <span class="token operator">=</span> <span class="token number">200</span>
+        <span class="token keyword">print</span><span class="token punctuation">(</span><span class="token string">"inner:"</span><span class="token punctuation">,</span> out_n<span class="token punctuation">)</span>
+    <span class="token keyword">print</span><span class="token punctuation">(</span><span class="token string">"outer1:"</span><span class="token punctuation">,</span> out_n<span class="token punctuation">)</span>
+    inner_func<span class="token punctuation">(</span><span class="token punctuation">)</span>
+    <span class="token keyword">print</span><span class="token punctuation">(</span><span class="token string">"outer2:"</span><span class="token punctuation">,</span> out_n<span class="token punctuation">)</span>
+    <span class="token keyword">return</span> inner_func
+
+<span class="token keyword">if</span> __name__ <span class="token operator">==</span> <span class="token string">'__main__'</span><span class="token punctuation">:</span>
+    of1 <span class="token operator">=</span> out_func<span class="token punctuation">(</span><span class="token punctuation">)</span>
+    of1<span class="token punctuation">(</span><span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<p><img src="/medias/loading.gif" data-original="https://raw.githubusercontent.com/luyaguo/pictures-guo/main/python-base/202407110005460.png" alt="image-20240711000536370"></p>
+<h2 id="2、装饰器"><a href="#2、装饰器" class="headerlink" title="2、装饰器"></a>2、装饰器</h2><h3 id="概念-1"><a href="#概念-1" class="headerlink" title="概念"></a>概念</h3><p>Python 语言中，装饰器是“<strong>用一个函数装饰另外一个函数并为其提供额外的能力</strong>”的语法现象。</p>
 <p>装饰器本身是一个函数，它的参数是被装饰的函数，它的返回值是一个带有装饰功能的函数。</p>
 <p>装饰器是一个高阶函数，它的参数和返回值都是函数。</p>
-<h2 id="Case"><a href="#Case" class="headerlink" title="Case"></a>Case</h2><h3 id="前提"><a href="#前提" class="headerlink" title="前提"></a>前提</h3><p>假设有名为<code>downlaod</code>和<code>upload</code>的两个函数，分别用于文件的上传和下载，如下所示：</p>
+<p>装饰器是Python提供的一种语法糖，装饰器使用<code>@</code>符号加上装饰器名称，用于修改其他函数的行为，并且在不修改原始函数定义和调用的情况下，添加额外的功能。</p>
+<p>装饰器提供一种简洁而优雅的方式，来扩展和修改函数或类的功能。它本质上就是一个闭包函数。</p>
+<h3 id="装饰器的功能"><a href="#装饰器的功能" class="headerlink" title="装饰器的功能"></a>装饰器的功能</h3><ul>
+<li>不修改已有函数的源代码；</li>
+<li>不修改已有函数的调用方式；</li>
+<li>给已有函数增加额外的功能。</li>
+</ul>
+<h3 id="装饰器的使用"><a href="#装饰器的使用" class="headerlink" title="装饰器的使用"></a>装饰器的使用</h3><ul>
+<li>由于装饰器本质上就是一个闭包函数，所以在使用自定义装饰器之前，需要先定义一个用来作为装饰器的闭包。</li>
+<li>而闭包的外部函数名，就作为装饰器名使用。</li>
+</ul>
+<p>使用闭包实现一个函数执行时间统计的功能。</p>
+<pre class="line-numbers language-python" data-language="python"><code class="language-python"><span class="token keyword">import</span> time
+
+<span class="token keyword">def</span> <span class="token function">count_time</span><span class="token punctuation">(</span>func<span class="token punctuation">)</span><span class="token punctuation">:</span>
+    <span class="token keyword">def</span> <span class="token function">inner</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">:</span>
+        start_time <span class="token operator">=</span> time<span class="token punctuation">.</span>time<span class="token punctuation">(</span><span class="token punctuation">)</span>
+        func<span class="token punctuation">(</span><span class="token punctuation">)</span>
+        stop_time <span class="token operator">=</span> time<span class="token punctuation">.</span>time<span class="token punctuation">(</span><span class="token punctuation">)</span>
+        <span class="token keyword">print</span><span class="token punctuation">(</span><span class="token string-interpolation"><span class="token string">f"函数执行时间为</span><span class="token interpolation"><span class="token punctuation">&#123;</span>stop_time <span class="token operator">-</span> start_time<span class="token punctuation">&#125;</span></span><span class="token string">秒"</span></span><span class="token punctuation">)</span>
+    <span class="token keyword">return</span> inner
+
+<span class="token decorator annotation punctuation">@count_time</span>
+<span class="token keyword">def</span> <span class="token function">show</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">:</span>
+    <span class="token keyword">for</span> i <span class="token keyword">in</span> <span class="token builtin">range</span><span class="token punctuation">(</span><span class="token number">3</span><span class="token punctuation">)</span><span class="token punctuation">:</span>
+        <span class="token keyword">print</span><span class="token punctuation">(</span><span class="token string-interpolation"><span class="token string">f"第</span><span class="token interpolation"><span class="token punctuation">&#123;</span>i<span class="token operator">+</span><span class="token number">1</span><span class="token punctuation">&#125;</span></span><span class="token string">次输出"</span></span><span class="token punctuation">)</span>
+        time<span class="token punctuation">.</span>sleep<span class="token punctuation">(</span><span class="token number">1</span><span class="token punctuation">)</span>
+
+
+<span class="token keyword">if</span> __name__ <span class="token operator">==</span> <span class="token string">'__main__'</span><span class="token punctuation">:</span>
+    show<span class="token punctuation">(</span><span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<p><img src="/medias/loading.gif" data-original="https://raw.githubusercontent.com/luyaguo/pictures-guo/main/python-base/202407110010963.png" alt="image-20240711001025884"></p>
+<ul>
+<li>从示例中可以看出，在使用count_time函数作为装饰器时，既没有改变show函数的内部定义，也没有改变show函数的调用方式，但却为show函数额外扩展了运行时间统计的功能，这就是装饰器的作用。</li>
+</ul>
+<h3 id="装饰器的本质"><a href="#装饰器的本质" class="headerlink" title="装饰器的本质"></a>装饰器的本质</h3><p>装饰器提供了一种简洁而优雅的方式（语法糖）来扩展和修改函数或类的功能。其本质就是函数的使用。</p>
+<h4 id="语法糖"><a href="#语法糖" class="headerlink" title="语法糖"></a>语法糖</h4><h5 id="概念-2"><a href="#概念-2" class="headerlink" title="概念"></a>概念</h5><p>在计算器科学中，语法糖（Syntactic suger）是指一种语法上的扩展，它并不改变编程语言的功能，只是提供了更便捷、更易读的写法，使得代码更加简洁和可理解。</p>
+<h5 id="常见的语法糖"><a href="#常见的语法糖" class="headerlink" title="常见的语法糖"></a>常见的语法糖</h5><ul>
+<li>推导式；</li>
+<li>装饰器；</li>
+<li>切片；</li>
+<li>上下文管理器。</li>
+</ul>
+<h5 id="执行步骤"><a href="#执行步骤" class="headerlink" title="执行步骤"></a>执行步骤</h5><ul>
+<li>python解释器在遇到装饰器时，会将被装饰函数引用作为参数传递给闭包的外函数，外函数执行后，返回内函数的引用，此时，再将内函数引用赋值给被装饰器函数。</li>
+<li>当python解释器执行完装饰过程后，被装饰函数的函数名就不再保存原函数的引用，而是保存的闭包函数inner的引用。</li>
+<li>而当执行被装饰函数时，实际执行的是闭包函数inner，由inner间接调用被装饰函数，完成整个调用过程。</li>
+</ul>
+<pre class="line-numbers language-python" data-language="python"><code class="language-python"><span class="token decorator annotation punctuation">@count_time</span>
+<span class="token keyword">def</span> <span class="token function">show</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">:</span>
+    <span class="token keyword">pass</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span></span></code></pre>
+
+<p>Python 解释器的过程：</p>
+<pre class="line-numbers language-python" data-language="python"><code class="language-python">show <span class="token operator">=</span> count_time<span class="token punctuation">(</span>show<span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+
+<h3 id="通用装饰器"><a href="#通用装饰器" class="headerlink" title="通用装饰器"></a>通用装饰器</h3><ul>
+<li>理论上，一个装饰器可以装饰任何函数，但实际前面定义的作为装饰器的 count_time 函数却只能装饰特定的无参无返回值的函数。</li>
+<li>如果需要装饰器可以装饰任何函数，那就需要解决被装饰函数的参数及返回值的问题。</li>
+<li>可以通过可变参数和在内函数中返回被装饰函数执行结果的形式，解决此问题。</li>
+</ul>
+<pre class="line-numbers language-python" data-language="python"><code class="language-python"><span class="token comment"># 作为装饰器名的外函数，使用参数接收被装饰函数的引用</span>
+<span class="token keyword">def</span> <span class="token function">decorator</span><span class="token punctuation">(</span>func<span class="token punctuation">)</span><span class="token punctuation">:</span>
+    <span class="token comment"># 内函数的可变参数用来接收被装饰函数使用的参数</span>
+    <span class="token keyword">def</span> <span class="token function">inner</span><span class="token punctuation">(</span><span class="token operator">*</span>args<span class="token punctuation">,</span> <span class="token operator">**</span>kwargs<span class="token punctuation">)</span><span class="token punctuation">:</span>
+        <span class="token comment"># 装饰器功能代码</span>
+        <span class="token comment"># 调用被装饰函数，并将接收的参数传递给被装饰函数，保存被装饰函数的执行结果</span>
+        result <span class="token operator">=</span> func<span class="token punctuation">(</span><span class="token operator">*</span>args<span class="token punctuation">,</span> <span class="token operator">**</span>kwargs<span class="token punctuation">)</span>
+        <span class="token comment"># 返回被装饰函数的执行结果</span>
+        <span class="token keyword">return</span> result
+
+    <span class="token comment"># 返回内函数引用</span>
+    <span class="token keyword">return</span> inner<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<h3 id="带参数装饰器"><a href="#带参数装饰器" class="headerlink" title="带参数装饰器"></a>带参数装饰器</h3><p>除了普通的装饰器使用方式之外，在使用装饰器时，还需要向装饰器传递一些参数，比如测试框架 pytest 实现数据驱动时，可以将测试数据以装饰器参数形式传入，此时，前面定义的作为装饰器的闭包形式就不满足需求了。</p>
+<p>可以在通用装饰器外，再定义一层函数，用来接收装饰器的参数。</p>
+<h4 id="实现代码"><a href="#实现代码" class="headerlink" title="实现代码"></a>实现代码</h4><pre class="line-numbers language-python" data-language="python"><code class="language-python"><span class="token keyword">def</span> <span class="token function">decorator_args</span><span class="token punctuation">(</span><span class="token builtin">vars</span><span class="token punctuation">,</span> datas<span class="token punctuation">)</span><span class="token punctuation">:</span>
+    <span class="token keyword">def</span> <span class="token function">decorator</span><span class="token punctuation">(</span>func<span class="token punctuation">)</span><span class="token punctuation">:</span>
+        <span class="token keyword">def</span> <span class="token function">inner</span><span class="token punctuation">(</span><span class="token operator">*</span>args<span class="token punctuation">,</span> <span class="token operator">**</span>kwargs<span class="token punctuation">)</span><span class="token punctuation">:</span>
+            <span class="token keyword">return</span> func<span class="token punctuation">(</span><span class="token operator">*</span>args<span class="token punctuation">,</span> <span class="token operator">**</span>kwargs<span class="token punctuation">)</span>
+        <span class="token keyword">return</span> inner
+    <span class="token keyword">return</span> decorator
+
+data <span class="token operator">=</span> <span class="token punctuation">[</span><span class="token punctuation">(</span><span class="token number">1</span><span class="token punctuation">,</span> <span class="token number">2</span><span class="token punctuation">,</span> <span class="token number">3</span><span class="token punctuation">)</span><span class="token punctuation">,</span> <span class="token punctuation">(</span><span class="token number">4</span><span class="token punctuation">,</span> <span class="token number">5</span><span class="token punctuation">,</span> <span class="token number">6</span><span class="token punctuation">)</span><span class="token punctuation">,</span> <span class="token punctuation">(</span><span class="token number">7</span><span class="token punctuation">,</span> <span class="token number">8</span><span class="token punctuation">,</span> <span class="token number">9</span><span class="token punctuation">)</span><span class="token punctuation">]</span>
+<span class="token comment"># 装饰器传参</span>
+<span class="token decorator annotation punctuation">@decorator_args</span><span class="token punctuation">(</span><span class="token string">"a,b,c"</span><span class="token punctuation">,</span> data<span class="token punctuation">)</span>
+<span class="token keyword">def</span> <span class="token function">show</span><span class="token punctuation">(</span>a<span class="token punctuation">,</span> b<span class="token punctuation">,</span> c<span class="token punctuation">)</span><span class="token punctuation">:</span>
+    <span class="token keyword">print</span><span class="token punctuation">(</span>a<span class="token punctuation">,</span> b<span class="token punctuation">,</span> c<span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<h4 id="装饰器传参原理"><a href="#装饰器传参原理" class="headerlink" title="装饰器传参原理"></a>装饰器传参原理</h4><p>装饰器传参的本质就是链式语法的多次函数调用。</p>
+<p><code>@decorator_args(&quot;a, b, c&quot;, data)</code>解析：</p>
+<ol>
+<li>将执行<code>@decorator_args(&quot;a, b, c&quot;, data)</code>部分；</li>
+<li>得到结果<code>decorator_args</code>与<code>@</code>结合变成装饰器形式<code>@decorator</code>；</li>
+<li>通过结果<code>@decorator</code>装饰器正常装饰被装饰的函数。</li>
+</ol>
+<h4 id="使用装饰器传参，实现数据驱动过程"><a href="#使用装饰器传参，实现数据驱动过程" class="headerlink" title="使用装饰器传参，实现数据驱动过程"></a>使用装饰器传参，实现数据驱动过程</h4><ul>
+<li>这里没有完整实现代码，只是讲解装饰器形式如何实现数据驱动过程，了解即可。</li>
+</ul>
+<pre class="line-numbers language-python" data-language="python"><code class="language-python"><span class="token comment"># 接收装饰器参数的函数</span>
+<span class="token comment"># 参数一：以字符串形式接收被装饰函数的参数列表，需要与被装饰函数的参数名保持一致</span>
+<span class="token comment"># 参数二：以[(),(),()]形式传入驱动数据</span>
+<span class="token keyword">def</span> <span class="token function">decorator_args</span><span class="token punctuation">(</span><span class="token builtin">vars</span><span class="token punctuation">,</span> datas<span class="token punctuation">)</span><span class="token punctuation">:</span>
+    <span class="token keyword">def</span> <span class="token function">decorator</span><span class="token punctuation">(</span>func<span class="token punctuation">)</span><span class="token punctuation">:</span>
+        <span class="token comment"># 将字符串参数分割备用</span>
+        v_keys <span class="token operator">=</span> <span class="token builtin">vars</span><span class="token punctuation">.</span>split<span class="token punctuation">(</span><span class="token string">","</span><span class="token punctuation">)</span>
+        <span class="token comment"># 定义保存[&#123;&#125;,&#123;&#125;,&#123;&#125;]形式的数据</span>
+        new_datas <span class="token operator">=</span> <span class="token punctuation">[</span><span class="token punctuation">]</span>
+        <span class="token comment"># 遍历数据，取出一组元素数据</span>
+        <span class="token keyword">for</span> item <span class="token keyword">in</span> datas<span class="token punctuation">:</span>
+            <span class="token comment"># 定义一个新字典，用来保存变量名与传入数据组成的字典</span>
+            d_item <span class="token operator">=</span> <span class="token punctuation">&#123;</span><span class="token punctuation">&#125;</span>
+            <span class="token comment"># 使用zip函数，同时遍历两个元组，变量名作为key，元素数据作为value</span>
+            <span class="token keyword">for</span> k<span class="token punctuation">,</span> v <span class="token keyword">in</span> <span class="token builtin">zip</span><span class="token punctuation">(</span>v_keys<span class="token punctuation">,</span> item<span class="token punctuation">)</span><span class="token punctuation">:</span>
+                <span class="token comment"># 将变量名和值对应保存到字典中</span>
+                d_item<span class="token punctuation">[</span>k<span class="token punctuation">]</span> <span class="token operator">=</span> v
+                <span class="token comment"># 将组合好的字典追加到新数据中备用</span>
+            new_datas<span class="token punctuation">.</span>append<span class="token punctuation">(</span>d_item<span class="token punctuation">)</span>
+        <span class="token keyword">def</span> <span class="token function">inner</span><span class="token punctuation">(</span><span class="token operator">*</span>args<span class="token punctuation">,</span> <span class="token operator">**</span>kwargs<span class="token punctuation">)</span><span class="token punctuation">:</span>
+            <span class="token keyword">return</span> func<span class="token punctuation">(</span><span class="token operator">*</span>args<span class="token punctuation">,</span> <span class="token operator">**</span>kwargs<span class="token punctuation">)</span>
+        <span class="token comment"># 遍历新数据，取出元素字典</span>
+        <span class="token keyword">for</span> item <span class="token keyword">in</span> new_datas<span class="token punctuation">:</span>
+            inner<span class="token punctuation">(</span><span class="token operator">**</span>item<span class="token punctuation">)</span>
+        <span class="token keyword">return</span> inner
+    <span class="token keyword">return</span> decorator
+
+<span class="token comment"># 传入驱动数据</span>
+data <span class="token operator">=</span> <span class="token punctuation">[</span><span class="token punctuation">(</span><span class="token number">1</span><span class="token punctuation">,</span> <span class="token number">2</span><span class="token punctuation">,</span> <span class="token number">3</span><span class="token punctuation">)</span><span class="token punctuation">,</span> <span class="token punctuation">(</span><span class="token number">4</span><span class="token punctuation">,</span> <span class="token number">5</span><span class="token punctuation">,</span> <span class="token number">6</span><span class="token punctuation">)</span><span class="token punctuation">,</span> <span class="token punctuation">(</span><span class="token number">7</span><span class="token punctuation">,</span> <span class="token number">8</span><span class="token punctuation">,</span> <span class="token number">9</span><span class="token punctuation">)</span><span class="token punctuation">,</span> <span class="token punctuation">(</span><span class="token string">"Hogwarts"</span><span class="token punctuation">,</span> <span class="token string">"is"</span><span class="token punctuation">,</span> <span class="token string">"Best"</span><span class="token punctuation">)</span><span class="token punctuation">]</span>
+<span class="token comment"># 装饰器传参</span>
+<span class="token decorator annotation punctuation">@decorator_args</span><span class="token punctuation">(</span><span class="token string">"a,b,c"</span><span class="token punctuation">,</span> data<span class="token punctuation">)</span>
+<span class="token keyword">def</span> <span class="token function">show</span><span class="token punctuation">(</span>a<span class="token punctuation">,</span> b<span class="token punctuation">,</span> c<span class="token punctuation">)</span><span class="token punctuation">:</span>
+    <span class="token keyword">print</span><span class="token punctuation">(</span>a<span class="token punctuation">,</span> b<span class="token punctuation">,</span> c<span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<h2 id="3、装饰器应用"><a href="#3、装饰器应用" class="headerlink" title="3、装饰器应用"></a>3、装饰器应用</h2><h3 id="前提"><a href="#前提" class="headerlink" title="前提"></a>前提</h3><p>假设有名为<code>downlaod</code>和<code>upload</code>的两个函数，分别用于文件的上传和下载，如下所示：</p>
 <pre class="line-numbers language-Python" data-language="Python"><code class="language-Python">import random
 import time
 
@@ -1065,7 +1279,7 @@ upload.__wrapped__(&#39;Python从新手到大师.pdf&#39;)<span aria-hidden="tru
             <br>
             
                 &nbsp;<i class="fas fa-chart-area"></i>&nbsp;Total Words:&nbsp;<span
-                        class="white-color">85.6k</span>
+                        class="white-color">96.8k</span>
             
             
             
