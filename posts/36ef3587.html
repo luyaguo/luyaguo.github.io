@@ -497,7 +497,7 @@ arr.">
                 
                 <div class="info-break-policy">
                     <i class="far fa-file-word fa-fw"></i>Word Count:&nbsp;&nbsp;
-                    5.1k
+                    5.2k
                 </div>
                 
 
@@ -809,11 +809,36 @@ arr<span class="token punctuation">.</span><span class="token function">sort</sp
 
 <h4 id="使用-localeCompare-for-strings"><a href="#使用-localeCompare-for-strings" class="headerlink" title="使用 localeCompare for strings"></a>使用 localeCompare for strings</h4><p>1）字符串比较在默认情况下，它通过字母的代码比较字母。</p>
 <p><strong>2）对于许多字母，最好使用 <code>str.localeCompare</code> 方法正确地对字母进行排序，例如 <code>Ö</code>。</strong></p>
-<p>例如，让我们用德语对几个国家&#x2F;地区进行排序：</p>
+<h4 id="Case-3"><a href="#Case-3" class="headerlink" title="Case"></a>Case</h4><p>例如，让我们用德语对几个国家&#x2F;地区进行排序：</p>
 <pre class="line-numbers language-javascript" data-language="javascript"><code class="language-javascript"><span class="token keyword">let</span> countries <span class="token operator">=</span> <span class="token punctuation">[</span><span class="token string">'Österreich'</span><span class="token punctuation">,</span> <span class="token string">'Andorra'</span><span class="token punctuation">,</span> <span class="token string">'Vietnam'</span><span class="token punctuation">]</span><span class="token punctuation">;</span>
 
 <span class="token function">alert</span><span class="token punctuation">(</span>countries<span class="token punctuation">.</span><span class="token function">sort</span><span class="token punctuation">(</span><span class="token punctuation">(</span><span class="token parameter">a<span class="token punctuation">,</span> b</span><span class="token punctuation">)</span> <span class="token operator">=></span> a <span class="token operator">></span> b <span class="token operator">?</span> <span class="token number">1</span> <span class="token operator">:</span> <span class="token operator">-</span><span class="token number">1</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// Andorra, Vietnam, Österreich（错的）</span>
 <span class="token function">alert</span><span class="token punctuation">(</span>countries<span class="token punctuation">.</span><span class="token function">sort</span><span class="token punctuation">(</span><span class="token punctuation">(</span><span class="token parameter">a<span class="token punctuation">,</span> b</span><span class="token punctuation">)</span> <span class="token operator">=></span> a<span class="token punctuation">.</span><span class="token function">localeCompare</span><span class="token punctuation">(</span>b<span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// Andorra,Österreich,Vietn</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span></span></code></pre>
+
+<h4 id="实例-工作"><a href="#实例-工作" class="headerlink" title="实例-工作"></a>实例-工作</h4><pre class="line-numbers language-javascript" data-language="javascript"><code class="language-javascript"><span class="token keyword">var</span> arr <span class="token operator">=</span> <span class="token punctuation">[</span>
+    <span class="token punctuation">&#123;</span> <span class="token literal-property property">deviceNO</span><span class="token operator">:</span> <span class="token string">'A123'</span><span class="token punctuation">,</span> <span class="token literal-property property">age</span><span class="token operator">:</span> <span class="token number">25</span> <span class="token punctuation">&#125;</span><span class="token punctuation">,</span>
+    <span class="token punctuation">&#123;</span> <span class="token literal-property property">deviceNO</span><span class="token operator">:</span> <span class="token string">'A345'</span><span class="token punctuation">,</span> <span class="token literal-property property">age</span><span class="token operator">:</span> <span class="token number">25</span> <span class="token punctuation">&#125;</span><span class="token punctuation">,</span>
+    <span class="token punctuation">&#123;</span> <span class="token literal-property property">deviceNO</span><span class="token operator">:</span> <span class="token string">'A123'</span><span class="token punctuation">,</span> <span class="token literal-property property">age</span><span class="token operator">:</span> <span class="token number">20</span> <span class="token punctuation">&#125;</span><span class="token punctuation">,</span>
+    <span class="token punctuation">&#123;</span> <span class="token literal-property property">deviceNO</span><span class="token operator">:</span> <span class="token string">'A345'</span><span class="token punctuation">,</span> <span class="token literal-property property">age</span><span class="token operator">:</span> <span class="token number">30</span> <span class="token punctuation">&#125;</span>
+<span class="token punctuation">]</span><span class="token punctuation">;</span>
+<span class="token keyword">function</span> <span class="token function">createComparisonFunction</span><span class="token punctuation">(</span><span class="token parameter">propertyName</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+  <span class="token keyword">return</span> <span class="token keyword">function</span> <span class="token punctuation">(</span><span class="token parameter">object1<span class="token punctuation">,</span>object2</span><span class="token punctuation">)</span><span class="token punctuation">&#123;</span>
+    <span class="token keyword">var</span> value1 <span class="token operator">=</span> object1<span class="token punctuation">[</span>propertyName<span class="token punctuation">]</span><span class="token punctuation">;</span>
+    <span class="token keyword">var</span> value2 <span class="token operator">=</span> object2<span class="token punctuation">[</span>propertyName<span class="token punctuation">]</span><span class="token punctuation">;</span>
+    <span class="token keyword">if</span> <span class="token punctuation">(</span>value1 <span class="token operator">&lt;</span> value2<span class="token punctuation">)</span><span class="token punctuation">&#123;</span>
+      <span class="token keyword">return</span> <span class="token operator">-</span><span class="token number">1</span><span class="token punctuation">;</span>
+    <span class="token punctuation">&#125;</span> <span class="token keyword">else</span> <span class="token keyword">if</span> <span class="token punctuation">(</span>value1 <span class="token operator">></span> value2<span class="token punctuation">)</span><span class="token punctuation">&#123;</span>
+      <span class="token keyword">return</span> <span class="token number">1</span><span class="token punctuation">;</span>
+    <span class="token punctuation">&#125;</span><span class="token keyword">else</span><span class="token punctuation">&#123;</span>
+      <span class="token keyword">return</span> <span class="token number">0</span>
+    <span class="token punctuation">&#125;</span>
+  <span class="token punctuation">&#125;</span>
+<span class="token punctuation">&#125;</span>
+
+arr<span class="token punctuation">.</span><span class="token function">sort</span><span class="token punctuation">(</span><span class="token function">createComparisonFunction</span><span class="token punctuation">(</span><span class="token string">"age"</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
+console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span>arr<span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+
 
 <h3 id="4-3、reverse"><a href="#4-3、reverse" class="headerlink" title="4-3、reverse"></a>4-3、reverse</h3><p><strong>arr.reverse 方法用于颠倒 <code>arr</code> 中元素的顺序。</strong></p>
 <pre class="line-numbers language-javascript" data-language="javascript"><code class="language-javascript"><span class="token keyword">let</span> arr <span class="token operator">=</span> <span class="token punctuation">[</span><span class="token number">1</span><span class="token punctuation">,</span> <span class="token number">2</span><span class="token punctuation">,</span> <span class="token number">3</span><span class="token punctuation">,</span> <span class="token number">4</span><span class="token punctuation">,</span> <span class="token number">5</span><span class="token punctuation">]</span><span class="token punctuation">;</span>
@@ -865,7 +890,7 @@ arr<span class="token punctuation">.</span><span class="token function">reverse<
 <li><code>arr</code> —— 数组本身。</li>
 </ul>
 <p>3）应用函数时，上一个函数调用的结果将作为第一个参数传递给下一个函数。因此，第一个参数本质上是累加器，用于存储所有先前执行的组合结果。最后，它成为 <code>reduce</code> 的结果。</p>
-<h4 id="Case-3"><a href="#Case-3" class="headerlink" title="Case"></a>Case</h4><p>在这里，我们通过一行代码得到一个数组的总和：</p>
+<h4 id="Case-4"><a href="#Case-4" class="headerlink" title="Case"></a>Case</h4><p>在这里，我们通过一行代码得到一个数组的总和：</p>
 <pre class="line-numbers language-javascript" data-language="javascript"><code class="language-javascript"><span class="token keyword">let</span> arr <span class="token operator">=</span> <span class="token punctuation">[</span><span class="token number">1</span><span class="token punctuation">,</span> <span class="token number">2</span><span class="token punctuation">,</span> <span class="token number">3</span><span class="token punctuation">,</span> <span class="token number">4</span><span class="token punctuation">,</span> <span class="token number">5</span><span class="token punctuation">]</span><span class="token punctuation">;</span>
 
 <span class="token keyword">let</span> result <span class="token operator">=</span> arr<span class="token punctuation">.</span><span class="token function">reduce</span><span class="token punctuation">(</span><span class="token punctuation">(</span><span class="token parameter">sum<span class="token punctuation">,</span> current</span><span class="token punctuation">)</span> <span class="token operator">=></span> sum <span class="token operator">+</span> current<span class="token punctuation">,</span> <span class="token number">0</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
@@ -962,7 +987,7 @@ arr<span class="token punctuation">.</span><span class="token function">map</spa
 
 <p>3）<code>thisArg</code> 参数的值在 <code>func</code> 中变为 <code>this</code>。</p>
 <p>上面的部分中没有解释该参数，因为该参数很少使用。但是为了完整性，我们需要讲讲它。</p>
-<h3 id="Case-4"><a href="#Case-4" class="headerlink" title="Case"></a>Case</h3><p>例如，在这里我们使用 <code>army</code> 对象方法作为过滤器，<code>thisArg</code> 用于传递上下文（passes the context）：</p>
+<h3 id="Case-5"><a href="#Case-5" class="headerlink" title="Case"></a>Case</h3><p>例如，在这里我们使用 <code>army</code> 对象方法作为过滤器，<code>thisArg</code> 用于传递上下文（passes the context）：</p>
 <pre class="line-numbers language-javascript" data-language="javascript"><code class="language-javascript"><span class="token keyword">let</span> army <span class="token operator">=</span> <span class="token punctuation">&#123;</span>
   <span class="token literal-property property">minAge</span><span class="token operator">:</span> <span class="token number">18</span><span class="token punctuation">,</span>
   <span class="token literal-property property">maxAge</span><span class="token operator">:</span> <span class="token number">27</span><span class="token punctuation">,</span>
@@ -1369,18 +1394,17 @@ arr<span class="token punctuation">.</span><span class="token function">map</spa
 <article id="prenext-posts" class="prev-next articles">
     <div class="row article-row">
         
-        <div class="article col s12 m6" data-aos="fade-up" data-aos="fade-up">
+        <div class="article col s12 m6" data-aos="fade-up">
             <div class="article-badge left-badge text-color">
-                <i class="far fa-dot-circle"></i>&nbsp;Current
-            </div>
+                <i class="fas fa-chevron-left"></i>&nbsp;Previous</div>
             <div class="card">
-                <a href="/posts/36ef3587.html">
+                <a href="/posts/4b033974.html">
                     <div class="card-image">
                         
                         
-                        <img src="/medias/featureimages/0.jpg" class="responsive-img" alt="二十七、JavaScript数组方法">
+                        <img src="/medias/featureimages/21.jpg" class="responsive-img" alt="二十八、JavaScript Iterable Object">
                         
-                        <span class="card-title">二十七、JavaScript数组方法</span>
+                        <span class="card-title">二十八、JavaScript Iterable Object</span>
                     </div>
                 </a>
                 <div class="card-content article-content">
@@ -1390,9 +1414,9 @@ arr<span class="token punctuation">.</span><span class="token function">map</spa
                         
                     </div>
                     <div class="publish-info">
-                            <span class="publish-date">
-                                <i class="far fa-clock fa-fw icon-date"></i>2024-08-21
-                            </span>
+                        <span class="publish-date">
+                            <i class="far fa-clock fa-fw icon-date"></i>2024-08-22
+                        </span>
                         <span class="publish-author">
                             
                             <i class="fas fa-bookmark fa-fw icon-category"></i>
@@ -1405,7 +1429,6 @@ arr<span class="token punctuation">.</span><span class="token function">map</spa
                         </span>
                     </div>
                 </div>
-
                 
                 <div class="card-action article-tags">
                     
@@ -1692,7 +1715,7 @@ arr<span class="token punctuation">.</span><span class="token function">map</spa
             <br>
             
                 &nbsp;<i class="fas fa-chart-area"></i>&nbsp;Total Words:&nbsp;<span
-                        class="white-color">198.7k</span>
+                        class="white-color">203.7k</span>
             
             
             
