@@ -549,7 +549,7 @@
 <li><code>next()</code> 方法返回的结果的格式必须是 <code>&#123;done: Boolean, value: any&#125;</code>，当 <code>done=true</code> 时，表示循环结束，否则 <code>value</code> 是下一个值。</li>
 </ol>
 <h3 id="解决方法"><a href="#解决方法" class="headerlink" title="解决方法"></a>解决方法</h3><p>这是带有注释的 <code>range</code> 的完整实现：</p>
-<pre class="line-numbers language-javascript" data-language="javascript"><div class="caption"><span>run</span></div><code class="language-javascript"><span class="token keyword">let</span> range <span class="token operator">=</span> <span class="token punctuation">&#123;</span>
+<pre class="line-numbers language-javascript" data-language="javascript"><code class="language-javascript"><span class="token keyword">let</span> range <span class="token operator">=</span> <span class="token punctuation">&#123;</span>
   <span class="token literal-property property">from</span><span class="token operator">:</span> <span class="token number">1</span><span class="token punctuation">,</span>
   <span class="token literal-property property">to</span><span class="token operator">:</span> <span class="token number">5</span>
 <span class="token punctuation">&#125;</span><span class="token punctuation">;</span>
@@ -589,7 +589,7 @@ range<span class="token punctuation">[</span>Symbol<span class="token punctuatio
 <p>因此，迭代器对象和与其进行迭代的对象是分开的。</p>
 </blockquote>
 <p>从技术上说，我们可以将它们合并，并使用 <code>range</code> 自身作为迭代器来简化代码。 就像这样：</p>
-<pre class="line-numbers language-javascript" data-language="javascript"><div class="caption"><span>run</span></div><code class="language-javascript"><span class="token keyword">let</span> range <span class="token operator">=</span> <span class="token punctuation">&#123;</span>
+<pre class="line-numbers language-javascript" data-language="javascript"><code class="language-javascript"><span class="token keyword">let</span> range <span class="token operator">=</span> <span class="token punctuation">&#123;</span>
   <span class="token literal-property property">from</span><span class="token operator">:</span> <span class="token number">1</span><span class="token punctuation">,</span>
   <span class="token literal-property property">to</span><span class="token operator">:</span> <span class="token number">5</span><span class="token punctuation">,</span>
 
@@ -617,20 +617,20 @@ range<span class="token punctuation">[</span>Symbol<span class="token punctuatio
 <p><code>next</code> 没有什么限制，它可以返回越来越多的值，这是正常的。</p>
 <p>当然，迭代这种对象的 <code>for..of</code> 循环将不会停止。但是我们可以通过使用 <code>break</code> 来停止它。</p>
 <h2 id="2、字符串是可迭代的"><a href="#2、字符串是可迭代的" class="headerlink" title="2、字符串是可迭代的"></a>2、字符串是可迭代的</h2><p>数组和字符串是使用最广泛的内建可迭代对象。 对于一个字符串，<code>for..of</code> 遍历它的每个字符：</p>
-<pre class="line-numbers language-javascript" data-language="javascript"><div class="caption"><span>run</span></div><code class="language-javascript"><span class="token keyword">for</span> <span class="token punctuation">(</span><span class="token keyword">let</span> char <span class="token keyword">of</span> <span class="token string">"test"</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+<pre class="line-numbers language-javascript" data-language="javascript"><code class="language-javascript"><span class="token keyword">for</span> <span class="token punctuation">(</span><span class="token keyword">let</span> char <span class="token keyword">of</span> <span class="token string">"test"</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
   <span class="token comment">// 触发 4 次，每个字符一次</span>
   <span class="token function">alert</span><span class="token punctuation">(</span> char <span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// t, then e, then s, then t</span>
 <span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span></span></code></pre>
 
 <p>对于代理对（surrogate pairs），它也能正常工作！（译注：这里的代理对也就指的是 UTF-16 的扩展字符）</p>
-<pre class="line-numbers language-javascript" data-language="javascript"><div class="caption"><span>run</span></div><code class="language-javascript"><span class="token keyword">let</span> str <span class="token operator">=</span> <span class="token string">'𝒳😂'</span><span class="token punctuation">;</span>
+<pre class="line-numbers language-javascript" data-language="javascript"><code class="language-javascript"><span class="token keyword">let</span> str <span class="token operator">=</span> <span class="token string">'𝒳😂'</span><span class="token punctuation">;</span>
 <span class="token keyword">for</span> <span class="token punctuation">(</span><span class="token keyword">let</span> char <span class="token keyword">of</span> str<span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
     <span class="token function">alert</span><span class="token punctuation">(</span> char <span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// 𝒳，然后是 😂</span>
 <span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span></span></code></pre>
 
 <h2 id="3、显式调用迭代器"><a href="#3、显式调用迭代器" class="headerlink" title="3、显式调用迭代器"></a>3、显式调用迭代器</h2><p>为了更深层地了解底层知识，让我们来看看如何显式地使用迭代器。</p>
 <p>我们将会采用与 <code>for..of</code> 完全相同的方式遍历字符串，但使用的是直接调用。这段代码创建了一个字符串迭代器，并“手动”从中获取值。</p>
-<pre class="line-numbers language-javascript" data-language="javascript"><div class="caption"><span>run</span></div><code class="language-javascript"><span class="token keyword">let</span> str <span class="token operator">=</span> <span class="token string">"Hello"</span><span class="token punctuation">;</span>
+<pre class="line-numbers language-javascript" data-language="javascript"><code class="language-javascript"><span class="token keyword">let</span> str <span class="token operator">=</span> <span class="token string">"Hello"</span><span class="token punctuation">;</span>
 
 <span class="token comment">// 和 for..of 做相同的事</span>
 <span class="token comment">// for (let char of str) alert(char);</span>
@@ -651,7 +651,7 @@ range<span class="token punctuation">[</span>Symbol<span class="token punctuatio
 <p>例如，字符串即是可迭代的（<code>for..of</code> 对它们有效），又是类数组的（它们有数值索引和 <code>length</code> 属性）。</p>
 <p>但是一个可迭代对象也许不是类数组对象。反之亦然，类数组对象可能不可迭代。</p>
 <p>例如，上面例子中的 <code>range</code> 是可迭代的，但并非类数组对象，因为它没有索引属性，也没有 <code>length</code> 属性。</p>
-<h3 id="类数组"><a href="#类数组" class="headerlink" title="类数组"></a>类数组</h3><pre class="line-numbers language-javascript" data-language="javascript"><div class="caption"><span>run</span></div><code class="language-javascript"><span class="token keyword">let</span> arrayLike <span class="token operator">=</span> <span class="token punctuation">&#123;</span> <span class="token comment">// 有索引和 length 属性 => 类数组对象</span>
+<h3 id="类数组"><a href="#类数组" class="headerlink" title="类数组"></a>类数组</h3><pre class="line-numbers language-javascript" data-language="javascript"><code class="language-javascript"><span class="token keyword">let</span> arrayLike <span class="token operator">=</span> <span class="token punctuation">&#123;</span> <span class="token comment">// 有索引和 length 属性 => 类数组对象</span>
   <span class="token number">0</span><span class="token operator">:</span> <span class="token string">"Hello"</span><span class="token punctuation">,</span>
   <span class="token number">1</span><span class="token operator">:</span> <span class="token string">"World"</span><span class="token punctuation">,</span>
   <span class="token literal-property property">length</span><span class="token operator">:</span> <span class="token number">2</span>
@@ -662,7 +662,7 @@ range<span class="token punctuation">[</span>Symbol<span class="token punctuatio
 
 <p>可迭代对象和类数组对象通常都 <strong>不是数组</strong>，它们没有 <code>push</code> 和 <code>pop</code> 等方法。如果我们有一个这样的对象，并想像数组那样操作它，那就非常不方便。例如，我们想使用数组方法操作 <code>range</code>，应该如何实现呢？</p>
 <h2 id="5、Array-from"><a href="#5、Array-from" class="headerlink" title="5、Array.from"></a>5、Array.from</h2><p>有一个全局方法 Array.from 可以接受一个可迭代或类数组的值，并从中获取一个“真正的”数组。然后我们就可以对其调用数组方法了。</p>
-<h3 id="类数组-1"><a href="#类数组-1" class="headerlink" title="类数组"></a>类数组</h3><pre class="line-numbers language-javascript" data-language="javascript"><div class="caption"><span>run</span></div><code class="language-javascript"><span class="token keyword">let</span> arrayLike <span class="token operator">=</span> <span class="token punctuation">&#123;</span>
+<h3 id="类数组-1"><a href="#类数组-1" class="headerlink" title="类数组"></a>类数组</h3><pre class="line-numbers language-javascript" data-language="javascript"><code class="language-javascript"><span class="token keyword">let</span> arrayLike <span class="token operator">=</span> <span class="token punctuation">&#123;</span>
   <span class="token number">0</span><span class="token operator">:</span> <span class="token string">"Hello"</span><span class="token punctuation">,</span>
   <span class="token number">1</span><span class="token operator">:</span> <span class="token string">"World"</span><span class="token punctuation">,</span>
   <span class="token literal-property property">length</span><span class="token operator">:</span> <span class="token number">2</span>
@@ -690,7 +690,7 @@ range<span class="token punctuation">[</span>Symbol<span class="token punctuatio
 <span class="token function">alert</span><span class="token punctuation">(</span>arr<span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// 1,4,9,16,25</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
 
 <h4 id="Case-1"><a href="#Case-1" class="headerlink" title="Case"></a>Case</h4><p>现在我们用 <code>Array.from</code> 将一个字符串转换为单个字符的数组：</p>
-<pre class="line-numbers language-javascript" data-language="javascript"><div class="caption"><span>run</span></div><code class="language-javascript"><span class="token keyword">let</span> str <span class="token operator">=</span> <span class="token string">'𝒳😂'</span><span class="token punctuation">;</span>
+<pre class="line-numbers language-javascript" data-language="javascript"><code class="language-javascript"><span class="token keyword">let</span> str <span class="token operator">=</span> <span class="token string">'𝒳😂'</span><span class="token punctuation">;</span>
 
 <span class="token comment">// 将 str 拆分为字符数组</span>
 <span class="token keyword">let</span> chars <span class="token operator">=</span> Array<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span>str<span class="token punctuation">)</span><span class="token punctuation">;</span>
@@ -701,7 +701,7 @@ range<span class="token punctuation">[</span>Symbol<span class="token punctuatio
 
 <p>与 <code>str.split</code> 方法不同，它依赖于字符串的可迭代特性。因此，就像 <code>for..of</code> 一样，可以正确地处理代理对（surrogate pair）。（译注：代理对也就是 UTF-16 扩展字符。）</p>
 <p>技术上来讲，它和下面这段代码做的是相同的事：</p>
-<pre class="line-numbers language-javascript" data-language="javascript"><div class="caption"><span>run</span></div><code class="language-javascript"><span class="token keyword">let</span> str <span class="token operator">=</span> <span class="token string">'𝒳😂'</span><span class="token punctuation">;</span>
+<pre class="line-numbers language-javascript" data-language="javascript"><code class="language-javascript"><span class="token keyword">let</span> str <span class="token operator">=</span> <span class="token string">'𝒳😂'</span><span class="token punctuation">;</span>
 
 <span class="token keyword">let</span> chars <span class="token operator">=</span> <span class="token punctuation">[</span><span class="token punctuation">]</span><span class="token punctuation">;</span> <span class="token comment">// Array.from 内部执行相同的循环</span>
 <span class="token keyword">for</span> <span class="token punctuation">(</span><span class="token keyword">let</span> char <span class="token keyword">of</span> str<span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
@@ -712,7 +712,7 @@ range<span class="token punctuation">[</span>Symbol<span class="token punctuatio
 
 <p>但 <code>Array.from</code> 精简很多。</p>
 <h4 id="Case-2"><a href="#Case-2" class="headerlink" title="Case"></a>Case</h4><p>我们甚至可以基于 <code>Array.from</code> 创建代理感知（surrogate-aware）的<code>slice</code> 方法（译注：也就是能够处理 UTF-16 扩展字符的 <code>slice</code> 方法）：</p>
-<pre class="line-numbers language-javascript" data-language="javascript"><div class="caption"><span>run</span></div><code class="language-javascript"><span class="token keyword">function</span> <span class="token function">slice</span><span class="token punctuation">(</span><span class="token parameter">str<span class="token punctuation">,</span> start<span class="token punctuation">,</span> end</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+<pre class="line-numbers language-javascript" data-language="javascript"><code class="language-javascript"><span class="token keyword">function</span> <span class="token function">slice</span><span class="token punctuation">(</span><span class="token parameter">str<span class="token punctuation">,</span> start<span class="token punctuation">,</span> end</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
   <span class="token keyword">return</span> Array<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span>str<span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">slice</span><span class="token punctuation">(</span>start<span class="token punctuation">,</span> end<span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">join</span><span class="token punctuation">(</span><span class="token string">''</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
 <span class="token punctuation">&#125;</span>
 
@@ -1386,7 +1386,7 @@ range<span class="token punctuation">[</span>Symbol<span class="token punctuatio
             <br>
             
                 &nbsp;<i class="fas fa-chart-area"></i>&nbsp;Total Words:&nbsp;<span
-                        class="white-color">203.7k</span>
+                        class="white-color">206k</span>
             
             
             
