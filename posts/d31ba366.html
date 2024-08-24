@@ -1,0 +1,1926 @@
+<!DOCTYPE HTML>
+<html lang="en">
+
+
+<head>
+    <meta charset="utf-8">
+    <meta name="keywords" content="三十二、JavaScript 解构赋值, LuYa Guo">
+    <meta name="description" content="三十二、JavaScript 解构赋值1、需求分析JavaScript 中最常用的两种数据结构是 Object 和 Array。
+
+对象是一种根据键存储数据的实体。
+数组是一种直接存储数据的有序列表。
+
+但是，当我们把它们传递给函数时，函数">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <meta name="renderer" content="webkit|ie-stand|ie-comp">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="format-detection" content="telephone=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="referrer" content="no-referrer-when-downgrade">
+    <!-- Global site tag (gtag.js) - Google Analytics -->
+
+
+    <title>三十二、JavaScript 解构赋值 | LuYa Guo</title>
+    <link rel="icon" type="image/png" href="/favicon.png">
+    
+
+
+    <!-- bg-cover style     -->
+
+
+
+<link rel="stylesheet" type="text/css" href="/libs/awesome/css/all.min.css">
+<link rel="stylesheet" type="text/css" href="/libs/materialize/materialize.min.css">
+<link rel="stylesheet" type="text/css" href="/libs/aos/aos.css">
+<link rel="stylesheet" type="text/css" href="/libs/animate/animate.min.css">
+<link rel="stylesheet" type="text/css" href="/libs/lightGallery/css/lightgallery.min.css">
+<link rel="stylesheet" type="text/css" href="/css/matery.css">
+<link rel="stylesheet" type="text/css" href="/css/my.css">
+<link rel="stylesheet" type="text/css" href="/css/dark.css" media="none" onload="if(media!='all')media='all'">
+
+
+
+
+    <link rel="stylesheet" href="/libs/tocbot/tocbot.css">
+    <link rel="stylesheet" href="/css/post.css">
+
+
+
+
+    
+
+
+
+    <script src="/libs/jquery/jquery-3.6.0.min.js"></script>
+
+<meta name="generator" content="Hexo 7.2.0"></head>
+
+<!-- 预加载动画 -->
+
+    <style type="text/css" lang="css">
+    #loading-container{
+        position: fixed;
+        top: 0;
+        left: 0;
+        min-height: 100vh;
+        width: 100vw;
+        z-index: 9999;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        background: #2c3561;
+        text-align: center;
+        /* loader页面消失采用渐隐的方式*/
+        -webkit-transition: opacity 1s ease;
+        -moz-transition: opacity 1s ease;
+        -o-transition: opacity 1s ease;
+        transition: opacity 1s ease;
+    }
+    .loading-image{
+        width: 120px;
+        height: 50px;
+        transform: translate(-50%);
+    }
+
+    .loading-image div:nth-child(2) {
+        -webkit-animation: pacman-balls 1s linear 0s infinite;
+        animation: pacman-balls 1s linear 0s infinite
+    }
+
+    .loading-image div:nth-child(3) {
+        -webkit-animation: pacman-balls 1s linear .33s infinite;
+        animation: pacman-balls 1s linear .33s infinite
+    }
+
+    .loading-image div:nth-child(4) {
+        -webkit-animation: pacman-balls 1s linear .66s infinite;
+        animation: pacman-balls 1s linear .66s infinite
+    }
+
+    .loading-image div:nth-child(5) {
+        -webkit-animation: pacman-balls 1s linear .99s infinite;
+        animation: pacman-balls 1s linear .99s infinite
+    }
+
+    .loading-image div:first-of-type {
+        width: 0;
+        height: 0;
+        border: 25px solid #49b1f5;
+        border-right-color: transparent;
+        border-radius: 25px;
+        -webkit-animation: rotate_pacman_half_up .5s 0s infinite;
+        animation: rotate_pacman_half_up .5s 0s infinite;
+    }
+    .loading-image div:nth-child(2) {
+        width: 0;
+        height: 0;
+        border: 25px solid #49b1f5;
+        border-right-color: transparent;
+        border-radius: 25px;
+        -webkit-animation: rotate_pacman_half_down .5s 0s infinite;
+        animation: rotate_pacman_half_down .5s 0s infinite;
+        margin-top: -50px;
+    }
+    @-webkit-keyframes rotate_pacman_half_up {0% {transform: rotate(270deg)}50% {transform: rotate(1turn)}to {transform: rotate(270deg)}}
+
+    @keyframes rotate_pacman_half_up {0% {transform: rotate(270deg)}50% {transform: rotate(1turn)}to {transform: rotate(270deg)}}
+
+    @-webkit-keyframes rotate_pacman_half_down {0% {transform: rotate(90deg)}50% {transform: rotate(0deg)}to {transform: rotate(90deg)}}
+
+    @keyframes rotate_pacman_half_down {0% {transform: rotate(90deg)}50% {transform: rotate(0deg)}to {transform: rotate(90deg)}}
+
+    @-webkit-keyframes pacman-balls {75% {opacity: .7}to {transform: translate(-100px, -6.25px)}}
+
+    @keyframes pacman-balls {75% {opacity: .7}to {transform: translate(-100px, -6.25px)}}
+
+
+    .loading-image div:nth-child(3),
+    .loading-image div:nth-child(4),
+    .loading-image div:nth-child(5),
+    .loading-image div:nth-child(6){
+        background-color: #49b1f5;
+        width: 15px;
+        height: 15px;
+        border-radius: 100%;
+        margin: 2px;
+        width: 10px;
+        height: 10px;
+        position: absolute;
+        transform: translateY(-6.25px);
+        top: 25px;
+        left: 100px;
+    }
+    .loading-text{
+        margin-bottom: 20vh;
+        text-align: center;
+        color: #f8c471;
+        font-size: 2rem;
+        box-sizing: border-box;
+        padding: 0 10px;
+        text-shadow: 0 2px 10px rgba(0,0,0,0.2);
+    }
+    @media only screen and (max-width: 500px) {
+        .loading-text{
+            font-size: 1.5rem;
+        }
+    }
+    .fadeout {
+        opacity: 0;
+        filter: alpha(opacity=0);
+    }
+    /* logo出现动画 */
+    @-webkit-keyframes fadeInDown{0%{opacity:0;-webkit-transform:translate3d(0,-100%,0);transform:translate3d(0,-100%,0)}100%{opacity:1;-webkit-transform:none;transform:none}}
+    @keyframes fadeInDown{0%{opacity:0;-webkit-transform:translate3d(0,-100%,0);}}
+</style>
+<script>
+    (function () {
+        const loaded = function(){
+            setTimeout(function(){
+                const loader = document.getElementById("loading-container");
+                loader.className="fadeout" ;//使用渐隐的方法淡出loading page
+                // document.getElementById("body-wrap").style.display="flex";
+                setTimeout(function(){
+                    loader.style.display="none";
+                },2500);
+            },800);//强制显示loading page 0.8s
+        };
+        loaded();
+    })()
+</script>
+
+<body>
+    <!--动态背景-->
+    <div id="bg"><canvas></canvas><canvas></canvas><canvas></canvas></div>
+    <script src="/js/canva_moving_effect.js"></script>
+
+    
+        <div id="loading-container">
+            <p class="loading-text">客官坐会儿，请稍等片刻. . . </p>
+            <div class="loading-image">
+                <div></div>
+                <div></div>
+                <div></div>
+                <div></div>
+                <div></div>
+            </div>
+        </div>
+    
+
+    <header class="navbar-fixed">
+    <nav id="headNav" class="bg-color nav-transparent">
+        <div id="navContainer" class="nav-wrapper container">
+            <div class="brand-logo">
+                <a href="/" class="waves-effect waves-light">
+                    <div>
+                        
+                            <img src="/medias/logo1.png" class="logo-img" alt="LOGO">
+                        
+                        <span class="logo-span">LuYa Guo</span>
+                    </div>
+                </a>
+            </div>
+            
+
+<a href="#" data-target="mobile-nav" class="sidenav-trigger button-collapse"><i class="fas fa-bars"></i></a>
+<ul class="right nav-menu">
+  
+  <li class="hide-on-med-and-down nav-item">
+    
+    <a href="/" class="waves-effect waves-light">
+      
+      <i class="fas fa-home" style="zoom: 0.6;"></i>
+      
+      <span>Index</span>
+    </a>
+    
+  </li>
+  
+  <li class="hide-on-med-and-down nav-item">
+    
+    <a href="/tags" class="waves-effect waves-light">
+      
+      <i class="fas fa-tags" style="zoom: 0.6;"></i>
+      
+      <span>Tags</span>
+    </a>
+    
+  </li>
+  
+  <li class="hide-on-med-and-down nav-item">
+    
+    <a href="/categories" class="waves-effect waves-light">
+      
+      <i class="fas fa-bookmark" style="zoom: 0.6;"></i>
+      
+      <span>Categories</span>
+    </a>
+    
+  </li>
+  
+  <li class="hide-on-med-and-down nav-item">
+    
+    <a href="/archives" class="waves-effect waves-light">
+      
+      <i class="fas fa-archive" style="zoom: 0.6;"></i>
+      
+      <span>Archives</span>
+    </a>
+    
+  </li>
+  
+  <li class="hide-on-med-and-down nav-item">
+    
+    <a href="/about" class="waves-effect waves-light">
+      
+      <i class="fas fa-user-circle" style="zoom: 0.6;"></i>
+      
+      <span>About</span>
+    </a>
+    
+  </li>
+  
+  <li class="hide-on-med-and-down nav-item">
+    
+    <a href="/contact" class="waves-effect waves-light">
+      
+      <i class="fas fa-comments" style="zoom: 0.6;"></i>
+      
+      <span>Contact</span>
+    </a>
+    
+  </li>
+  
+  <li class="hide-on-med-and-down nav-item">
+    
+    <a href="/friends" class="waves-effect waves-light">
+      
+      <i class="fas fa-address-book" style="zoom: 0.6;"></i>
+      
+      <span>Friends</span>
+    </a>
+    
+  </li>
+  
+  <li>
+    <a href="#searchModal" class="modal-trigger waves-effect waves-light">
+      <i id="searchIcon" class="fas fa-search" title="Search" style="zoom: 0.85;"></i>
+    </a>
+  </li>
+
+  <!-- 全屏 -->
+  <li id="fullscreen_li" class="fullscreen">
+    <a href="javascript:void(0);" class="modal-trigger waves-effect waves-light">
+      <i id="fullscreen" class="fas fa-expand-arrows-alt" title="全屏" style="zoom: 0.85;"></i>
+    </a>
+  </li>
+
+  <!-- 主题背景 -->
+  <li>
+    <a href="javascript:;" class="modal-trigger waves-effect waves-light" onclick="switchNightMode()" title="深色/浅色模式" >
+      <i id="sum-moon-icon" class="fas fa-sun" style="zoom: 0.85;"></i>
+    </a>
+  </li>
+</ul>
+
+
+<div id="mobile-nav" class="side-nav sidenav">
+
+    <div class="mobile-head bg-color">
+        
+        <img src="/medias/logo1.png" class="logo-img circle responsive-img">
+        
+        <div class="logo-name">LuYa Guo</div>
+        <div class="logo-desc">
+            
+            Never give up and never give in...
+            
+        </div>
+    </div>
+
+    <ul class="menu-list mobile-menu-list">
+        
+        <li class="m-nav-item">
+	  
+		<a href="/" class="waves-effect waves-light">
+			
+			    <i class="fa-fw fas fa-home"></i>
+			
+			Index
+		</a>
+          
+        </li>
+        
+        <li class="m-nav-item">
+	  
+		<a href="/tags" class="waves-effect waves-light">
+			
+			    <i class="fa-fw fas fa-tags"></i>
+			
+			Tags
+		</a>
+          
+        </li>
+        
+        <li class="m-nav-item">
+	  
+		<a href="/categories" class="waves-effect waves-light">
+			
+			    <i class="fa-fw fas fa-bookmark"></i>
+			
+			Categories
+		</a>
+          
+        </li>
+        
+        <li class="m-nav-item">
+	  
+		<a href="/archives" class="waves-effect waves-light">
+			
+			    <i class="fa-fw fas fa-archive"></i>
+			
+			Archives
+		</a>
+          
+        </li>
+        
+        <li class="m-nav-item">
+	  
+		<a href="/about" class="waves-effect waves-light">
+			
+			    <i class="fa-fw fas fa-user-circle"></i>
+			
+			About
+		</a>
+          
+        </li>
+        
+        <li class="m-nav-item">
+	  
+		<a href="/contact" class="waves-effect waves-light">
+			
+			    <i class="fa-fw fas fa-comments"></i>
+			
+			Contact
+		</a>
+          
+        </li>
+        
+        <li class="m-nav-item">
+	  
+		<a href="/friends" class="waves-effect waves-light">
+			
+			    <i class="fa-fw fas fa-address-book"></i>
+			
+			Friends
+		</a>
+          
+        </li>
+        
+        
+    </ul>
+</div>
+
+
+        </div>
+
+        
+    </nav>
+
+</header>
+
+    
+
+
+
+<div class="bg-cover pd-header post-cover" style="background-image: url('/medias/featureimages/8.jpg')">
+    <div class="container" style="right: 0px;left: 0px;">
+        <div class="row">
+            <div class="col s12 m12 l12">
+                <div class="brand">
+                    <h1 class="description center-align post-title">三十二、JavaScript 解构赋值</h1>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+<main class="post-container content">
+
+    
+    <div class="row">
+    <div id="main-content" class="col s12 m12 l9">
+        <!-- 文章内容详情 -->
+<div id="artDetail">
+    <div class="card">
+        <div class="card-content article-info">
+            <div class="row tag-cate">
+                <div class="col s7">
+                    
+                    <div class="article-tag">
+                        
+                            <a href="/tags/JavaScript/">
+                                <span class="chip bg-color">JavaScript</span>
+                            </a>
+                        
+                    </div>
+                    
+                </div>
+                <div class="col s5 right-align">
+                    
+                    <div class="post-cate">
+                        <i class="fas fa-bookmark fa-fw icon-category"></i>
+                        
+                            <a href="/categories/JavaScript/" class="post-category">
+                                JavaScript
+                            </a>
+                        
+                    </div>
+                    
+                </div>
+            </div>
+
+            <div class="post-info">
+                
+                <div class="post-date info-break-policy">
+                    <i class="far fa-calendar-minus fa-fw"></i>Publish Date:&nbsp;&nbsp;
+                    2024-08-24
+                </div>
+                
+
+                
+
+                
+                <div class="info-break-policy">
+                    <i class="far fa-file-word fa-fw"></i>Word Count:&nbsp;&nbsp;
+                    3.3k
+                </div>
+                
+
+                
+                <div class="info-break-policy">
+                    <i class="far fa-clock fa-fw"></i>Read Times:&nbsp;&nbsp;
+                    13 Min
+                </div>
+                
+
+                
+                    <div id="busuanzi_container_page_pv" class="info-break-policy">
+                        <i class="far fa-eye fa-fw"></i>Read Count:&nbsp;&nbsp;
+                        <span id="busuanzi_value_page_pv"></span>
+                    </div>
+				
+            </div>
+        </div>
+        <hr class="clearfix">
+
+        
+        <!-- 是否加载使用自带的 prismjs. -->
+        <link rel="stylesheet" href="/libs/prism/prism.min.css">
+        
+
+        
+        <!-- 代码块折行 -->
+        <style type="text/css">
+            code[class*="language-"], pre[class*="language-"] { white-space: pre-wrap !important; }
+        </style>
+        
+
+        <div class="card-content article-card-content">
+            <div id="articleContent">
+                <h1 id="三十二、JavaScript-解构赋值"><a href="#三十二、JavaScript-解构赋值" class="headerlink" title="三十二、JavaScript 解构赋值"></a>三十二、JavaScript 解构赋值</h1><h2 id="1、需求分析"><a href="#1、需求分析" class="headerlink" title="1、需求分析"></a>1、需求分析</h2><p>JavaScript 中最常用的两种数据结构是 <code>Object</code> 和 <code>Array</code>。</p>
+<ul>
+<li>对象是一种根据键存储数据的实体。</li>
+<li>数组是一种直接存储数据的有序列表。</li>
+</ul>
+<p><strong>但是，当我们把它们传递给函数时，函数可能不需要整个对象&#x2F;数组，而只需要其中一部分。</strong></p>
+<p><strong>解构赋值</strong> 是一种特殊的语法，它使我们可以将数组或对象“拆包”至一系列变量中。有时这样做更方便。</p>
+<h2 id="2、数组解构"><a href="#2、数组解构" class="headerlink" title="2、数组解构"></a>2、数组解构</h2><h3 id="使用案例"><a href="#使用案例" class="headerlink" title="使用案例"></a>使用案例</h3><h4 id="Case"><a href="#Case" class="headerlink" title="Case"></a>Case</h4><pre class="line-numbers language-javascript" data-language="javascript"><code class="language-javascript"><span class="token comment">// 我们有一个存放了名字和姓氏的数组</span>
+<span class="token keyword">let</span> arr <span class="token operator">=</span> <span class="token punctuation">[</span><span class="token string">"John"</span><span class="token punctuation">,</span> <span class="token string">"Smith"</span><span class="token punctuation">]</span>
+
+<span class="token comment">// 解构赋值</span>
+<span class="token comment">// 设置 firstName = arr[0]</span>
+<span class="token comment">// 以及 surname = arr[1]</span>
+<span class="token keyword">let</span> <span class="token punctuation">[</span>firstName<span class="token punctuation">,</span> surname<span class="token punctuation">]</span> <span class="token operator">=</span> arr<span class="token punctuation">;</span>
+
+<span class="token function">alert</span><span class="token punctuation">(</span>firstName<span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// John</span>
+<span class="token function">alert</span><span class="token punctuation">(</span>surname<span class="token punctuation">)</span><span class="token punctuation">;</span>  <span class="token comment">// Smith</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<ul>
+<li>我们可以使用这些变量而非原来的数组项；</li>
+</ul>
+<h4 id="Case-split-函数"><a href="#Case-split-函数" class="headerlink" title="Case-split()函数"></a>Case-split()函数</h4><p>当与 <code>split</code> 函数（或其他返回值为数组的函数）结合使用时，看起来更优雅：</p>
+<pre class="line-numbers language-javascript" data-language="javascript"><code class="language-javascript"><span class="token keyword">let</span> <span class="token punctuation">[</span>firstName<span class="token punctuation">,</span> surname<span class="token punctuation">]</span> <span class="token operator">=</span> <span class="token string">"John Smith"</span><span class="token punctuation">.</span><span class="token function">split</span><span class="token punctuation">(</span><span class="token string">' '</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+<span class="token function">alert</span><span class="token punctuation">(</span>firstName<span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// John</span>
+<span class="token function">alert</span><span class="token punctuation">(</span>surname<span class="token punctuation">)</span><span class="token punctuation">;</span>  <span class="token comment">// Smith</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span></span></code></pre>
+
+<h3 id="解构-并不意味着-破坏"><a href="#解构-并不意味着-破坏" class="headerlink" title="解构 并不意味着 破坏"></a>解构 并不意味着 破坏</h3><p><strong>这种语法被叫做“解构赋值”，是因为它“拆开”了数组或对象，将其中的各元素复制给一些变量。原来的数组或对象自身没有被修改。</strong></p>
+<p>换句话说，解构赋值只是写起来简洁一点。以下两种写法是等价的：</p>
+<pre class="line-numbers language-javascript" data-language="javascript"><code class="language-javascript"><span class="token comment">// 方式一</span>
+<span class="token keyword">let</span> <span class="token punctuation">[</span>firstName<span class="token punctuation">,</span> surname<span class="token punctuation">]</span> <span class="token operator">=</span> arr<span class="token punctuation">;</span>
+<span class="token comment">// 方式二</span>
+<span class="token keyword">let</span> firstName <span class="token operator">=</span> arr<span class="token punctuation">[</span><span class="token number">0</span><span class="token punctuation">]</span><span class="token punctuation">;</span>
+<span class="token keyword">let</span> surname <span class="token operator">=</span> arr<span class="token punctuation">[</span><span class="token number">1</span><span class="token punctuation">]</span><span class="token punctuation">;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<h3 id="使用逗号忽略元素"><a href="#使用逗号忽略元素" class="headerlink" title="使用逗号忽略元素"></a>使用逗号忽略元素</h3><p><strong>可以通过添加额外的逗号来丢弃数组中不想要的元素</strong>：</p>
+<pre class="line-numbers language-javascript" data-language="javascript"><code class="language-javascript"><span class="token comment">// 不需要第二个元素</span>
+<span class="token keyword">let</span> <span class="token punctuation">[</span>firstName<span class="token punctuation">,</span> <span class="token punctuation">,</span> title<span class="token punctuation">]</span> <span class="token operator">=</span> <span class="token punctuation">[</span><span class="token string">"Julius"</span><span class="token punctuation">,</span> <span class="token string">"Caesar"</span><span class="token punctuation">,</span> <span class="token string">"Consul"</span><span class="token punctuation">,</span> <span class="token string">"of the Roman Republic"</span><span class="token punctuation">]</span><span class="token punctuation">;</span>
+
+<span class="token function">alert</span><span class="token punctuation">(</span>title<span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// Consul</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span></span></code></pre>
+
+<ul>
+<li>数组的第二个元素被跳过了，第三个元素被赋值给了 <code>title</code> 变量。</li>
+<li>数组中剩下的元素也都被跳过了，因为在这没有对应给它们的变量。</li>
+</ul>
+<h3 id="等号右侧可以是任何可迭代对象"><a href="#等号右侧可以是任何可迭代对象" class="headerlink" title="等号右侧可以是任何可迭代对象"></a>等号右侧可以是任何可迭代对象</h3><p>实际上，我们可以将其与任何可迭代对象一起使用，而不仅限于数组：</p>
+<pre class="line-numbers language-javascript" data-language="javascript"><code class="language-javascript"><span class="token keyword">let</span> <span class="token punctuation">[</span>a<span class="token punctuation">,</span> b<span class="token punctuation">,</span> c<span class="token punctuation">]</span> <span class="token operator">=</span> <span class="token string">"abc"</span><span class="token punctuation">;</span> <span class="token comment">// ["a", "b", "c"]</span>
+<span class="token keyword">let</span> <span class="token punctuation">[</span>one<span class="token punctuation">,</span> two<span class="token punctuation">,</span> three<span class="token punctuation">]</span> <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">Set</span><span class="token punctuation">(</span><span class="token punctuation">[</span><span class="token number">1</span><span class="token punctuation">,</span> <span class="token number">2</span><span class="token punctuation">,</span> <span class="token number">3</span><span class="token punctuation">]</span><span class="token punctuation">)</span><span class="token punctuation">;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre>
+
+<ul>
+<li>这种情况下解构赋值是通过迭代右侧的值来完成工作的。</li>
+<li><strong>这是一种用于对在 <code>=</code> 右侧的值上调用 <code>for..of</code> 并进行赋值的操作的语法糖。</strong></li>
+</ul>
+<h3 id="赋值给等号左侧的任何内容"><a href="#赋值给等号左侧的任何内容" class="headerlink" title="赋值给等号左侧的任何内容"></a>赋值给等号左侧的任何内容</h3><p><strong>我们可以在等号左侧使用任何“可以被赋值的”东西。</strong></p>
+<p>例如，一个对象的属性：</p>
+<pre class="line-numbers language-javascript" data-language="javascript"><code class="language-javascript"><span class="token keyword">let</span> user <span class="token operator">=</span> <span class="token punctuation">&#123;</span><span class="token punctuation">&#125;</span><span class="token punctuation">;</span>
+<span class="token punctuation">[</span>user<span class="token punctuation">.</span>name<span class="token punctuation">,</span> user<span class="token punctuation">.</span>surname<span class="token punctuation">]</span> <span class="token operator">=</span> <span class="token string">"John Smith"</span><span class="token punctuation">.</span><span class="token function">split</span><span class="token punctuation">(</span><span class="token string">' '</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+<span class="token function">alert</span><span class="token punctuation">(</span>user<span class="token punctuation">.</span>name<span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// John</span>
+<span class="token function">alert</span><span class="token punctuation">(</span>user<span class="token punctuation">.</span>surname<span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// Smith</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<h3 id="与-entries-方法进行循环操作-Good"><a href="#与-entries-方法进行循环操作-Good" class="headerlink" title="与 .entries() 方法进行循环操作(Good)"></a>与 .entries() 方法进行循环操作(Good)</h3><p>我们可以将 .entries() 方法与解构语法一同使用，来遍历一个对象的“键—值”对：</p>
+<pre class="line-numbers language-javascript" data-language="javascript"><code class="language-javascript"><span class="token keyword">let</span> user <span class="token operator">=</span> <span class="token punctuation">&#123;</span>
+  <span class="token literal-property property">name</span><span class="token operator">:</span> <span class="token string">"John"</span><span class="token punctuation">,</span>
+  <span class="token literal-property property">age</span><span class="token operator">:</span> <span class="token number">30</span>
+<span class="token punctuation">&#125;</span><span class="token punctuation">;</span>
+
+<span class="token comment">// 使用循环遍历键—值对</span>
+<span class="token keyword">for</span> <span class="token punctuation">(</span><span class="token keyword">let</span> <span class="token punctuation">[</span>key<span class="token punctuation">,</span> value<span class="token punctuation">]</span> <span class="token keyword">of</span> Object<span class="token punctuation">.</span><span class="token function">entries</span><span class="token punctuation">(</span>user<span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+  <span class="token function">alert</span><span class="token punctuation">(</span><span class="token template-string"><span class="token template-punctuation string">`</span><span class="token interpolation"><span class="token interpolation-punctuation punctuation">$&#123;</span>key<span class="token interpolation-punctuation punctuation">&#125;</span></span><span class="token string">:</span><span class="token interpolation"><span class="token interpolation-punctuation punctuation">$&#123;</span>value<span class="token interpolation-punctuation punctuation">&#125;</span></span><span class="token template-punctuation string">`</span></span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// name:John, then age:30</span>
+<span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<p>用于 <code>Map</code> 的类似代码更简单，因为 Map 是可迭代的：</p>
+<pre class="line-numbers language-javascript" data-language="javascript"><code class="language-javascript"><span class="token keyword">let</span> user <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">Map</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+user<span class="token punctuation">.</span><span class="token function">set</span><span class="token punctuation">(</span><span class="token string">"name"</span><span class="token punctuation">,</span> <span class="token string">"John"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+user<span class="token punctuation">.</span><span class="token function">set</span><span class="token punctuation">(</span><span class="token string">"age"</span><span class="token punctuation">,</span> <span class="token string">"30"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+<span class="token comment">// Map 是以 [key, value] 对的形式进行迭代的，非常便于解构</span>
+<span class="token keyword">for</span> <span class="token punctuation">(</span><span class="token keyword">let</span> <span class="token punctuation">[</span>key<span class="token punctuation">,</span> value<span class="token punctuation">]</span> <span class="token keyword">of</span> user<span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+  <span class="token function">alert</span><span class="token punctuation">(</span><span class="token template-string"><span class="token template-punctuation string">`</span><span class="token interpolation"><span class="token interpolation-punctuation punctuation">$&#123;</span>key<span class="token interpolation-punctuation punctuation">&#125;</span></span><span class="token string">:</span><span class="token interpolation"><span class="token interpolation-punctuation punctuation">$&#123;</span>value<span class="token interpolation-punctuation punctuation">&#125;</span></span><span class="token template-punctuation string">`</span></span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// name:John, then age:30</span>
+<span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<h3 id="技巧–交换变量值-Good"><a href="#技巧–交换变量值-Good" class="headerlink" title="技巧–交换变量值(Good)"></a>技巧–交换变量值(Good)</h3><p><strong>1）使用解构赋值来交换两个变量的值是一个著名的技巧</strong>：</p>
+<pre class="line-numbers language-javascript" data-language="javascript"><code class="language-javascript"><span class="token keyword">let</span> guest <span class="token operator">=</span> <span class="token string">"Jane"</span><span class="token punctuation">;</span>
+<span class="token keyword">let</span> admin <span class="token operator">=</span> <span class="token string">"Pete"</span><span class="token punctuation">;</span>
+
+<span class="token comment">// 让我们来交换变量的值：使得 guest = Pete，admin = Jane</span>
+<span class="token punctuation">[</span>guest<span class="token punctuation">,</span> admin<span class="token punctuation">]</span> <span class="token operator">=</span> <span class="token punctuation">[</span>admin<span class="token punctuation">,</span> guest<span class="token punctuation">]</span><span class="token punctuation">;</span>
+
+<span class="token function">alert</span><span class="token punctuation">(</span><span class="token template-string"><span class="token template-punctuation string">`</span><span class="token interpolation"><span class="token interpolation-punctuation punctuation">$&#123;</span>guest<span class="token interpolation-punctuation punctuation">&#125;</span></span><span class="token string"> </span><span class="token interpolation"><span class="token interpolation-punctuation punctuation">$&#123;</span>admin<span class="token interpolation-punctuation punctuation">&#125;</span></span><span class="token template-punctuation string">`</span></span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// Pete Jane（成功交换！）</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<ul>
+<li>这里我们创建了一个由两个变量组成的临时数组，并且立即以颠倒的顺序对其进行了解构赋值。</li>
+</ul>
+<p><strong>2）我们也可以用这种方式交换两个以上的变量。</strong></p>
+<h3 id="其余项-…"><a href="#其余项-…" class="headerlink" title="其余项 …"></a>其余项 …</h3><p><strong>1）通常，如果数组比左边的列表长，那么“其余”的数组项会被省略。</strong></p>
+<pre class="line-numbers language-javascript" data-language="javascript"><code class="language-javascript"><span class="token keyword">let</span> <span class="token punctuation">[</span>name1<span class="token punctuation">,</span> name2<span class="token punctuation">]</span> <span class="token operator">=</span> <span class="token punctuation">[</span><span class="token string">"Julius"</span><span class="token punctuation">,</span> <span class="token string">"Caesar"</span><span class="token punctuation">,</span> <span class="token string">"Consul"</span><span class="token punctuation">,</span> <span class="token string">"of the Roman Republic"</span><span class="token punctuation">]</span><span class="token punctuation">;</span>
+
+<span class="token function">alert</span><span class="token punctuation">(</span>name1<span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// Julius</span>
+<span class="token function">alert</span><span class="token punctuation">(</span>name2<span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// Caesar</span>
+<span class="token comment">// 其余数组项未被分配到任何地方</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<p><strong>2）如果我们还想收集其余的数组项 —— 我们可以使用三个点 <code>&quot;...&quot;</code> 来再加一个参数以获取其余数组项。</strong></p>
+<pre class="line-numbers language-javascript" data-language="javascript"><code class="language-javascript"><span class="token keyword">let</span> <span class="token punctuation">[</span>name1<span class="token punctuation">,</span> name2<span class="token punctuation">,</span> <span class="token operator">...</span>rest<span class="token punctuation">]</span> <span class="token operator">=</span> <span class="token punctuation">[</span><span class="token string">"Julius"</span><span class="token punctuation">,</span> <span class="token string">"Caesar"</span><span class="token punctuation">,</span> <span class="token string">"Consul"</span><span class="token punctuation">,</span> <span class="token string">"of the Roman Republic"</span><span class="token punctuation">]</span><span class="token punctuation">;</span>
+
+<span class="token comment">// rest 是包含从第三项开始的其余数组项的数组</span>
+<span class="token function">alert</span><span class="token punctuation">(</span>rest<span class="token punctuation">[</span><span class="token number">0</span><span class="token punctuation">]</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// Consul</span>
+<span class="token function">alert</span><span class="token punctuation">(</span>rest<span class="token punctuation">[</span><span class="token number">1</span><span class="token punctuation">]</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// of the Roman Republic</span>
+<span class="token function">alert</span><span class="token punctuation">(</span>rest<span class="token punctuation">.</span>length<span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// 2</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<ul>
+<li><code>rest</code> 的值就是数组中剩下的元素组成的数组。</li>
+</ul>
+<h3 id="默认值"><a href="#默认值" class="headerlink" title="默认值"></a>默认值</h3><p><strong>1）如果数组比左边的变量列表短，这里不会出现报错。缺少对应值的变量都会被赋 <code>undefined</code>。</strong></p>
+<pre class="line-numbers language-javascript" data-language="javascript"><code class="language-javascript"><span class="token keyword">let</span> <span class="token punctuation">[</span>firstName<span class="token punctuation">,</span> surname<span class="token punctuation">]</span> <span class="token operator">=</span> <span class="token punctuation">[</span><span class="token punctuation">]</span><span class="token punctuation">;</span>
+
+<span class="token function">alert</span><span class="token punctuation">(</span>firstName<span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// undefined</span>
+<span class="token function">alert</span><span class="token punctuation">(</span>surname<span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// undefined</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span></span></code></pre>
+
+<p><strong>2）如果我们想要一个“默认”值给未赋值的变量，我们可以使用 <code>=</code> 来提供。</strong></p>
+<pre class="line-numbers language-javascript" data-language="javascript"><code class="language-javascript"><span class="token comment">// 默认值</span>
+<span class="token keyword">let</span> <span class="token punctuation">[</span>name <span class="token operator">=</span> <span class="token string">"Guest"</span><span class="token punctuation">,</span> surname <span class="token operator">=</span> <span class="token string">"Anonymous"</span><span class="token punctuation">]</span> <span class="token operator">=</span> <span class="token punctuation">[</span><span class="token string">"Julius"</span><span class="token punctuation">]</span><span class="token punctuation">;</span>
+
+<span class="token function">alert</span><span class="token punctuation">(</span>name<span class="token punctuation">)</span><span class="token punctuation">;</span>    <span class="token comment">// Julius（来自数组的值）</span>
+<span class="token function">alert</span><span class="token punctuation">(</span>surname<span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// Anonymous（默认值被使用了）</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<p><strong>3）默认值可以是更加复杂的表达式，甚至可以是函数调用。不过，这些表达式或函数只会在这个变量未被赋值的时候才会被计算。</strong></p>
+<pre class="line-numbers language-javascript" data-language="javascript"><code class="language-javascript"><span class="token comment">// 只会提示输入姓氏</span>
+<span class="token keyword">let</span> <span class="token punctuation">[</span>name <span class="token operator">=</span> <span class="token function">prompt</span><span class="token punctuation">(</span><span class="token string">'name?'</span><span class="token punctuation">)</span><span class="token punctuation">,</span> surname <span class="token operator">=</span> <span class="token function">prompt</span><span class="token punctuation">(</span><span class="token string">'surname?'</span><span class="token punctuation">)</span><span class="token punctuation">]</span> <span class="token operator">=</span> <span class="token punctuation">[</span><span class="token string">"Julius"</span><span class="token punctuation">]</span><span class="token punctuation">;</span>
+
+<span class="token function">alert</span><span class="token punctuation">(</span>name<span class="token punctuation">)</span><span class="token punctuation">;</span>    <span class="token comment">// Julius（来自数组）</span>
+<span class="token function">alert</span><span class="token punctuation">(</span>surname<span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// 你输入的值</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<ul>
+<li>请注意：<code>prompt</code> 将仅针对缺失值（<code>surname</code>）运行。</li>
+</ul>
+<h2 id="3、对象解构"><a href="#3、对象解构" class="headerlink" title="3、对象解构"></a>3、对象解构</h2><p>解构赋值同样适用于对象。</p>
+<h3 id="基本语法"><a href="#基本语法" class="headerlink" title="基本语法"></a>基本语法</h3><pre class="line-numbers language-javascript" data-language="javascript"><code class="language-javascript"><span class="token keyword">let</span> <span class="token punctuation">&#123;</span>var1<span class="token punctuation">,</span> var2<span class="token punctuation">&#125;</span> <span class="token operator">=</span> <span class="token punctuation">&#123;</span><span class="token literal-property property">var1</span><span class="token operator">:</span>…<span class="token punctuation">,</span> <span class="token literal-property property">var2</span><span class="token operator">:</span>…<span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+
+<ul>
+<li>在等号右侧是一个已经存在的对象，我们想把它拆分到变量中。</li>
+<li>等号左侧包含了对象相应属性的一个类对象“模式（pattern）”。</li>
+<li>在最简单的情况下，等号左侧的就是 <code>&#123;...&#125;</code> 中的变量名列表。</li>
+</ul>
+<pre class="line-numbers language-javascript" data-language="javascript"><code class="language-javascript"><span class="token keyword">let</span> options <span class="token operator">=</span> <span class="token punctuation">&#123;</span>
+  <span class="token literal-property property">title</span><span class="token operator">:</span> <span class="token string">"Menu"</span><span class="token punctuation">,</span>
+  <span class="token literal-property property">width</span><span class="token operator">:</span> <span class="token number">100</span><span class="token punctuation">,</span>
+  <span class="token literal-property property">height</span><span class="token operator">:</span> <span class="token number">200</span>
+<span class="token punctuation">&#125;</span><span class="token punctuation">;</span>
+
+<span class="token keyword">let</span> <span class="token punctuation">&#123;</span>title<span class="token punctuation">,</span> width<span class="token punctuation">,</span> height<span class="token punctuation">&#125;</span> <span class="token operator">=</span> options<span class="token punctuation">;</span>
+
+<span class="token function">alert</span><span class="token punctuation">(</span>title<span class="token punctuation">)</span><span class="token punctuation">;</span>  <span class="token comment">// Menu</span>
+<span class="token function">alert</span><span class="token punctuation">(</span>width<span class="token punctuation">)</span><span class="token punctuation">;</span>  <span class="token comment">// 100</span>
+<span class="token function">alert</span><span class="token punctuation">(</span>height<span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// 200</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<ul>
+<li>属性 <code>options.title</code>、<code>options.width</code> 和 <code>options.height</code> 值被赋给了对应的变量。</li>
+</ul>
+<h3 id="要点"><a href="#要点" class="headerlink" title="要点"></a>要点</h3><p><strong>1）变量的顺序并不重要。</strong></p>
+<p>下面这个代码也是等价的：</p>
+<pre class="line-numbers language-javascript" data-language="javascript"><code class="language-javascript"><span class="token comment">// 改变 let &#123;...&#125; 中元素的顺序</span>
+<span class="token keyword">let</span> <span class="token punctuation">&#123;</span>height<span class="token punctuation">,</span> width<span class="token punctuation">,</span> title<span class="token punctuation">&#125;</span> <span class="token operator">=</span> <span class="token punctuation">&#123;</span> <span class="token literal-property property">title</span><span class="token operator">:</span> <span class="token string">"Menu"</span><span class="token punctuation">,</span> <span class="token literal-property property">height</span><span class="token operator">:</span> <span class="token number">200</span><span class="token punctuation">,</span> <span class="token literal-property property">width</span><span class="token operator">:</span> <span class="token number">100</span> <span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre>
+
+<p><strong>2）等号左侧的模式（pattern）可以指定属性和变量之间的映射关系。如果我们想把一个属性赋值给另一个名字的变量，可以使用冒号来设置变量名称。</strong></p>
+<pre class="line-numbers language-javascript" data-language="javascript"><code class="language-javascript"><span class="token keyword">let</span> options <span class="token operator">=</span> <span class="token punctuation">&#123;</span>
+  <span class="token literal-property property">title</span><span class="token operator">:</span> <span class="token string">"Menu"</span><span class="token punctuation">,</span>
+  <span class="token literal-property property">width</span><span class="token operator">:</span> <span class="token number">100</span><span class="token punctuation">,</span>
+  <span class="token literal-property property">height</span><span class="token operator">:</span> <span class="token number">200</span>
+<span class="token punctuation">&#125;</span><span class="token punctuation">;</span>
+
+<span class="token comment">// &#123; sourceProperty: targetVariable &#125;</span>
+<span class="token keyword">let</span> <span class="token punctuation">&#123;</span><span class="token literal-property property">width</span><span class="token operator">:</span> w<span class="token punctuation">,</span> <span class="token literal-property property">height</span><span class="token operator">:</span> h<span class="token punctuation">,</span> title<span class="token punctuation">&#125;</span> <span class="token operator">=</span> options<span class="token punctuation">;</span>
+
+<span class="token comment">// width -> w</span>
+<span class="token comment">// height -> h</span>
+<span class="token comment">// title -> title</span>
+
+<span class="token function">alert</span><span class="token punctuation">(</span>title<span class="token punctuation">)</span><span class="token punctuation">;</span>  <span class="token comment">// Menu</span>
+<span class="token function">alert</span><span class="token punctuation">(</span>w<span class="token punctuation">)</span><span class="token punctuation">;</span>      <span class="token comment">// 100</span>
+<span class="token function">alert</span><span class="token punctuation">(</span>h<span class="token punctuation">)</span><span class="token punctuation">;</span>      <span class="token comment">// 200</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<ul>
+<li>属性 <code>width</code> 被赋值给了 <code>w</code></li>
+<li>属性 <code>height</code> 被赋值给了 <code>h</code></li>
+<li>属性 <code>title</code> 被赋值给了同名变量。</li>
+</ul>
+<blockquote>
+<p><strong>冒号的语法是：从对象中什么属性的值：赋值给哪个变量。</strong></p>
+</blockquote>
+<p><strong>3）对于可能缺失的属性，我们可以使用 <code>&quot;=&quot;</code> 设置默认值。</strong>如下所示：</p>
+<pre class="line-numbers language-javascript" data-language="javascript"><code class="language-javascript"><span class="token keyword">let</span> options <span class="token operator">=</span> <span class="token punctuation">&#123;</span>
+  <span class="token literal-property property">title</span><span class="token operator">:</span> <span class="token string">"Menu"</span>
+<span class="token punctuation">&#125;</span><span class="token punctuation">;</span>
+
+<span class="token keyword">let</span> <span class="token punctuation">&#123;</span>width <span class="token operator">=</span> <span class="token number">100</span><span class="token punctuation">,</span> height <span class="token operator">=</span> <span class="token number">200</span><span class="token punctuation">,</span> title<span class="token punctuation">&#125;</span> <span class="token operator">=</span> options<span class="token punctuation">;</span>
+
+<span class="token function">alert</span><span class="token punctuation">(</span>title<span class="token punctuation">)</span><span class="token punctuation">;</span>  <span class="token comment">// Menu</span>
+<span class="token function">alert</span><span class="token punctuation">(</span>width<span class="token punctuation">)</span><span class="token punctuation">;</span>  <span class="token comment">// 100</span>
+<span class="token function">alert</span><span class="token punctuation">(</span>height<span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// 200</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<p>4）就像数组或函数参数一样，默认值可以是任意表达式甚至可以是函数调用。它们只会在未提供对应的值时才会被计算&#x2F;调用。</p>
+<p>5）我们还可以将冒号和等号结合起来。</p>
+<pre class="line-numbers language-javascript" data-language="javascript"><code class="language-javascript"><span class="token keyword">let</span> options <span class="token operator">=</span> <span class="token punctuation">&#123;</span>
+  <span class="token literal-property property">title</span><span class="token operator">:</span> <span class="token string">"Menu"</span>
+<span class="token punctuation">&#125;</span><span class="token punctuation">;</span>
+
+<span class="token keyword">let</span> <span class="token punctuation">&#123;</span><span class="token literal-property property">width</span><span class="token operator">:</span> w <span class="token operator">=</span> <span class="token number">100</span><span class="token punctuation">,</span> <span class="token literal-property property">height</span><span class="token operator">:</span> h <span class="token operator">=</span> <span class="token number">200</span><span class="token punctuation">,</span> title<span class="token punctuation">&#125;</span> <span class="token operator">=</span> options<span class="token punctuation">;</span>
+
+<span class="token function">alert</span><span class="token punctuation">(</span>title<span class="token punctuation">)</span><span class="token punctuation">;</span>  <span class="token comment">// Menu</span>
+<span class="token function">alert</span><span class="token punctuation">(</span>w<span class="token punctuation">)</span><span class="token punctuation">;</span>      <span class="token comment">// 100</span>
+<span class="token function">alert</span><span class="token punctuation">(</span>h<span class="token punctuation">)</span><span class="token punctuation">;</span>      <span class="token comment">// 200</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<p><strong>6）如果我们有一个具有很多属性的复杂对象，那么我们可以只提取所需的内容。</strong></p>
+<pre class="line-numbers language-javascript" data-language="javascript"><code class="language-javascript"><span class="token keyword">let</span> options <span class="token operator">=</span> <span class="token punctuation">&#123;</span>
+  <span class="token literal-property property">title</span><span class="token operator">:</span> <span class="token string">"Menu"</span><span class="token punctuation">,</span>
+  <span class="token literal-property property">width</span><span class="token operator">:</span> <span class="token number">100</span><span class="token punctuation">,</span>
+  <span class="token literal-property property">height</span><span class="token operator">:</span> <span class="token number">200</span>
+<span class="token punctuation">&#125;</span><span class="token punctuation">;</span>
+
+<span class="token comment">// 仅提取 title 作为变量</span>
+<span class="token keyword">let</span> <span class="token punctuation">&#123;</span> title <span class="token punctuation">&#125;</span> <span class="token operator">=</span> options<span class="token punctuation">;</span>
+
+<span class="token function">alert</span><span class="token punctuation">(</span>title<span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// Menu</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<h3 id="剩余模式（pattern）…"><a href="#剩余模式（pattern）…" class="headerlink" title="剩余模式（pattern）…"></a>剩余模式（pattern）…</h3><p>如果对象拥有的属性数量比我们提供的变量数量还多，我们可以使用剩余模式（pattern）只取其中的某一些属性，然后把“剩余的”赋值到其他地方。</p>
+<pre class="line-numbers language-javascript" data-language="javascript"><code class="language-javascript"><span class="token keyword">let</span> options <span class="token operator">=</span> <span class="token punctuation">&#123;</span>
+  <span class="token literal-property property">title</span><span class="token operator">:</span> <span class="token string">"Menu"</span><span class="token punctuation">,</span>
+  <span class="token literal-property property">height</span><span class="token operator">:</span> <span class="token number">200</span><span class="token punctuation">,</span>
+  <span class="token literal-property property">width</span><span class="token operator">:</span> <span class="token number">100</span>
+<span class="token punctuation">&#125;</span><span class="token punctuation">;</span>
+
+<span class="token comment">// title = 名为 title 的属性</span>
+<span class="token comment">// rest = 存有剩余属性的对象</span>
+<span class="token keyword">let</span> <span class="token punctuation">&#123;</span>title<span class="token punctuation">,</span> <span class="token operator">...</span>rest<span class="token punctuation">&#125;</span> <span class="token operator">=</span> options<span class="token punctuation">;</span>
+
+<span class="token comment">// 现在 title="Menu", rest=&#123;height: 200, width: 100&#125;</span>
+<span class="token function">alert</span><span class="token punctuation">(</span>rest<span class="token punctuation">.</span>height<span class="token punctuation">)</span><span class="token punctuation">;</span>  <span class="token comment">// 200</span>
+<span class="token function">alert</span><span class="token punctuation">(</span>rest<span class="token punctuation">.</span>width<span class="token punctuation">)</span><span class="token punctuation">;</span>   <span class="token comment">// 100</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<h3 id="不使用-let-时的陷阱"><a href="#不使用-let-时的陷阱" class="headerlink" title="不使用 let 时的陷阱"></a>不使用 <code>let</code> 时的陷阱</h3><p>在上面的示例中，变量都是在赋值中通过正确方式声明的：<code>let &#123;…&#125; = &#123;…&#125;</code>。当然，我们也可以使用已有的变量，而不用 <code>let</code>，但这里有一个陷阱。</p>
+<h4 id="问题"><a href="#问题" class="headerlink" title="问题"></a>问题</h4><p>以下代码无法正常运行：</p>
+<pre class="line-numbers language-javascript" data-language="javascript"><code class="language-javascript"><span class="token keyword">let</span> title<span class="token punctuation">,</span> width<span class="token punctuation">,</span> height<span class="token punctuation">;</span>
+
+<span class="token comment">// 这一行发生了错误</span>
+<span class="token punctuation">&#123;</span>title<span class="token punctuation">,</span> width<span class="token punctuation">,</span> height<span class="token punctuation">&#125;</span> <span class="token operator">=</span> <span class="token punctuation">&#123;</span><span class="token literal-property property">title</span><span class="token operator">:</span> <span class="token string">"Menu"</span><span class="token punctuation">,</span> <span class="token literal-property property">width</span><span class="token operator">:</span> <span class="token number">200</span><span class="token punctuation">,</span> <span class="token literal-property property">height</span><span class="token operator">:</span> <span class="token number">100</span><span class="token punctuation">&#125;</span><span class="token punctuation">;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span></span></code></pre>
+
+<h4 id="原因"><a href="#原因" class="headerlink" title="原因"></a>原因</h4><p>问题在于 JavaScript 把主代码流（即不在其他表达式中）的 <code>&#123;...&#125;</code> 当做一个代码块。这样的代码块可以用于对语句分组，如下所示：</p>
+<pre class="line-numbers language-javascript" data-language="javascript"><code class="language-javascript"><span class="token punctuation">&#123;</span>
+  <span class="token comment">// 一个代码块</span>
+  <span class="token keyword">let</span> message <span class="token operator">=</span> <span class="token string">"Hello"</span><span class="token punctuation">;</span>
+  <span class="token comment">// ...</span>
+  <span class="token function">alert</span><span class="token punctuation">(</span> message <span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<h4 id="解决方法"><a href="#解决方法" class="headerlink" title="解决方法"></a>解决方法</h4><p>为了告诉 JavaScript 这不是一个代码块，我们可以把整个赋值表达式用括号 <code>(...)</code> 包起来：</p>
+<pre class="line-numbers language-javascript" data-language="javascript"><code class="language-javascript"><span class="token keyword">let</span> title<span class="token punctuation">,</span> width<span class="token punctuation">,</span> height<span class="token punctuation">;</span>
+
+<span class="token comment">// 现在就可以了</span>
+<span class="token punctuation">(</span><span class="token punctuation">&#123;</span>title<span class="token punctuation">,</span> width<span class="token punctuation">,</span> height<span class="token punctuation">&#125;</span> <span class="token operator">=</span> <span class="token punctuation">&#123;</span><span class="token literal-property property">title</span><span class="token operator">:</span> <span class="token string">"Menu"</span><span class="token punctuation">,</span> <span class="token literal-property property">width</span><span class="token operator">:</span> <span class="token number">200</span><span class="token punctuation">,</span> <span class="token literal-property property">height</span><span class="token operator">:</span> <span class="token number">100</span><span class="token punctuation">&#125;</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+<span class="token function">alert</span><span class="token punctuation">(</span>title<span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// Menu</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<h2 id="4、嵌套解构-Good"><a href="#4、嵌套解构-Good" class="headerlink" title="4、嵌套解构(Good)"></a>4、嵌套解构(Good)</h2><p><strong>如果一个对象或数组嵌套了其他的对象和数组，我们可以在等号左侧使用更复杂的模式（pattern）来提取更深层的数据。</strong></p>
+<p>在下面的代码中，<code>options</code> 的属性 <code>size</code> 是另一个对象，属性 <code>items</code> 是另一个数组。赋值语句中等号左侧的模式（pattern）具有相同的结构以从中提取值：</p>
+<pre class="line-numbers language-javascript" data-language="javascript"><code class="language-javascript"><span class="token keyword">let</span> options <span class="token operator">=</span> <span class="token punctuation">&#123;</span>
+  <span class="token literal-property property">size</span><span class="token operator">:</span> <span class="token punctuation">&#123;</span>
+    <span class="token literal-property property">width</span><span class="token operator">:</span> <span class="token number">100</span><span class="token punctuation">,</span>
+    <span class="token literal-property property">height</span><span class="token operator">:</span> <span class="token number">200</span>
+  <span class="token punctuation">&#125;</span><span class="token punctuation">,</span>
+  <span class="token literal-property property">items</span><span class="token operator">:</span> <span class="token punctuation">[</span><span class="token string">"Cake"</span><span class="token punctuation">,</span> <span class="token string">"Donut"</span><span class="token punctuation">]</span><span class="token punctuation">,</span>
+  <span class="token literal-property property">extra</span><span class="token operator">:</span> <span class="token boolean">true</span>
+<span class="token punctuation">&#125;</span><span class="token punctuation">;</span>
+
+<span class="token comment">// 为了清晰起见，解构赋值语句被写成多行的形式</span>
+<span class="token keyword">let</span> <span class="token punctuation">&#123;</span>
+  <span class="token literal-property property">size</span><span class="token operator">:</span> <span class="token punctuation">&#123;</span> <span class="token comment">// 把 size 赋值到这里</span>
+    width<span class="token punctuation">,</span>
+    height
+  <span class="token punctuation">&#125;</span><span class="token punctuation">,</span>
+  <span class="token literal-property property">items</span><span class="token operator">:</span> <span class="token punctuation">[</span>item1<span class="token punctuation">,</span> item2<span class="token punctuation">]</span><span class="token punctuation">,</span> <span class="token comment">// 把 items 赋值到这里</span>
+  title <span class="token operator">=</span> <span class="token string">"Menu"</span> <span class="token comment">// 在对象中不存在（使用默认值）</span>
+<span class="token punctuation">&#125;</span> <span class="token operator">=</span> options<span class="token punctuation">;</span>
+
+<span class="token function">alert</span><span class="token punctuation">(</span>title<span class="token punctuation">)</span><span class="token punctuation">;</span>  <span class="token comment">// Menu</span>
+<span class="token function">alert</span><span class="token punctuation">(</span>width<span class="token punctuation">)</span><span class="token punctuation">;</span>  <span class="token comment">// 100</span>
+<span class="token function">alert</span><span class="token punctuation">(</span>height<span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// 200</span>
+<span class="token function">alert</span><span class="token punctuation">(</span>item1<span class="token punctuation">)</span><span class="token punctuation">;</span>  <span class="token comment">// Cake</span>
+<span class="token function">alert</span><span class="token punctuation">(</span>item2<span class="token punctuation">)</span><span class="token punctuation">;</span>  <span class="token comment">// Donut</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<ul>
+<li>对象 <code>options</code> 的所有属性，除了 <code>extra</code> 属性在等号左侧不存在，都被赋值给了对应的变量：</li>
+</ul>
+<p><img src="/medias/loading.gif" data-original="https://raw.githubusercontent.com/luyaguo/pictures-guo/main/javascript-base/202408241432392.svg" alt="destructuring-complex"></p>
+<ul>
+<li>最终，我们得到了 <code>width</code>、<code>height</code>、<code>item1</code>、<code>item2</code> 和具有默认值的 <code>title</code> 变量。</li>
+<li>注意，<code>size</code> 和 <code>items</code> 没有对应的变量，因为我们取的是它们的内容。</li>
+</ul>
+<h2 id="5、智能函数参数"><a href="#5、智能函数参数" class="headerlink" title="5、智能函数参数"></a>5、智能函数参数</h2><h3 id="问题一"><a href="#问题一" class="headerlink" title="问题一"></a>问题一</h3><p>有时，一个函数有很多参数，其中大部分的参数都是可选的。对用户界面来说更是如此。想象一个创建菜单的函数。它可能具有宽度参数，高度参数，标题参数和项目列表等。</p>
+<p>下面是实现这种函数的一个很不好的写法：</p>
+<pre class="line-numbers language-javascript" data-language="javascript"><code class="language-javascript"><span class="token keyword">function</span> <span class="token function">showMenu</span><span class="token punctuation">(</span>title <span class="token operator">=</span> <span class="token string">"Untitled"</span><span class="token punctuation">,</span> width <span class="token operator">=</span> <span class="token number">200</span><span class="token punctuation">,</span> height <span class="token operator">=</span> <span class="token number">100</span><span class="token punctuation">,</span> items <span class="token operator">=</span> <span class="token punctuation">[</span><span class="token punctuation">]</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+  <span class="token comment">// ...</span>
+<span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span></span></code></pre>
+
+<p>在实际开发中，记忆如此多的参数的位置是一个很大的负担。</p>
+<p>另一个问题就是，在大部分的参数只需采用默认值的情况下，调用这个函数时会需要写大量的 undefined。</p>
+<p>像这样：</p>
+<pre class="line-numbers language-javascript" data-language="javascript"><code class="language-javascript"><span class="token comment">// 在采用默认值就可以的位置设置 undefined</span>
+<span class="token function">showMenu</span><span class="token punctuation">(</span><span class="token string">"My Menu"</span><span class="token punctuation">,</span> <span class="token keyword">undefined</span><span class="token punctuation">,</span> <span class="token keyword">undefined</span><span class="token punctuation">,</span> <span class="token punctuation">[</span><span class="token string">"Item1"</span><span class="token punctuation">,</span> <span class="token string">"Item2"</span><span class="token punctuation">]</span><span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre>
+
+<ul>
+<li>这太难看了。而且，当我们处理更多参数的时候可读性会变得很差。</li>
+</ul>
+<h3 id="解决方法–解构赋值"><a href="#解决方法–解构赋值" class="headerlink" title="解决方法–解构赋值"></a>解决方法–解构赋值</h3><p>我们可以用一个对象来传递所有参数，而函数负责把这个对象解构成各个参数：</p>
+<pre class="line-numbers language-javascript" data-language="javascript"><code class="language-javascript"><span class="token comment">// 我们传递一个对象给函数</span>
+<span class="token keyword">let</span> options <span class="token operator">=</span> <span class="token punctuation">&#123;</span>
+  <span class="token literal-property property">title</span><span class="token operator">:</span> <span class="token string">"My menu"</span><span class="token punctuation">,</span>
+  <span class="token literal-property property">items</span><span class="token operator">:</span> <span class="token punctuation">[</span><span class="token string">"Item1"</span><span class="token punctuation">,</span> <span class="token string">"Item2"</span><span class="token punctuation">]</span>
+<span class="token punctuation">&#125;</span><span class="token punctuation">;</span>
+
+<span class="token comment">// 然后函数马上把对象解构成变量</span>
+<span class="token keyword">function</span> <span class="token function">showMenu</span><span class="token punctuation">(</span><span class="token punctuation">&#123;</span>title <span class="token operator">=</span> <span class="token string">"Untitled"</span><span class="token punctuation">,</span> width <span class="token operator">=</span> <span class="token number">200</span><span class="token punctuation">,</span> height <span class="token operator">=</span> <span class="token number">100</span><span class="token punctuation">,</span> items <span class="token operator">=</span> <span class="token punctuation">[</span><span class="token punctuation">]</span><span class="token punctuation">&#125;</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+  <span class="token comment">// title, items – 提取于 options，</span>
+  <span class="token comment">// width, height – 使用默认值</span>
+  <span class="token function">alert</span><span class="token punctuation">(</span> <span class="token template-string"><span class="token template-punctuation string">`</span><span class="token interpolation"><span class="token interpolation-punctuation punctuation">$&#123;</span>title<span class="token interpolation-punctuation punctuation">&#125;</span></span><span class="token string"> </span><span class="token interpolation"><span class="token interpolation-punctuation punctuation">$&#123;</span>width<span class="token interpolation-punctuation punctuation">&#125;</span></span><span class="token string"> </span><span class="token interpolation"><span class="token interpolation-punctuation punctuation">$&#123;</span>height<span class="token interpolation-punctuation punctuation">&#125;</span></span><span class="token template-punctuation string">`</span></span> <span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// My Menu 200 100</span>
+  <span class="token function">alert</span><span class="token punctuation">(</span> items <span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// Item1, Item2</span>
+<span class="token punctuation">&#125;</span>
+
+<span class="token function">showMenu</span><span class="token punctuation">(</span>options<span class="token punctuation">)</span><span class="token punctuation">;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<p>我们也可以使用带有嵌套对象和冒号映射的更加复杂的解构：</p>
+<pre class="line-numbers language-javascript" data-language="javascript"><code class="language-javascript"><span class="token keyword">let</span> options <span class="token operator">=</span> <span class="token punctuation">&#123;</span>
+  <span class="token literal-property property">title</span><span class="token operator">:</span> <span class="token string">"My menu"</span><span class="token punctuation">,</span>
+  <span class="token literal-property property">items</span><span class="token operator">:</span> <span class="token punctuation">[</span><span class="token string">"Item1"</span><span class="token punctuation">,</span> <span class="token string">"Item2"</span><span class="token punctuation">]</span>
+<span class="token punctuation">&#125;</span><span class="token punctuation">;</span>
+
+<span class="token keyword">function</span> <span class="token function">showMenu</span><span class="token punctuation">(</span><span class="token punctuation">&#123;</span>
+  title <span class="token operator">=</span> <span class="token string">"Untitled"</span><span class="token punctuation">,</span>
+  <span class="token literal-property property">width</span><span class="token operator">:</span> w <span class="token operator">=</span> <span class="token number">100</span><span class="token punctuation">,</span>  <span class="token comment">// width goes to w</span>
+  <span class="token literal-property property">height</span><span class="token operator">:</span> h <span class="token operator">=</span> <span class="token number">200</span><span class="token punctuation">,</span> <span class="token comment">// height goes to h</span>
+  <span class="token literal-property property">items</span><span class="token operator">:</span> <span class="token punctuation">[</span>item1<span class="token punctuation">,</span> item2<span class="token punctuation">]</span> <span class="token comment">// items first element goes to item1, second to item2</span>
+<span class="token punctuation">&#125;</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+  <span class="token function">alert</span><span class="token punctuation">(</span><span class="token template-string"><span class="token template-punctuation string">`</span><span class="token interpolation"><span class="token interpolation-punctuation punctuation">$&#123;</span>title<span class="token interpolation-punctuation punctuation">&#125;</span></span><span class="token string"> </span><span class="token interpolation"><span class="token interpolation-punctuation punctuation">$&#123;</span>w<span class="token interpolation-punctuation punctuation">&#125;</span></span><span class="token string"> </span><span class="token interpolation"><span class="token interpolation-punctuation punctuation">$&#123;</span>h<span class="token interpolation-punctuation punctuation">&#125;</span></span><span class="token template-punctuation string">`</span></span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// My Menu 100 200</span>
+  <span class="token function">alert</span><span class="token punctuation">(</span>item1<span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// Item1</span>
+  <span class="token function">alert</span><span class="token punctuation">(</span>item2<span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// Item2</span>
+<span class="token punctuation">&#125;</span>
+
+<span class="token function">showMenu</span><span class="token punctuation">(</span>options<span class="token punctuation">)</span><span class="token punctuation">;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<h3 id="语法"><a href="#语法" class="headerlink" title="语法"></a>语法</h3><p>完整语法和解构赋值是一样的：</p>
+<pre class="line-numbers language-javascript" data-language="javascript"><code class="language-javascript"><span class="token keyword">function</span><span class="token punctuation">(</span><span class="token parameter"><span class="token punctuation">&#123;</span>
+  <span class="token literal-property property">incomingProperty</span><span class="token operator">:</span> varName <span class="token operator">=</span> defaultValue
+  <span class="token operator">...</span>
+<span class="token punctuation">&#125;</span></span><span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span></span></code></pre>
+
+<ul>
+<li>对于参数对象，属性 <code>incomingProperty</code> 对应的变量是 <code>varName</code>，默认值是 <code>defaultValue</code>。</li>
+</ul>
+<h3 id="问题-1"><a href="#问题-1" class="headerlink" title="问题"></a>问题</h3><p>如果我们想让所有的参数都使用默认值，那我们应该传递一个空对象：</p>
+<pre class="line-numbers language-javascript" data-language="javascript"><code class="language-javascript"><span class="token function">showMenu</span><span class="token punctuation">(</span><span class="token punctuation">&#123;</span><span class="token punctuation">&#125;</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// 不错，所有值都取默认值</span>
+
+<span class="token function">showMenu</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// 这样会导致错误</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span></span></code></pre>
+
+<h3 id="解决方法-1"><a href="#解决方法-1" class="headerlink" title="解决方法"></a>解决方法</h3><p>我们可以通过指定空对象 <code>&#123;&#125;</code> 为整个参数对象的默认值来解决这个问题：</p>
+<pre class="line-numbers language-javascript" data-language="javascript"><code class="language-javascript"><span class="token keyword">function</span> <span class="token function">showMenu</span><span class="token punctuation">(</span><span class="token punctuation">&#123;</span> title <span class="token operator">=</span> <span class="token string">"Menu"</span><span class="token punctuation">,</span> width <span class="token operator">=</span> <span class="token number">100</span><span class="token punctuation">,</span> height <span class="token operator">=</span> <span class="token number">200</span> <span class="token punctuation">&#125;</span> <span class="token operator">=</span> <span class="token punctuation">&#123;</span><span class="token punctuation">&#125;</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+  <span class="token function">alert</span><span class="token punctuation">(</span><span class="token template-string"><span class="token template-punctuation string">`</span><span class="token interpolation"><span class="token interpolation-punctuation punctuation">$&#123;</span>title<span class="token interpolation-punctuation punctuation">&#125;</span></span><span class="token string"> </span><span class="token interpolation"><span class="token interpolation-punctuation punctuation">$&#123;</span>width<span class="token interpolation-punctuation punctuation">&#125;</span></span><span class="token string"> </span><span class="token interpolation"><span class="token interpolation-punctuation punctuation">$&#123;</span>height<span class="token interpolation-punctuation punctuation">&#125;</span></span><span class="token template-punctuation string">`</span></span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">&#125;</span>
+
+<span class="token function">showMenu</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// Menu 100 200</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<ul>
+<li>在上面的代码中，整个参数对象的默认是 <code>&#123;&#125;</code>，因此总会有内容可以用来解构。</li>
+</ul>
+<h2 id="6、总结"><a href="#6、总结" class="headerlink" title="6、总结"></a>6、总结</h2><ul>
+<li><p>解构赋值可以简洁地将一个对象或数组拆开赋值到多个变量上。</p>
+</li>
+<li><p>解构对象的完整语法：</p>
+<pre class="line-numbers language-javascript" data-language="javascript"><code class="language-javascript"><span class="token keyword">let</span> <span class="token punctuation">&#123;</span><span class="token literal-property property">prop</span> <span class="token operator">:</span> varName <span class="token operator">=</span> <span class="token keyword">default</span><span class="token punctuation">,</span> <span class="token operator">...</span>rest<span class="token punctuation">&#125;</span> <span class="token operator">=</span> object<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+
+<p>这表示属性 <code>prop</code> 会被赋值给变量 <code>varName</code>，如果没有这个属性的话，就会使用默认值 <code>default</code>。</p>
+<p>没有对应映射的对象属性会被复制到 <code>rest</code> 对象。</p>
+</li>
+<li><p>解构数组的完整语法：</p>
+<pre class="line-numbers language-javascript" data-language="javascript"><code class="language-javascript"><span class="token keyword">let</span> <span class="token punctuation">[</span>item1 <span class="token operator">=</span> <span class="token keyword">default</span><span class="token punctuation">,</span> item2<span class="token punctuation">,</span> <span class="token operator">...</span>rest<span class="token punctuation">]</span> <span class="token operator">=</span> array<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+
+<p>数组的第一个元素被赋值给 <code>item1</code>，第二个元素被赋值给 <code>item2</code>，剩下的所有元素被复制到另一个数组 <code>rest</code>。</p>
+</li>
+<li><p>从嵌套数组&#x2F;对象中提取数据也是可以的，此时等号左侧必须和等号右侧有相同的结构。</p>
+</li>
+</ul>
+
+                
+            </div>
+            <hr/>
+
+            
+
+
+
+            <div class="tag_share" style="display: block;">
+                <div class="post-meta__tag-list" style="display: inline-block;">
+                    
+                        <div class="article-tag">
+                            
+                                <a href="/tags/JavaScript/">
+                                    <span class="chip bg-color">JavaScript</span>
+                                </a>
+                            
+                        </div>
+                    
+                </div>
+                <div class="post_share" style="zoom: 80%; width: fit-content; display: inline-block; float: right; margin: -0.15rem 0;">
+                    <link rel="stylesheet" type="text/css" href="/libs/share/css/share.min.css">
+<div id="article-share">
+
+    
+    <div class="social-share" data-sites="twitter,facebook,google,qq,qzone,wechat,weibo,douban,linkedin" data-wechat-qrcode-helper="<p>微信扫一扫即可分享！</p>"></div>
+    <script src="/libs/share/js/social-share.min.js"></script>
+    
+
+    
+
+</div>
+
+                </div>
+            </div>
+            
+        </div>
+    </div>
+
+    
+
+    
+
+    
+
+    
+
+    
+        <style>
+    .valine-card {
+        margin: 1.5rem auto;
+    }
+
+    .valine-card .card-content {
+        padding: 20px 20px 5px 20px;
+    }
+
+    #vcomments textarea {
+        box-sizing: border-box;
+        background: url("/medias/bg.webp") 100% 100% no-repeat;
+    }
+
+    #vcomments p {
+        margin: 2px 2px 10px;
+        font-size: 1.05rem;
+        line-height: 1.78rem;
+    }
+
+    #vcomments blockquote p {
+        text-indent: 0.2rem;
+    }
+
+    #vcomments a {
+        padding: 0 2px;
+        color: #4cbf30;
+        font-weight: 500;
+        text-decoration: none;
+    }
+
+    #vcomments img {
+        max-width: 100%;
+        height: auto;
+        cursor: pointer;
+    }
+
+    #vcomments ol li {
+        list-style-type: decimal;
+    }
+
+    #vcomments ol,
+    ul {
+        display: block;
+        padding-left: 2em;
+        word-spacing: 0.05rem;
+    }
+
+    #vcomments ul li,
+    ol li {
+        display: list-item;
+        line-height: 1.8rem;
+        font-size: 1rem;
+    }
+
+    #vcomments ul li {
+        list-style-type: disc;
+    }
+
+    #vcomments ul ul li {
+        list-style-type: circle;
+    }
+
+    #vcomments table, th, td {
+        padding: 12px 13px;
+        border: 1px solid #dfe2e5;
+    }
+
+    #vcomments table, th, td {
+        border: 0;
+    }
+
+    table tr:nth-child(2n), thead {
+        background-color: #fafafa;
+    }
+
+    #vcomments table th {
+        background-color: #f2f2f2;
+        min-width: 80px;
+    }
+
+    #vcomments table td {
+        min-width: 80px;
+    }
+
+    #vcomments h1 {
+        font-size: 1.85rem;
+        font-weight: bold;
+        line-height: 2.2rem;
+    }
+
+    #vcomments h2 {
+        font-size: 1.65rem;
+        font-weight: bold;
+        line-height: 1.9rem;
+    }
+
+    #vcomments h3 {
+        font-size: 1.45rem;
+        font-weight: bold;
+        line-height: 1.7rem;
+    }
+
+    #vcomments h4 {
+        font-size: 1.25rem;
+        font-weight: bold;
+        line-height: 1.5rem;
+    }
+
+    #vcomments h5 {
+        font-size: 1.1rem;
+        font-weight: bold;
+        line-height: 1.4rem;
+    }
+
+    #vcomments h6 {
+        font-size: 1rem;
+        line-height: 1.3rem;
+    }
+
+    #vcomments p {
+        font-size: 1rem;
+        line-height: 1.5rem;
+    }
+
+    #vcomments hr {
+        margin: 12px 0;
+        border: 0;
+        border-top: 1px solid #ccc;
+    }
+
+    #vcomments blockquote {
+        margin: 15px 0;
+        border-left: 5px solid #42b983;
+        padding: 1rem 0.8rem 0.3rem 0.8rem;
+        color: #666;
+        background-color: rgba(66, 185, 131, .1);
+    }
+
+    #vcomments pre {
+        font-family: monospace, monospace;
+        padding: 1.2em;
+        margin: .5em 0;
+        background: #272822;
+        overflow: auto;
+        border-radius: 0.3em;
+        tab-size: 4;
+    }
+
+    #vcomments code {
+        font-family: monospace, monospace;
+        padding: 1px 3px;
+        font-size: 0.92rem;
+        color: #e96900;
+        background-color: #f8f8f8;
+        border-radius: 2px;
+    }
+
+    #vcomments pre code {
+        font-family: monospace, monospace;
+        padding: 0;
+        color: #e8eaf6;
+        background-color: #272822;
+    }
+
+    #vcomments pre[class*="language-"] {
+        padding: 1.2em;
+        margin: .5em 0;
+    }
+
+    #vcomments code[class*="language-"],
+    pre[class*="language-"] {
+        color: #e8eaf6;
+    }
+
+    #vcomments [type="checkbox"]:not(:checked), [type="checkbox"]:checked {
+        position: inherit;
+        margin-left: -1.3rem;
+        margin-right: 0.4rem;
+        margin-top: -1px;
+        vertical-align: middle;
+        left: unset;
+        visibility: visible;
+    }
+
+    #vcomments b,
+    strong {
+        font-weight: bold;
+    }
+
+    #vcomments dfn {
+        font-style: italic;
+    }
+
+    #vcomments small {
+        font-size: 85%;
+    }
+
+    #vcomments cite {
+        font-style: normal;
+    }
+
+    #vcomments mark {
+        background-color: #fcf8e3;
+        padding: .2em;
+    }
+
+    #vcomments table, th, td {
+        padding: 12px 13px;
+        border: 1px solid #dfe2e5;
+    }
+
+    table tr:nth-child(2n), thead {
+        background-color: #fafafa;
+    }
+
+    #vcomments table th {
+        background-color: #f2f2f2;
+        min-width: 80px;
+    }
+
+    #vcomments table td {
+        min-width: 80px;
+    }
+
+    #vcomments [type="checkbox"]:not(:checked), [type="checkbox"]:checked {
+        position: inherit;
+        margin-left: -1.3rem;
+        margin-right: 0.4rem;
+        margin-top: -1px;
+        vertical-align: middle;
+        left: unset;
+        visibility: visible;
+    }
+</style>
+
+<div class="card valine-card" data-aos="fade-up">
+    <div class="comment_headling" style="font-size: 20px; font-weight: 700; position: relative; padding-left: 20px; top: 15px; padding-bottom: 5px;">
+        <i class="fas fa-comments fa-fw" aria-hidden="true"></i>
+        <span>评论</span>
+    </div>
+    <div id="vcomments" class="card-content" style="display: grid">
+    </div>
+</div>
+
+<script src="/libs/valine/av-min.js"></script>
+<script src="/libs/valine/Valine.min.js"></script>
+<script>
+    new Valine({
+        el: '#vcomments',
+        appId: 'XGAJufgp6Z2bX17baB3E7enQ-gzGzoHsz',
+        appKey: 'j9yun8pjBYMNT3Gg8ehomdsf',
+        serverURLs: 'https://xgajufgp.lc-cn-n1-shared.com',
+        notify: 'false' === 'true',
+        verify: 'false' === 'true',
+        visitor: 'true' === 'true',
+        avatar: 'wavatar',
+        pageSize: '10',
+        lang: 'en',
+        placeholder: '支持markdown格式以及丰富的小表情，快来留下些记忆吧~'
+    });
+</script>
+
+<!--酷Q推送-->
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+<article id="prenext-posts" class="prev-next articles">
+    <div class="row article-row">
+        
+        <div class="article col s12 m6" data-aos="fade-up" data-aos="fade-up">
+            <div class="article-badge left-badge text-color">
+                <i class="far fa-dot-circle"></i>&nbsp;Current
+            </div>
+            <div class="card">
+                <a href="/posts/d31ba366.html">
+                    <div class="card-image">
+                        
+                        
+                        <img src="/medias/featureimages/8.jpg" class="responsive-img" alt="三十二、JavaScript 解构赋值">
+                        
+                        <span class="card-title">三十二、JavaScript 解构赋值</span>
+                    </div>
+                </a>
+                <div class="card-content article-content">
+                    <div class="summary block-with-text">
+                        
+                            
+                        
+                    </div>
+                    <div class="publish-info">
+                            <span class="publish-date">
+                                <i class="far fa-clock fa-fw icon-date"></i>2024-08-24
+                            </span>
+                        <span class="publish-author">
+                            
+                            <i class="fas fa-bookmark fa-fw icon-category"></i>
+                            
+                            <a href="/categories/JavaScript/" class="post-category">
+                                    JavaScript
+                                </a>
+                            
+                            
+                        </span>
+                    </div>
+                </div>
+
+                
+                <div class="card-action article-tags">
+                    
+                    <a href="/tags/JavaScript/">
+                        <span class="chip bg-color">JavaScript</span>
+                    </a>
+                    
+                </div>
+                
+            </div>
+        </div>
+        
+        
+        <div class="article col s12 m6" data-aos="fade-up">
+            <div class="article-badge right-badge text-color">
+                Next&nbsp;<i class="fas fa-chevron-right"></i>
+            </div>
+            <div class="card">
+                <a href="/posts/26975c1e.html">
+                    <div class="card-image">
+                        
+                        
+                        <img src="/medias/featureimages/3.jpg" class="responsive-img" alt="三十一、JavaScript Object方法">
+                        
+                        <span class="card-title">三十一、JavaScript Object方法</span>
+                    </div>
+                </a>
+                <div class="card-content article-content">
+                    <div class="summary block-with-text">
+                        
+                            
+                        
+                    </div>
+                    <div class="publish-info">
+                            <span class="publish-date">
+                                <i class="far fa-clock fa-fw icon-date"></i>2024-08-24
+                            </span>
+                        <span class="publish-author">
+                            
+                            <i class="fas fa-bookmark fa-fw icon-category"></i>
+                            
+                            <a href="/categories/JavaScript/" class="post-category">
+                                    JavaScript
+                                </a>
+                            
+                            
+                        </span>
+                    </div>
+                </div>
+                
+                <div class="card-action article-tags">
+                    
+                    <a href="/tags/JavaScript/">
+                        <span class="chip bg-color">JavaScript</span>
+                    </a>
+                    
+                </div>
+                
+            </div>
+        </div>
+        
+    </div>
+</article>
+
+</div>
+
+
+<script>
+    $('#articleContent').on('copy', function (e) {
+        // IE8 or earlier browser is 'undefined'
+        if (typeof window.getSelection === 'undefined') return;
+
+        var selection = window.getSelection();
+        // if the selection is short let's not annoy our users.
+        if (('' + selection).length < Number.parseInt('120')) {
+            return;
+        }
+
+        // create a div outside of the visible area and fill it with the selected text.
+        var bodyElement = document.getElementsByTagName('body')[0];
+        var newdiv = document.createElement('div');
+        newdiv.style.position = 'absolute';
+        newdiv.style.left = '-99999px';
+        bodyElement.appendChild(newdiv);
+        newdiv.appendChild(selection.getRangeAt(0).cloneContents());
+
+        // we need a <pre> tag workaround.
+        // otherwise the text inside "pre" loses all the line breaks!
+        if (selection.getRangeAt(0).commonAncestorContainer.nodeName === 'PRE' || selection.getRangeAt(0).commonAncestorContainer.nodeName === 'CODE') {
+            newdiv.innerHTML = "<pre>" + newdiv.innerHTML + "</pre>";
+        }
+
+        var url = document.location.href;
+        newdiv.innerHTML += '<br />'
+            + 'From: LuYa Guo<br />'
+            + 'Author: luyaguo<br />'
+            + 'Link: <a href="' + url + '">' + url + '</a><br />'
+            + '本文章著作权归作者所有，任何形式的转载都请注明出处。';
+
+        selection.selectAllChildren(newdiv);
+        window.setTimeout(function () {bodyElement.removeChild(newdiv);}, 200);
+    });
+</script>
+
+
+<!-- 代码块功能依赖 -->
+<script type="text/javascript" src="/libs/codeBlock/codeBlockFuction.js"></script>
+
+
+  <!-- 是否加载使用自带的 prismjs. -->
+  <script type="text/javascript" src="/libs/prism/prism.min.js"></script>
+
+
+<!-- 代码语言 -->
+
+<script type="text/javascript" src="/libs/codeBlock/codeLang.js"></script>
+
+
+<!-- 代码块复制 -->
+
+<script type="text/javascript" src="/libs/codeBlock/codeCopy.js"></script>
+
+
+<!-- 代码块收缩 -->
+
+<script type="text/javascript" src="/libs/codeBlock/codeShrink.js"></script>
+
+
+
+    </div>
+    <div id="toc-aside" class="expanded col l3 hide-on-med-and-down">
+        <div class="toc-widget card" style="background-color: white;">
+            <div class="toc-title"><i class="far fa-list-alt"></i>&nbsp;&nbsp;TOC</div>
+            <div id="toc-content"></div>
+        </div>
+    </div>
+</div>
+
+<!-- TOC 悬浮按钮. -->
+
+<div id="floating-toc-btn" class="hide-on-med-and-down">
+    <a class="btn-floating btn-large bg-color">
+        <i class="fas fa-list-ul"></i>
+    </a>
+</div>
+
+
+<script src="/libs/tocbot/tocbot.min.js"></script>
+<script>
+    $(function () {
+        tocbot.init({
+            tocSelector: '#toc-content',
+            contentSelector: '#articleContent',
+            headingsOffset: -($(window).height() * 0.4 - 45),
+            collapseDepth: Number('0'),
+            headingSelector: 'h2, h3, h4'
+        });
+
+        // Set scroll toc fixed.
+        let tocHeight = parseInt($(window).height() * 0.4 - 64);
+        let $tocWidget = $('.toc-widget');
+        $(window).scroll(function () {
+            let scroll = $(window).scrollTop();
+            /* add post toc fixed. */
+            if (scroll > tocHeight) {
+                $tocWidget.addClass('toc-fixed');
+            } else {
+                $tocWidget.removeClass('toc-fixed');
+            }
+        });
+
+        
+        /* 修复文章卡片 div 的宽度. */
+        let fixPostCardWidth = function (srcId, targetId) {
+            let srcDiv = $('#' + srcId);
+            if (srcDiv.length === 0) {
+                return;
+            }
+
+            let w = srcDiv.width();
+            if (w >= 450) {
+                w = w + 21;
+            } else if (w >= 350 && w < 450) {
+                w = w + 18;
+            } else if (w >= 300 && w < 350) {
+                w = w + 16;
+            } else {
+                w = w + 14;
+            }
+            $('#' + targetId).width(w);
+        };
+
+        // 切换TOC目录展开收缩的相关操作.
+        const expandedClass = 'expanded';
+        let $tocAside = $('#toc-aside');
+        let $mainContent = $('#main-content');
+        $('#floating-toc-btn .btn-floating').click(function () {
+            if ($tocAside.hasClass(expandedClass)) {
+                $tocAside.removeClass(expandedClass).hide();
+                $mainContent.removeClass('l9');
+            } else {
+                $tocAside.addClass(expandedClass).show();
+                $mainContent.addClass('l9');
+            }
+            fixPostCardWidth('artDetail', 'prenext-posts');
+        });
+        
+    });
+</script>
+
+    
+
+</main>
+
+
+
+
+    <footer class="page-footer bg-color">
+    
+        <link rel="stylesheet" href="/libs/aplayer/APlayer.min.css">
+<style>
+    .aplayer .aplayer-lrc p {
+        
+        display: none;
+        
+        font-size: 12px;
+        font-weight: 700;
+        line-height: 16px !important;
+    }
+
+    .aplayer .aplayer-lrc p.aplayer-lrc-current {
+        
+        display: none;
+        
+        font-size: 15px;
+        color: #42b983;
+    }
+
+    
+    .aplayer.aplayer-fixed.aplayer-narrow .aplayer-body {
+        left: -66px !important;
+    }
+
+    .aplayer.aplayer-fixed.aplayer-narrow .aplayer-body:hover {
+        left: 0px !important;
+    }
+
+    
+</style>
+<div class="">
+    
+    <div class="row">
+        <meting-js class="col l8 offset-l2 m10 offset-m1 s12"
+                   server="netease"
+                   type="playlist"
+                   id="8428618004"
+                   fixed='true'
+                   autoplay='false'
+                   theme='#42b983'
+                   loop='all'
+                   order='random'
+                   preload='auto'
+                   volume='0.7'
+                   list-folded='true'
+        >
+        </meting-js>
+    </div>
+</div>
+
+<script src="/libs/aplayer/APlayer.min.js"></script>
+<script src="/libs/aplayer/Meting.min.js"></script>
+
+    
+
+    <div class="container row center-align"
+         style="margin-bottom: 15px !important;">
+        <div class="col s12 m8 l8 copy-right">
+            Copyright&nbsp;&copy;
+            
+                <span id="year">2024</span>
+            
+            <a href="/about" target="_blank">Luya Guo</a>
+            
+            <br>
+            
+                &nbsp;<i class="fas fa-chart-area"></i>&nbsp;Total Words:&nbsp;<span
+                        class="white-color">209.9k</span>
+            
+            
+            
+                
+            
+            
+                <span id="busuanzi_container_site_pv">
+                &nbsp;|&nbsp;<i class="far fa-eye"></i>&nbsp;Total visits:&nbsp;
+                    <span id="busuanzi_value_site_pv" class="white-color"></span>
+            </span>
+            
+            
+                <span id="busuanzi_container_site_uv">
+                &nbsp;|&nbsp;<i class="fas fa-users"></i>&nbsp;Total visitors:&nbsp;
+                    <span id="busuanzi_value_site_uv" class="white-color"></span>
+            </span>
+            
+            <br>
+
+            <a style="margin-inline:5px" target="_blank" href="https://hexo.io"><img src="https://img.shields.io/badge/Frame-Hexo-blue?style=flat&logo=hexo" title="基于Hexo框架"></a>
+            <a style="margin-inline:5px" target="_blank" href="https://github.com/blinkfox/hexo-theme-matery"><img src="https://img.shields.io/badge/Theme-Matery-7138b6?style=flat&logo=MEGA" title="Themes Matery"></a>
+            <a style="margin-inline:5px" target="_blank" href="https://cloudflare.com"><img src="https://img.shields.io/badge/Hosted-Cloudflare-brightgreen?style=flat&logo=Cloudflare" title="基于Cloudflare Pages托管部署"></a>
+            <a style="margin-inline:5px" target="_blank" href="https://github.com"><img src="https://img.shields.io/badge/Source-Github-67e1fb?style=flat&logo=GitHub" title="静态文件托管于GitHub"></a>
+            <br>
+
+            <!-- 运行天数提醒. -->
+            
+                <span id="sitetime"> Loading ...</span>
+                <script>
+                    var calcSiteTime = function () {
+                        var seconds = 1000;
+                        var minutes = seconds * 60;
+                        var hours = minutes * 60;
+                        var days = hours * 24;
+                        var years = days * 365;
+                        var today = new Date();
+                        var startYear = "2024";
+                        var startMonth = "5";
+                        var startDate = "20";
+                        var startHour = "0";
+                        var startMinute = "0";
+                        var startSecond = "0";
+                        var todayYear = today.getFullYear();
+                        var todayMonth = today.getMonth() + 1;
+                        var todayDate = today.getDate();
+                        var todayHour = today.getHours();
+                        var todayMinute = today.getMinutes();
+                        var todaySecond = today.getSeconds();
+                        var t1 = Date.UTC(startYear, startMonth, startDate, startHour, startMinute, startSecond);
+                        var t2 = Date.UTC(todayYear, todayMonth, todayDate, todayHour, todayMinute, todaySecond);
+                        var diff = t2 - t1;
+                        var diffYears = Math.floor(diff / years);
+                        var diffDays = Math.floor((diff / days) - diffYears * 365);
+
+                        // 区分是否有年份.
+                        var language = 'en';
+                        if (startYear === String(todayYear)) {
+                            document.getElementById("year").innerHTML = todayYear;
+                            var daysTip = 'This site has been running for ' + diffDays + ' days';
+                            if (language === 'zh-CN') {
+                                daysTip = '本站已运行 ' + diffDays + ' 天';
+                            } else if (language === 'zh-HK') {
+                                daysTip = '本站已運行 ' + diffDays + ' 天';
+                            }
+                            document.getElementById("sitetime").innerHTML = daysTip;
+                        } else {
+                            document.getElementById("year").innerHTML = startYear + " - " + todayYear;
+                            var yearsAndDaysTip = 'This site has been running for ' + diffYears + ' years and '
+                                + diffDays + ' days';
+                            if (language === 'zh-CN') {
+                                yearsAndDaysTip = '本站已运行 ' + diffYears + ' 年 ' + diffDays + ' 天';
+                            } else if (language === 'zh-HK') {
+                                yearsAndDaysTip = '本站已運行 ' + diffYears + ' 年 ' + diffDays + ' 天';
+                            }
+                            document.getElementById("sitetime").innerHTML = yearsAndDaysTip;
+                        }
+                    }
+
+                    calcSiteTime();
+                </script>
+            
+            <br>
+            
+        </div>
+        <div class="col s12 m4 l4 social-link social-statis">
+    <a href="https://github.com/luyaguo" class="tooltipped" target="_blank" data-tooltip="访问我的GitHub" data-position="top" data-delay="50">
+        <i class="fab fa-github"></i>
+    </a>
+
+
+
+    <a href="mailto:luyaguo839@gmail.com" class="tooltipped" target="_blank" data-tooltip="邮件联系我" data-position="top" data-delay="50">
+        <i class="fas fa-envelope-open"></i>
+    </a>
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <a href="/atom.xml" class="tooltipped" target="_blank" data-tooltip="RSS 订阅" data-position="top" data-delay="50">
+        <i class="fas fa-rss"></i>
+    </a>
+
+</div>
+    </div>
+</footer>
+
+<div class="progress-bar"></div>
+
+
+    <!-- 搜索遮罩框 -->
+<div id="searchModal" class="modal">
+    <div class="modal-content">
+        <div class="search-header">
+            <span class="title"><i class="fas fa-search"></i>&nbsp;&nbsp;Search</span>
+            <input type="search" id="searchInput" name="s" placeholder="Please enter a search keyword"
+                   class="search-input">
+        </div>
+        <div id="searchResult"></div>
+    </div>
+</div>
+
+<script type="text/javascript">
+$(function () {
+    var searchFunc = function (path, search_id, content_id) {
+        'use strict';
+        $.ajax({
+            url: path,
+            dataType: "xml",
+            success: function (xmlResponse) {
+                // get the contents from search data
+                var datas = $("entry", xmlResponse).map(function () {
+                    return {
+                        title: $("title", this).text(),
+                        content: $("content", this).text(),
+                        url: $("url", this).text()
+                    };
+                }).get();
+                var $input = document.getElementById(search_id);
+                var $resultContent = document.getElementById(content_id);
+                $input.addEventListener('input', function () {
+                    var str = '<ul class=\"search-result-list\">';
+                    var keywords = this.value.trim().toLowerCase().split(/[\s\-]+/);
+                    $resultContent.innerHTML = "";
+                    if (this.value.trim().length <= 0) {
+                        return;
+                    }
+                    // perform local searching
+                    datas.forEach(function (data) {
+                        var isMatch = true;
+                        var data_title = data.title.trim().toLowerCase();
+                        var data_content = data.content.trim().replace(/<[^>]+>/g, "").toLowerCase();
+                        var data_url = data.url;
+                        data_url = data_url.indexOf('/') === 0 ? data.url : '/' + data_url;
+                        var index_title = -1;
+                        var index_content = -1;
+                        var first_occur = -1;
+                        // only match artiles with not empty titles and contents
+                        if (data_title !== '' && data_content !== '') {
+                            keywords.forEach(function (keyword, i) {
+                                index_title = data_title.indexOf(keyword);
+                                index_content = data_content.indexOf(keyword);
+                                if (index_title < 0 && index_content < 0) {
+                                    isMatch = false;
+                                } else {
+                                    if (index_content < 0) {
+                                        index_content = 0;
+                                    }
+                                    if (i === 0) {
+                                        first_occur = index_content;
+                                    }
+                                }
+                            });
+                        }
+                        // show search results
+                        if (isMatch) {
+                            str += "<li><a href='" + data_url + "' class='search-result-title'>" + data_title + "</a>";
+                            var content = data.content.trim().replace(/<[^>]+>/g, "");
+                            if (first_occur >= 0) {
+                                // cut out 100 characters
+                                var start = first_occur - 20;
+                                var end = first_occur + 80;
+                                if (start < 0) {
+                                    start = 0;
+                                }
+                                if (start === 0) {
+                                    end = 100;
+                                }
+                                if (end > content.length) {
+                                    end = content.length;
+                                }
+                                var match_content = content.substr(start, end);
+                                // highlight all keywords
+                                keywords.forEach(function (keyword) {
+                                    var regS = new RegExp(keyword, "gi");
+                                    match_content = match_content.replace(regS, "<em class=\"search-keyword\">" + keyword + "</em>");
+                                });
+
+                                str += "<p class=\"search-result\">" + match_content + "...</p>"
+                            }
+                            str += "</li>";
+                        }
+                    });
+                    str += "</ul>";
+                    $resultContent.innerHTML = str;
+                });
+            }
+        });
+    };
+
+    searchFunc('/search.xml', 'searchInput', 'searchResult');
+});
+</script>
+
+    <!-- 白天和黑夜主题 -->
+<div class="stars-con">
+    <div id="stars"></div>
+    <div id="stars2"></div>
+    <div id="stars3"></div>  
+</div>
+
+<script>
+    function switchNightMode() {
+        $('<div class="Cuteen_DarkSky"><div class="Cuteen_DarkPlanet"></div></div>').appendTo($('body')),
+        setTimeout(function () {
+            $('body').hasClass('DarkMode') 
+            ? ($('body').removeClass('DarkMode'), localStorage.setItem('isDark', '0'), $('#sum-moon-icon').removeClass("fa-sun").addClass('fa-moon')) 
+            : ($('body').addClass('DarkMode'), localStorage.setItem('isDark', '1'), $('#sum-moon-icon').addClass("fa-sun").removeClass('fa-moon')),
+            
+            setTimeout(function () {
+            $('.Cuteen_DarkSky').fadeOut(1e3, function () {
+                $(this).remove()
+            })
+            }, 2e3)
+        })
+    }
+</script>
+
+    <!-- 回到顶部按钮 -->
+<div id="backTop" class="top-scroll">
+    <a class="btn-floating btn-large waves-effect waves-light" href="#!">
+        <i class="fas fa-arrow-up"></i>
+    </a>
+</div>
+
+
+    <script src="/libs/materialize/materialize.min.js"></script>
+    <script src="/libs/masonry/masonry.pkgd.min.js"></script>
+    <script src="/libs/aos/aos.js"></script>
+    <script src="/libs/scrollprogress/scrollProgress.min.js"></script>
+    <script src="/libs/lightGallery/js/lightgallery-all.min.js"></script>
+    <script src="/js/matery.js"></script>
+
+    
+
+    
+    
+    
+
+    <!-- 雪花特效 -->
+    
+
+    <!-- 鼠标星星特效 -->
+     
+        <script type="text/javascript">
+            // 只在桌面版网页启用特效
+            var windowWidth = $(window).width();
+            if (windowWidth > 768) {
+                document.write('<script type="text/javascript" src="/libs/others/star.js"><\/script>');
+            }
+        </script>
+    
+
+     
+        <script src="https://ssl.captcha.qq.com/TCaptcha.js"></script>
+        <script src="/libs/others/TencentCaptcha.js"></script>
+        <button id="TencentCaptcha" data-appid="xxxxxxxxxx" data-cbfn="callback" type="button" hidden></button>
+    
+
+    <!-- Baidu Analytics -->
+
+    <!-- Baidu Push -->
+
+<script>
+    (function () {
+        var bp = document.createElement('script');
+        var curProtocol = window.location.protocol.split(':')[0];
+        if (curProtocol === 'https') {
+            bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+        } else {
+            bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+        }
+        var s = document.getElementsByTagName("script")[0];
+        s.parentNode.insertBefore(bp, s);
+    })();
+</script>
+
+    
+    <script src="/libs/others/clicklove.js" async="async"></script>
+    
+    
+    <script async src="/libs/others/busuanzi.pure.mini.js"></script>
+    
+
+    
+
+    
+
+    <!--腾讯兔小巢-->
+    
+    
+
+    
+
+    
+
+    
+    <script src="/libs/instantpage/instantpage.js" type="module"></script>
+    
+
+    <!-- 冒泡 -->
+    
+
+    <!--全屏-->
+    <script src="/js/fullscreen.js" type="module"></script>
+
+        <style>
+            [bg-lazy] {
+                background-image: none !important;
+                background-color: #eee !important;
+            }
+        </style>
+        <script>
+            window.imageLazyLoadSetting = {
+                isSPA: false,
+                preloadRatio: 1,
+                processImages: null,
+            };
+        </script><script>window.addEventListener("load",function(){var t=/\.(gif|jpg|jpeg|tiff|png)$/i,r=/^data:image\/[a-z]+;base64,/;Array.prototype.slice.call(document.querySelectorAll("img[data-original]")).forEach(function(a){var e=a.parentNode;"A"===e.tagName&&(e.href.match(t)||e.href.match(r))&&(e.href=a.dataset.original)})});</script><script>!function(r){r.imageLazyLoadSetting.processImages=t;var a=r.imageLazyLoadSetting.isSPA,n=r.imageLazyLoadSetting.preloadRatio||1,d=o();function o(){var t=Array.prototype.slice.call(document.querySelectorAll("img[data-original]")),e=Array.prototype.slice.call(document.querySelectorAll("[bg-lazy]"));return t.concat(e)}function t(t){(a||t)&&(d=o());for(var e,i=0;i<d.length;i++)0<=(e=(e=d[i]).getBoundingClientRect()).bottom&&0<=e.left&&e.top<=(r.innerHeight*n||document.documentElement.clientHeight*n)&&function(){var t,e,a,n,o=d[i];e=function(){d=d.filter(function(t){return o!==t}),r.imageLazyLoadSetting.onImageLoaded&&r.imageLazyLoadSetting.onImageLoaded(o)},(t=o).dataset.loaded||(t.hasAttribute("bg-lazy")?(t.removeAttribute("bg-lazy"),e&&e()):(a=new Image,n=t.getAttribute("data-original"),a.onload=function(){t.src=n,t.removeAttribute("data-original"),t.setAttribute("data-loaded",!0),e&&e()},a.onerror=function(){t.removeAttribute("data-original"),t.setAttribute("data-loaded",!1),t.src=n},t.src!==n&&(a.src=n)))}()}function e(){clearTimeout(t.tId),t.tId=setTimeout(t,500)}t(),document.addEventListener("scroll",e),r.addEventListener("resize",e),r.addEventListener("orientationchange",e)}(this);</script></body>
+
+</html>
