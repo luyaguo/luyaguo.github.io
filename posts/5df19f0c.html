@@ -4,10 +4,16 @@
 
 <head>
     <meta charset="utf-8">
-    <meta name="keywords" content="四十四、JavaScript 函数绑定, 西伯">
-    <meta name="description" content="四十四、JavaScript 函数绑定当将对象方法作为回调进行传递，例如传递给 setTimeout，这儿会存在一个常见的问题：“丢失 this”。
-在本章中，我们会学习如何去解决这个问题。
-1、丢失 this一旦方法被传递到与对象分开的某">
+    <meta name="keywords" content="十七、鼠标事件, 西伯">
+    <meta name="description" content="十七、鼠标事件1、鼠标事件类型我们已经见过了其中一些事件：
+
+mousedown/mouseup
+在元素上点击&amp;#x2F;释放鼠标按钮。
+
+mouseover/mouseout
+鼠标指针从一个元素上移入&amp;#x2F;移出。
+
+mousemov">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
     <meta name="renderer" content="webkit|ie-stand|ie-comp">
@@ -19,7 +25,7 @@
     <!-- Global site tag (gtag.js) - Google Analytics -->
 
 
-    <title>四十四、JavaScript 函数绑定 | 西伯</title>
+    <title>十七、鼠标事件 | 西伯</title>
     <link rel="icon" type="image/png" href="/favicon.png">
     
 
@@ -433,12 +439,12 @@
 
 
 
-<div class="bg-cover pd-header post-cover" style="background-image: url('/medias/featureimages/21.jpg')">
+<div class="bg-cover pd-header post-cover" style="background-image: url('/medias/featureimages/1.jpg')">
     <div class="container" style="right: 0px;left: 0px;">
         <div class="row">
             <div class="col s12 m12 l12">
                 <div class="brand">
-                    <h1 class="description center-align post-title">四十四、JavaScript 函数绑定</h1>
+                    <h1 class="description center-align post-title">十七、鼠标事件</h1>
                 </div>
             </div>
         </div>
@@ -462,8 +468,8 @@
                     
                     <div class="article-tag">
                         
-                            <a href="/tags/JavaScript/">
-                                <span class="chip bg-color">JavaScript</span>
+                            <a href="/tags/%E6%B5%8F%E8%A7%88%E5%99%A8%EF%BC%9A%E6%96%87%E6%A1%A3%E3%80%81%E4%BA%8B%E4%BB%B6%E3%80%81%E6%8E%A5%E5%8F%A3/">
+                                <span class="chip bg-color">浏览器：文档、事件、接口</span>
                             </a>
                         
                     </div>
@@ -474,8 +480,8 @@
                     <div class="post-cate">
                         <i class="fas fa-bookmark fa-fw icon-category"></i>
                         
-                            <a href="/categories/JavaScript/" class="post-category">
-                                JavaScript
+                            <a href="/categories/%E6%B5%8F%E8%A7%88%E5%99%A8%EF%BC%9A%E6%96%87%E6%A1%A3%E3%80%81%E4%BA%8B%E4%BB%B6%E3%80%81%E6%8E%A5%E5%8F%A3/" class="post-category">
+                                浏览器：文档、事件、接口
                             </a>
                         
                     </div>
@@ -487,7 +493,7 @@
                 
                 <div class="post-date info-break-policy">
                     <i class="far fa-calendar-minus fa-fw"></i>Publish Date:&nbsp;&nbsp;
-                    2024-09-09
+                    2025-03-19
                 </div>
                 
 
@@ -496,14 +502,14 @@
                 
                 <div class="info-break-policy">
                     <i class="far fa-file-word fa-fw"></i>Word Count:&nbsp;&nbsp;
-                    1.7k
+                    1.5k
                 </div>
                 
 
                 
                 <div class="info-break-policy">
                     <i class="far fa-clock fa-fw"></i>Read Times:&nbsp;&nbsp;
-                    6 Min
+                    5 Min
                 </div>
                 
 
@@ -531,183 +537,132 @@
 
         <div class="card-content article-card-content">
             <div id="articleContent">
-                <h1 id="四十四、JavaScript-函数绑定"><a href="#四十四、JavaScript-函数绑定" class="headerlink" title="四十四、JavaScript 函数绑定"></a>四十四、JavaScript 函数绑定</h1><p>当将对象方法作为回调进行传递，例如传递给 <code>setTimeout</code>，这儿会存在一个常见的问题：“丢失 <code>this</code>”。</p>
-<p>在本章中，我们会学习如何去解决这个问题。</p>
-<h2 id="1、丢失-this"><a href="#1、丢失-this" class="headerlink" title="1、丢失 this"></a>1、丢失 this</h2><p>一旦方法被传递到与对象分开的某个地方 —— <code>this</code> 就会丢失。</p>
-<h3 id="Case"><a href="#Case" class="headerlink" title="Case"></a>Case</h3><p>下面是使用 <code>setTimeout</code> 时 <code>this</code> 是如何丢失的：</p>
-<pre class="line-numbers language-javascript" data-language="javascript"><code class="language-javascript"><span class="token keyword">let</span> user <span class="token operator">=</span> <span class="token punctuation">&#123;</span>
-  <span class="token literal-property property">firstName</span><span class="token operator">:</span> <span class="token string">"John"</span><span class="token punctuation">,</span>
-  <span class="token function">sayHi</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
-    <span class="token function">alert</span><span class="token punctuation">(</span><span class="token template-string"><span class="token template-punctuation string">`</span><span class="token string">Hello, </span><span class="token interpolation"><span class="token interpolation-punctuation punctuation">$&#123;</span><span class="token keyword">this</span><span class="token punctuation">.</span>firstName<span class="token interpolation-punctuation punctuation">&#125;</span></span><span class="token string">!</span><span class="token template-punctuation string">`</span></span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-  <span class="token punctuation">&#125;</span>
-<span class="token punctuation">&#125;</span><span class="token punctuation">;</span>
-
-<span class="token function">setTimeout</span><span class="token punctuation">(</span>user<span class="token punctuation">.</span>sayHi<span class="token punctuation">,</span> <span class="token number">1000</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// Hello, undefined!</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
-
-<p>因为 <code>setTimeout</code> 获取到了函数 <code>user.sayHi</code>，但它和对象分离开了。最后一行可以被重写为：</p>
-<pre class="line-numbers language-javascript" data-language="javascript"><code class="language-javascript"><span class="token keyword">let</span> f <span class="token operator">=</span> user<span class="token punctuation">.</span>sayHi<span class="token punctuation">;</span>
-<span class="token function">setTimeout</span><span class="token punctuation">(</span>f<span class="token punctuation">,</span> <span class="token number">1000</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// 丢失了 user 上下文</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre>
-
-<h3 id="原因"><a href="#原因" class="headerlink" title="原因"></a>原因</h3><p>浏览器中的 <code>setTimeout</code> 方法有些特殊：它为函数调用设定了 <code>this=window</code>（对于 Node.js，<code>this</code> 则会变为计时器（timer）对象，但在这儿并不重要）。所以对于 <code>this.firstName</code>，它其实试图获取的是 <code>window.firstName</code>，这个变量并不存在。在其他类似的情况下，通常 <code>this</code> 会变为 <code>undefined</code>。</p>
-<h3 id="需求"><a href="#需求" class="headerlink" title="需求"></a>需求</h3><p>我们想将一个对象方法传递到别的地方（传递到调度程序），然后在该位置调用它。如何确保在正确的上下文中调用它？</p>
-<h2 id="2、解决方案-1：包装器"><a href="#2、解决方案-1：包装器" class="headerlink" title="2、解决方案 1：包装器"></a>2、解决方案 1：包装器</h2><p>最简单的解决方案是使用一个包装函数：</p>
-<pre class="line-numbers language-javascript" data-language="javascript"><code class="language-javascript"><span class="token keyword">let</span> user <span class="token operator">=</span> <span class="token punctuation">&#123;</span>
-  <span class="token literal-property property">firstName</span><span class="token operator">:</span> <span class="token string">"John"</span><span class="token punctuation">,</span>
-  <span class="token function">sayHi</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
-    <span class="token function">alert</span><span class="token punctuation">(</span><span class="token template-string"><span class="token template-punctuation string">`</span><span class="token string">Hello, </span><span class="token interpolation"><span class="token interpolation-punctuation punctuation">$&#123;</span><span class="token keyword">this</span><span class="token punctuation">.</span>firstName<span class="token interpolation-punctuation punctuation">&#125;</span></span><span class="token string">!</span><span class="token template-punctuation string">`</span></span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-  <span class="token punctuation">&#125;</span>
-<span class="token punctuation">&#125;</span><span class="token punctuation">;</span>
-
-<span class="token function">setTimeout</span><span class="token punctuation">(</span><span class="token keyword">function</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
-  user<span class="token punctuation">.</span><span class="token function">sayHi</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// Hello, John!</span>
-<span class="token punctuation">&#125;</span><span class="token punctuation">,</span> <span class="token number">1000</span><span class="token punctuation">)</span><span class="token punctuation">;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
-
-<p>现在它可以正常工作了，因为它从外部词法环境中获取到了 <code>user</code>，就可以正常地调用方法了。</p>
-<h3 id="简化"><a href="#简化" class="headerlink" title="简化"></a>简化</h3><p>相同的功能，但是更简短：</p>
-<pre class="line-numbers language-javascript" data-language="javascript"><code class="language-javascript"><span class="token function">setTimeout</span><span class="token punctuation">(</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">=></span> user<span class="token punctuation">.</span><span class="token function">sayHi</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">,</span> <span class="token number">1000</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// Hello, John!</span><span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
-
-<h3 id="问题"><a href="#问题" class="headerlink" title="问题"></a>问题</h3><p>如果在 <code>setTimeout</code> 触发之前（有一秒的延迟！）<code>user</code> 的值改变了怎么办？那么，突然间，它将调用错误的对象！</p>
-<pre class="line-numbers language-javascript" data-language="javascript"><code class="language-javascript"><span class="token keyword">let</span> user <span class="token operator">=</span> <span class="token punctuation">&#123;</span>
-  <span class="token literal-property property">firstName</span><span class="token operator">:</span> <span class="token string">"John"</span><span class="token punctuation">,</span>
-  <span class="token function">sayHi</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
-    <span class="token function">alert</span><span class="token punctuation">(</span><span class="token template-string"><span class="token template-punctuation string">`</span><span class="token string">Hello, </span><span class="token interpolation"><span class="token interpolation-punctuation punctuation">$&#123;</span><span class="token keyword">this</span><span class="token punctuation">.</span>firstName<span class="token interpolation-punctuation punctuation">&#125;</span></span><span class="token string">!</span><span class="token template-punctuation string">`</span></span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-  <span class="token punctuation">&#125;</span>
-<span class="token punctuation">&#125;</span><span class="token punctuation">;</span>
-
-<span class="token function">setTimeout</span><span class="token punctuation">(</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">=></span> user<span class="token punctuation">.</span><span class="token function">sayHi</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">,</span> <span class="token number">1000</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-
-<span class="token comment">// ……user 的值在不到 1 秒的时间内发生了改变</span>
-user <span class="token operator">=</span> <span class="token punctuation">&#123;</span>
-  <span class="token function">sayHi</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span> <span class="token function">alert</span><span class="token punctuation">(</span><span class="token string">"Another user in setTimeout!"</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token punctuation">&#125;</span>
-<span class="token punctuation">&#125;</span><span class="token punctuation">;</span>
-
-<span class="token comment">// Another user in setTimeout!</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
-
-<h2 id="3、解决方案-2：bind"><a href="#3、解决方案-2：bind" class="headerlink" title="3、解决方案 2：bind"></a>3、解决方案 2：bind</h2><p>函数提供了一个内建方法 <a target="_blank" rel="noopener" href="https://developer.mozilla.org/zh/docs/Web/JavaScript/Reference/Global_Objects/Function/bind">bind</a>，它可以绑定 <code>this</code>。</p>
-<h3 id="基本语法"><a href="#基本语法" class="headerlink" title="基本语法"></a>基本语法</h3><pre class="line-numbers language-javascript" data-language="javascript"><code class="language-javascript"><span class="token comment">// 稍后将会有更复杂的语法</span>
-<span class="token keyword">let</span> boundFunc <span class="token operator">=</span> <span class="token function">func</span><span class="token punctuation">.</span><span class="token function">bind</span><span class="token punctuation">(</span>context<span class="token punctuation">)</span><span class="token punctuation">;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre>
-
-<p><code>func.bind(context)</code> 的结果是一个特殊的类似于函数的“外来对象（exotic object）”，它可以像函数一样被调用，并且透明地（transparently）将调用传递给 <code>func</code> 并设定 <code>this=context</code>。</p>
-<p>换句话说，<code>boundFunc</code> 调用就像绑定了 <code>this</code> 的 <code>func</code>。</p>
-<h4 id="Case-1"><a href="#Case-1" class="headerlink" title="Case"></a>Case</h4><p>举个例子，这里的 <code>funcUser</code> 将调用传递给了 <code>func</code> 同时 <code>this=user</code>：</p>
-<pre class="line-numbers language-javascript" data-language="javascript"><code class="language-javascript"><span class="token keyword">let</span> user <span class="token operator">=</span> <span class="token punctuation">&#123;</span>
-  <span class="token literal-property property">firstName</span><span class="token operator">:</span> <span class="token string">"John"</span>
-<span class="token punctuation">&#125;</span><span class="token punctuation">;</span>
-
-<span class="token keyword">function</span> <span class="token function">func</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
-  <span class="token function">alert</span><span class="token punctuation">(</span><span class="token keyword">this</span><span class="token punctuation">.</span>firstName<span class="token punctuation">)</span><span class="token punctuation">;</span>
-<span class="token punctuation">&#125;</span>
-
-<span class="token keyword">let</span> funcUser <span class="token operator">=</span> <span class="token function">func</span><span class="token punctuation">.</span><span class="token function">bind</span><span class="token punctuation">(</span>user<span class="token punctuation">)</span><span class="token punctuation">;</span>
-<span class="token function">funcUser</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// John</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
-
+                <h1 id="十七、鼠标事件"><a href="#十七、鼠标事件" class="headerlink" title="十七、鼠标事件"></a>十七、鼠标事件</h1><h2 id="1、鼠标事件类型"><a href="#1、鼠标事件类型" class="headerlink" title="1、鼠标事件类型"></a>1、鼠标事件类型</h2><p>我们已经见过了其中一些事件：</p>
 <ul>
-<li>这里的 <code>func.bind(user)</code> 作为 <code>func</code> 的“绑定的（bound）变体”，绑定了 <code>this=user</code>。</li>
+<li><p><code>mousedown/mouseup</code></p>
+<p>在元素上点击&#x2F;释放鼠标按钮。</p>
+</li>
+<li><p><code>mouseover/mouseout</code></p>
+<p>鼠标指针从一个元素上移入&#x2F;移出。</p>
+</li>
+<li><p><code>mousemove</code></p>
+<p>鼠标在元素上的每个移动都会触发此事件。</p>
+</li>
+<li><p><code>click</code></p>
+<p>如果使用的是鼠标左键，则在同一个元素上的 <code>mousedown</code> 及 <code>mouseup</code> 相继触发后，触发该事件。</p>
+</li>
+<li><p><code>dblclick</code></p>
+<p>在短时间内双击同一元素后触发。如今已经很少使用了。</p>
+</li>
+<li><p><code>contextmenu</code></p>
+<p>在鼠标右键被按下时触发。还有其他打开上下文菜单的方式，例如使用特殊的键盘按键，在这种情况下它也会被触发，因此它并不完全是鼠标事件。</p>
+</li>
 </ul>
-<h3 id="参数传递"><a href="#参数传递" class="headerlink" title="参数传递"></a>参数传递</h3><p>所有的参数（arguments）都被“原样”传递给了初始的 <code>func</code>。例如：</p>
-<pre class="line-numbers language-javascript" data-language="javascript"><code class="language-javascript"><span class="token keyword">let</span> user <span class="token operator">=</span> <span class="token punctuation">&#123;</span>
-  <span class="token literal-property property">firstName</span><span class="token operator">:</span> <span class="token string">"John"</span>
-<span class="token punctuation">&#125;</span><span class="token punctuation">;</span>
-
-<span class="token keyword">function</span> <span class="token function">func</span><span class="token punctuation">(</span><span class="token parameter">phrase</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
-  <span class="token function">alert</span><span class="token punctuation">(</span>phrase <span class="token operator">+</span> <span class="token string">', '</span> <span class="token operator">+</span> <span class="token keyword">this</span><span class="token punctuation">.</span>firstName<span class="token punctuation">)</span><span class="token punctuation">;</span>
-<span class="token punctuation">&#125;</span>
-
-<span class="token comment">// 将 this 绑定到 user</span>
-<span class="token keyword">let</span> funcUser <span class="token operator">=</span> <span class="token function">func</span><span class="token punctuation">.</span><span class="token function">bind</span><span class="token punctuation">(</span>user<span class="token punctuation">)</span><span class="token punctuation">;</span>
-
-<span class="token function">funcUser</span><span class="token punctuation">(</span><span class="token string">"Hello"</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// Hello, John（参数 "Hello" 被传递，并且 this=user）</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
-
-<h4 id="Case-2"><a href="#Case-2" class="headerlink" title="Case"></a>Case</h4><p>现在我们来尝试一个对象方法：</p>
-<pre class="line-numbers language-javascript" data-language="javascript"><code class="language-javascript"><span class="token keyword">let</span> user <span class="token operator">=</span> <span class="token punctuation">&#123;</span>
-  <span class="token literal-property property">firstName</span><span class="token operator">:</span> <span class="token string">"John"</span><span class="token punctuation">,</span>
-  <span class="token function">sayHi</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
-    <span class="token function">alert</span><span class="token punctuation">(</span><span class="token template-string"><span class="token template-punctuation string">`</span><span class="token string">Hello, </span><span class="token interpolation"><span class="token interpolation-punctuation punctuation">$&#123;</span><span class="token keyword">this</span><span class="token punctuation">.</span>firstName<span class="token interpolation-punctuation punctuation">&#125;</span></span><span class="token string">!</span><span class="token template-punctuation string">`</span></span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-  <span class="token punctuation">&#125;</span>
-<span class="token punctuation">&#125;</span><span class="token punctuation">;</span>
-
-<span class="token keyword">let</span> sayHi <span class="token operator">=</span> user<span class="token punctuation">.</span><span class="token function">sayHi</span><span class="token punctuation">.</span><span class="token function">bind</span><span class="token punctuation">(</span>user<span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// (*)</span>
-
-<span class="token comment">// 可以在没有对象（译注：与对象分离）的情况下运行它</span>
-<span class="token function">sayHi</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// Hello, John!</span>
-
-<span class="token function">setTimeout</span><span class="token punctuation">(</span>sayHi<span class="token punctuation">,</span> <span class="token number">1000</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// Hello, John!</span>
-
-<span class="token comment">// 即使 user 的值在不到 1 秒内发生了改变</span>
-<span class="token comment">// sayHi 还是会使用预先绑定（pre-bound）的值，该值是对旧的 user 对象的引用</span>
-user <span class="token operator">=</span> <span class="token punctuation">&#123;</span>
-  <span class="token function">sayHi</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span> <span class="token function">alert</span><span class="token punctuation">(</span><span class="token string">"Another user in setTimeout!"</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token punctuation">&#125;</span>
-<span class="token punctuation">&#125;</span><span class="token punctuation">;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
-
-<h3 id="bindAll"><a href="#bindAll" class="headerlink" title="bindAll"></a><code>bindAll</code></h3><p>如果一个对象有很多方法，并且我们都打算将它们都传递出去，那么我们可以在一个循环中完成所有方法的绑定：</p>
-<pre class="line-numbers language-javascript" data-language="javascript"><code class="language-javascript"><span class="token keyword">for</span> <span class="token punctuation">(</span><span class="token keyword">let</span> key <span class="token keyword">in</span> user<span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
-  <span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token keyword">typeof</span> user<span class="token punctuation">[</span>key<span class="token punctuation">]</span> <span class="token operator">==</span> <span class="token string">'function'</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
-    user<span class="token punctuation">[</span>key<span class="token punctuation">]</span> <span class="token operator">=</span> user<span class="token punctuation">[</span>key<span class="token punctuation">]</span><span class="token punctuation">.</span><span class="token function">bind</span><span class="token punctuation">(</span>user<span class="token punctuation">)</span><span class="token punctuation">;</span>
-  <span class="token punctuation">&#125;</span>
-<span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span></span></code></pre>
-
-<p>JavaScript 库还提供了方便批量绑定的函数，例如 lodash 中的 <a target="_blank" rel="noopener" href="http://lodash.com/docs#bindAll">_.bindAll(object, methodNames)</a>。</p>
-<h2 id="4、部分函数-Partial-functions"><a href="#4、部分函数-Partial-functions" class="headerlink" title="4、部分函数(Partial functions)"></a>4、部分函数(Partial functions)</h2><p>我们不仅可以绑定 <code>this</code>，还可以绑定参数（arguments）。虽然很少这么做，但有时它可以派上用场。</p>
-<h3 id="bind-完整语法"><a href="#bind-完整语法" class="headerlink" title="bind 完整语法"></a><code>bind</code> 完整语法</h3><pre class="line-numbers language-javascript" data-language="javascript"><code class="language-javascript"><span class="token keyword">let</span> bound <span class="token operator">=</span> <span class="token function">func</span><span class="token punctuation">.</span><span class="token function">bind</span><span class="token punctuation">(</span>context<span class="token punctuation">,</span> <span class="token punctuation">[</span>arg1<span class="token punctuation">]</span><span class="token punctuation">,</span> <span class="token punctuation">[</span>arg2<span class="token punctuation">]</span><span class="token punctuation">,</span> <span class="token operator">...</span><span class="token punctuation">)</span><span class="token punctuation">;</span><span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
-
+<h2 id="2、事件顺序"><a href="#2、事件顺序" class="headerlink" title="2、事件顺序"></a>2、事件顺序</h2><p>从上面的列表中我们可以看到，一个用户操作可能会触发多个事件。</p>
+<p><strong>在单个动作触发多个事件时，事件的顺序是固定的。也就是说，会遵循 <code>mousedown</code> → <code>mouseup</code> → <code>click</code> 的顺序调用处理程序。</strong></p>
+<p>例如，点击鼠标左键，在鼠标左键被按下时，会首先触发 <code>mousedown</code>，然后当鼠标左键被释放时，会触发 <code>mouseup</code> 和 <code>click</code>。</p>
+<h2 id="3、鼠标按钮"><a href="#3、鼠标按钮" class="headerlink" title="3、鼠标按钮"></a>3、鼠标按钮</h2><h3 id="event-button-属性"><a href="#event-button-属性" class="headerlink" title="event.button 属性"></a>event.button 属性</h3><p>与点击相关的事件始终具有 <code>button</code> 属性，该属性允许获取确切的鼠标按钮。</p>
+<p>通常我们不在 <code>click</code> 和 <code>contextmenu</code> 事件中使用这一属性，因为前者只在单击鼠标左键时触发，后者只在单击鼠标右键时触发。</p>
+<p>不过，在 <code>mousedown</code> 和 <code>mouseup</code> 事件中则可能需要用到 <code>event.button</code>，因为这两个事件在任何按键上都会触发，所以我们可以使用 <code>button</code> 属性来区分是左键单击还是右键单击。</p>
+<p><code>event.button</code> 的所有可能值如下：</p>
+<table>
+<thead>
+<tr>
+<th align="left">鼠标按键状态</th>
+<th align="left"><code>event.button</code></th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left">左键 (主要按键)</td>
+<td align="left">0</td>
+</tr>
+<tr>
+<td align="left">中键 (辅助按键)</td>
+<td align="left">1</td>
+</tr>
+<tr>
+<td align="left">右键 (次要按键)</td>
+<td align="left">2</td>
+</tr>
+<tr>
+<td align="left">X1 键 (后退按键)</td>
+<td align="left">3</td>
+</tr>
+<tr>
+<td align="left">X2 键 (前进按键)</td>
+<td align="left">4</td>
+</tr>
+</tbody></table>
+<p>大多数鼠标设备只有左键和右键，对应的值就是 <code>0</code> 和 <code>2</code>。触屏设备中的点按操作也会触发类似的事件。</p>
+<h3 id="event-buttons-属性"><a href="#event-buttons-属性" class="headerlink" title="event.buttons 属性"></a>event.buttons 属性</h3><p><code>event.buttons</code> 属性：以整数的形式存储着当前所有按下的鼠标按键，每个按键一个比特位。在实际开发中，很少会用到这个属性。</p>
+<h3 id="event-which-过时"><a href="#event-which-过时" class="headerlink" title="event.which 过时"></a>event.which 过时</h3><p>一些老代码可能会使用 <code>event.which</code> 属性来获得按下的按键。这是一个古老的非标准的方式，具有以下可能值：</p>
 <ul>
-<li>它允许将上下文绑定为 <code>this</code>，以及绑定函数的部分参数。</li>
+<li><code>event.which == 1</code> —— 鼠标左键，</li>
+<li><code>event.which == 2</code> —— 鼠标中键，</li>
+<li><code>event.which == 3</code> —— 鼠标右键。</li>
 </ul>
-<p>例如，我们有一个乘法函数 <code>mul(a, b)</code>：</p>
-<pre class="line-numbers language-javascript" data-language="javascript"><code class="language-javascript"><span class="token keyword">function</span> <span class="token function">mul</span><span class="token punctuation">(</span><span class="token parameter">a<span class="token punctuation">,</span> b</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
-  <span class="token keyword">return</span> a <span class="token operator">*</span> b<span class="token punctuation">;</span>
-<span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span></span></code></pre>
-
+<p>现在，<code>event.which</code> 已经被弃用了，不应再使用它。</p>
+<h2 id="4、组合键：shift，alt，ctrl，meta"><a href="#4、组合键：shift，alt，ctrl，meta" class="headerlink" title="4、组合键：shift，alt，ctrl，meta"></a>4、组合键：shift，alt，ctrl，meta</h2><p><strong>所有的鼠标事件都包含有关按下的组合键的信息。</strong></p>
+<p><strong>事件属性：</strong></p>
 <ul>
-<li>对 <code>mul.bind(null, 2)</code> 的调用创建了一个新函数 <code>double</code>，它将调用传递到 <code>mul</code>，将 <code>null</code> 绑定为上下文，并将 <code>2</code> 绑定为第一个参数。并且，参数（arguments）均被“原样”传递。</li>
-<li>它被称为 <a target="_blank" rel="noopener" href="https://en.wikipedia.org/wiki/Partial_application">函数的部分应用（partial function application）</a> —— 我们通过绑定先有函数的一些参数来创建一个新函数。</li>
-<li>请注意，这里我们实际上没有用到 <code>this</code>。但是 <code>bind</code> 需要它，所以我们必须传入 <code>null</code> 之类的东西。</li>
+<li><strong><code>shiftKey</code>：Shift</strong></li>
+<li><strong><code>altKey</code>：Alt（或对于 Mac 是 Opt）</strong></li>
+<li><strong><code>ctrlKey</code>：Ctrl</strong></li>
+<li><strong><code>metaKey</code>：对于 Mac 是 Cmd</strong></li>
 </ul>
-<h4 id="Case-3"><a href="#Case-3" class="headerlink" title="Case"></a>Case</h4><p>下面这段代码中的 <code>triple</code> 函数将值乘了三倍：</p>
-<pre class="line-numbers language-javascript" data-language="javascript"><code class="language-javascript"><span class="token keyword">function</span> <span class="token function">mul</span><span class="token punctuation">(</span><span class="token parameter">a<span class="token punctuation">,</span> b</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
-  <span class="token keyword">return</span> a <span class="token operator">*</span> b<span class="token punctuation">;</span>
-<span class="token punctuation">&#125;</span>
+<p><strong>如果在事件期间按下了相应的键，则它们为 <code>true</code>。</strong></p>
+<p>比如，下面这个按钮仅在 Alt+Shift+click 时才有效：</p>
+<pre class="line-numbers language-markup" data-language="markup"><code class="language-markup"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>button</span> <span class="token attr-name">id</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>button<span class="token punctuation">"</span></span><span class="token punctuation">></span></span>Alt+Shift+Click on me!<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>button</span><span class="token punctuation">></span></span>
 
-<span class="token keyword">let</span> triple <span class="token operator">=</span> <span class="token function">mul</span><span class="token punctuation">.</span><span class="token function">bind</span><span class="token punctuation">(</span><span class="token keyword">null</span><span class="token punctuation">,</span> <span class="token number">3</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>script</span><span class="token punctuation">></span></span><span class="token script"><span class="token language-javascript">
+  button<span class="token punctuation">.</span><span class="token function-variable function">onclick</span> <span class="token operator">=</span> <span class="token keyword">function</span><span class="token punctuation">(</span><span class="token parameter">event</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+    <span class="token keyword">if</span> <span class="token punctuation">(</span>event<span class="token punctuation">.</span>altKey <span class="token operator">&amp;&amp;</span> event<span class="token punctuation">.</span>shiftKey<span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+      <span class="token function">alert</span><span class="token punctuation">(</span><span class="token string">'Hooray!'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">&#125;</span>
+  <span class="token punctuation">&#125;</span><span class="token punctuation">;</span>
+</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>script</span><span class="token punctuation">></span></span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
 
-<span class="token function">alert</span><span class="token punctuation">(</span> <span class="token function">triple</span><span class="token punctuation">(</span><span class="token number">3</span><span class="token punctuation">)</span> <span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// = mul(3, 3) = 9</span>
-<span class="token function">alert</span><span class="token punctuation">(</span> <span class="token function">triple</span><span class="token punctuation">(</span><span class="token number">4</span><span class="token punctuation">)</span> <span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// = mul(3, 4) = 12</span>
-<span class="token function">alert</span><span class="token punctuation">(</span> <span class="token function">triple</span><span class="token punctuation">(</span><span class="token number">5</span><span class="token punctuation">)</span> <span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// = mul(3, 5) = 15</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<h2 id="5、坐标：clientX-Y，pageX-Y"><a href="#5、坐标：clientX-Y，pageX-Y" class="headerlink" title="5、坐标：clientX&#x2F;Y，pageX&#x2F;Y"></a>5、坐标：clientX&#x2F;Y，pageX&#x2F;Y</h2><p>所有的鼠标事件都提供了两种形式的坐标：</p>
+<ol>
+<li>相对于窗口的坐标：<code>clientX</code> 和 <code>clientY</code>。</li>
+<li>相对于文档的坐标：<code>pageX</code> 和 <code>pageY</code>。</li>
+</ol>
+<p>我们已经在 <a target="_blank" rel="noopener" href="https://zh.javascript.info/coordinates">坐标</a> 中解释过它们之间的区别。</p>
+<p>简而言之，相对于文档的坐标 <code>pageX/Y</code> 以文档的左上角为参照物，并且同一位置的坐标不随页面的滚动而改变。相对于窗口的坐标 <code>clientX/Y</code> 以当前窗口的左上角为参照物，并且同一位置的坐标会随着页面的滚动而改变。</p>
+<h2 id="6、防止在鼠标按下时的选择"><a href="#6、防止在鼠标按下时的选择" class="headerlink" title="6、防止在鼠标按下时的选择"></a>6、防止在鼠标按下时的选择</h2><h3 id="防止双击选中文本"><a href="#防止双击选中文本" class="headerlink" title="防止双击选中文本"></a>防止双击选中文本</h3><p>双击鼠标会有副作用，在某些界面中可能会出现干扰：它会选择文本。</p>
+<p>比如，双击下面的文本，除了我们的处理程序外，还会选择文本：</p>
+<pre class="line-numbers language-markup" data-language="markup"><code class="language-markup"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>span</span> <span class="token special-attr"><span class="token attr-name">ondblclick</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span><span class="token value javascript language-javascript"><span class="token function">alert</span><span class="token punctuation">(</span><span class="token string">'dblclick'</span><span class="token punctuation">)</span></span><span class="token punctuation">"</span></span></span><span class="token punctuation">></span></span>Double-click me<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>span</span><span class="token punctuation">></span></span><span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
 
-<h2 id="5、partial"><a href="#5、partial" class="headerlink" title="5、partial"></a>5、partial</h2><p>当我们想绑定一些参数（arguments），但是不想绑定上下文 <code>this</code>，应该怎么办？</p>
-<p>答：原生的 <code>bind</code> 不允许这种情况。我们不可以省略上下文直接跳到参数（arguments）。</p>
-<p>幸运的是，仅绑定参数（arguments）的函数 <code>partial</code> 比较容易实现。</p>
-<pre class="line-numbers language-javascript" data-language="javascript"><code class="language-javascript"><span class="token keyword">function</span> <span class="token function">partial</span><span class="token punctuation">(</span><span class="token parameter">func<span class="token punctuation">,</span> <span class="token operator">...</span>argsBound</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
-  <span class="token keyword">return</span> <span class="token keyword">function</span><span class="token punctuation">(</span><span class="token parameter"><span class="token operator">...</span>args</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span> <span class="token comment">// (*)</span>
-    <span class="token keyword">return</span> <span class="token function">func</span><span class="token punctuation">.</span><span class="token function">call</span><span class="token punctuation">(</span><span class="token keyword">this</span><span class="token punctuation">,</span> <span class="token operator">...</span>argsBound<span class="token punctuation">,</span> <span class="token operator">...</span>args<span class="token punctuation">)</span><span class="token punctuation">;</span>
-  <span class="token punctuation">&#125;</span>
-<span class="token punctuation">&#125;</span>
+<p>如果按下鼠标左键，并在不松开的情况下移动鼠标，这也常常会造成不必要的选择。</p>
+<p>有多种防止选择的方法，你可以在 <a target="_blank" rel="noopener" href="https://zh.javascript.info/selection-range">选择（Selection）和范围（Range）</a> 一章中详细阅读。</p>
+<p>在这种情况下，最合理的方式是防止浏览器对 <code>mousedown</code> 进行操作。这样能够阻止刚刚提到的两种选择：</p>
+<pre class="line-numbers language-markup" data-language="markup"><code class="language-markup"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>b</span> <span class="token special-attr"><span class="token attr-name">ondblclick</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span><span class="token value javascript language-javascript"><span class="token function">alert</span><span class="token punctuation">(</span><span class="token string">'Click!'</span><span class="token punctuation">)</span></span><span class="token punctuation">"</span></span></span> <span class="token special-attr"><span class="token attr-name">onmousedown</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span><span class="token value javascript language-javascript"><span class="token keyword">return</span> <span class="token boolean">false</span></span><span class="token punctuation">"</span></span></span><span class="token punctuation">></span></span>
+  Double-click me
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>b</span><span class="token punctuation">></span></span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span></span></code></pre>
 
-<span class="token comment">// 用法：</span>
-<span class="token keyword">let</span> user <span class="token operator">=</span> <span class="token punctuation">&#123;</span>
-  <span class="token literal-property property">firstName</span><span class="token operator">:</span> <span class="token string">"John"</span><span class="token punctuation">,</span>
-  <span class="token function">say</span><span class="token punctuation">(</span><span class="token parameter">time<span class="token punctuation">,</span> phrase</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
-    <span class="token function">alert</span><span class="token punctuation">(</span><span class="token template-string"><span class="token template-punctuation string">`</span><span class="token string">[</span><span class="token interpolation"><span class="token interpolation-punctuation punctuation">$&#123;</span>time<span class="token interpolation-punctuation punctuation">&#125;</span></span><span class="token string">] </span><span class="token interpolation"><span class="token interpolation-punctuation punctuation">$&#123;</span><span class="token keyword">this</span><span class="token punctuation">.</span>firstName<span class="token interpolation-punctuation punctuation">&#125;</span></span><span class="token string">: </span><span class="token interpolation"><span class="token interpolation-punctuation punctuation">$&#123;</span>phrase<span class="token interpolation-punctuation punctuation">&#125;</span></span><span class="token string">!</span><span class="token template-punctuation string">`</span></span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-  <span class="token punctuation">&#125;</span>
-<span class="token punctuation">&#125;</span><span class="token punctuation">;</span>
+<p>现在，在双击时，粗体元素不会被选中，并且在粗体元素上按下鼠标左键也不会开始选择。</p>
+<p>请注意：其中的文本仍然是可选择的。但是，选择不应该开始于该文本自身，而应该在该文本之前或之后开始。通常，这对用户来说挺好的。</p>
+<h3 id="防止复制"><a href="#防止复制" class="headerlink" title="防止复制"></a>防止复制</h3><p>如果我们想禁用选择以保护我们页面的内容不被复制粘贴，那么我们可以使用另一个事件：<code>oncopy</code>。</p>
+<pre class="line-numbers language-markup" data-language="markup"><code class="language-markup"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>div</span> <span class="token attr-name">oncopy</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>alert('Copying forbidden!');return false<span class="token punctuation">"</span></span><span class="token punctuation">></span></span>
+  Dear user,
+  The copying is forbidden for you.
+  If you know JS or HTML, then you can get everything from the page source though.
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>div</span><span class="token punctuation">></span></span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span></span></code></pre>
 
-<span class="token comment">// 添加一个带有绑定时间的 partial 方法</span>
-user<span class="token punctuation">.</span>sayNow <span class="token operator">=</span> <span class="token function">partial</span><span class="token punctuation">(</span>user<span class="token punctuation">.</span>say<span class="token punctuation">,</span> <span class="token keyword">new</span> <span class="token class-name">Date</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">getHours</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">+</span> <span class="token string">':'</span> <span class="token operator">+</span> <span class="token keyword">new</span> <span class="token class-name">Date</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">getMinutes</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
 
-user<span class="token punctuation">.</span><span class="token function">sayNow</span><span class="token punctuation">(</span><span class="token string">"Hello"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-<span class="token comment">// 类似于这样的一些内容：</span>
-<span class="token comment">// [10:00] John: Hello!</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
-
-<p><code>partial(func[, arg1, arg2...])</code> 调用的结果是一个包装器 <code>(*)</code>，它调用 <code>func</code> 并具有以下内容：</p>
+<p>如果你试图在 <code>&lt;div&gt;</code> 中复制一段文本，这是行不通的，因为默认行为 <code>oncopy</code> 被阻止了。</p>
+<p>当然，用户可以访问页面的 HTML 源码，并且可以从那里获取内容，但并不是每个人都知道如何做到这一点。</p>
+<h2 id="7、总结"><a href="#7、总结" class="headerlink" title="7、总结"></a>7、总结</h2><p>鼠标事件有以下属性：</p>
 <ul>
-<li>与它获得的函数具有相同的 <code>this</code>（对于 <code>user.sayNow</code> 调用来说，它是 <code>user</code>）</li>
-<li>然后给它 <code>...argsBound</code> —— 来自于 <code>partial</code> 调用的参数（<code>&quot;10:00&quot;</code>）</li>
-<li>然后给它 <code>...args</code> —— 给包装器的参数（<code>&quot;Hello&quot;</code>）</li>
+<li>按钮：<code>button</code>。</li>
+<li>组合键（如果被按下则为 <code>true</code>）：<code>altKey</code>，<code>ctrlKey</code>，<code>shiftKey</code> 和 <code>metaKey</code>（Mac）。<ul>
+<li>如果你想处理 Ctrl，那么不要忘记 Mac 用户，他们通常使用的是 Cmd，所以最好检查 <code>if (e.metaKey || e.ctrlKey)</code>。</li>
 </ul>
-<h2 id="6、总结"><a href="#6、总结" class="headerlink" title="6、总结"></a>6、总结</h2><p>方法 <code>func.bind(context, ...args)</code> 返回函数 <code>func</code> 的“绑定的（bound）变体”，它绑定了上下文 <code>this</code> 和 <code>...args</code> 参数。</p>
-<p>通常我们应用 <code>bind</code> 来绑定对象方法的 <code>this</code>，这样我们就可以把它们传递到其他地方使用。例如，传递给 <code>setTimeout</code>。</p>
-<p>当我们绑定一个现有的函数的某些参数时，绑定后的（不太通用的）函数被称为 <strong>partially applied</strong> 或 <strong>partial</strong>。</p>
-<p>当我们不想一遍又一遍地重复相同的参数时，部分应用函数非常有用。就像我们有一个 <code>send(from, to)</code> 函数，并且对于我们的任务来说，<code>from</code> 应该总是一样的，那么我们就可以使用它的一个部分应用函数。</p>
+</li>
+<li>窗口相对坐标：<code>clientX/clientY</code>。</li>
+<li>文档相对坐标：<code>pageX/pageY</code>。</li>
+</ul>
+<p><code>mousedown</code> 的默认浏览器操作是文本选择，如果它对界面不利，则应避免它。</p>
 
                 
             </div>
@@ -722,8 +677,8 @@ user<span class="token punctuation">.</span><span class="token function">sayNow<
                     
                         <div class="article-tag">
                             
-                                <a href="/tags/JavaScript/">
-                                    <span class="chip bg-color">JavaScript</span>
+                                <a href="/tags/%E6%B5%8F%E8%A7%88%E5%99%A8%EF%BC%9A%E6%96%87%E6%A1%A3%E3%80%81%E4%BA%8B%E4%BB%B6%E3%80%81%E6%8E%A5%E5%8F%A3/">
+                                    <span class="chip bg-color">浏览器：文档、事件、接口</span>
                                 </a>
                             
                         </div>
@@ -1036,17 +991,18 @@ user<span class="token punctuation">.</span><span class="token function">sayNow<
 <article id="prenext-posts" class="prev-next articles">
     <div class="row article-row">
         
-        <div class="article col s12 m6" data-aos="fade-up">
+        <div class="article col s12 m6" data-aos="fade-up" data-aos="fade-up">
             <div class="article-badge left-badge text-color">
-                <i class="fas fa-chevron-left"></i>&nbsp;Previous</div>
+                <i class="far fa-dot-circle"></i>&nbsp;Current
+            </div>
             <div class="card">
-                <a href="/posts/3ffe7388.html">
+                <a href="/posts/5df19f0c.html">
                     <div class="card-image">
                         
                         
-                        <img src="/medias/featureimages/3.jpg" class="responsive-img" alt="四十五、JavaScript深入理解箭头函数">
+                        <img src="/medias/featureimages/1.jpg" class="responsive-img" alt="十七、鼠标事件">
                         
-                        <span class="card-title">四十五、JavaScript深入理解箭头函数</span>
+                        <span class="card-title">十七、鼠标事件</span>
                     </div>
                 </a>
                 <div class="card-content article-content">
@@ -1056,26 +1012,27 @@ user<span class="token punctuation">.</span><span class="token function">sayNow<
                         
                     </div>
                     <div class="publish-info">
-                        <span class="publish-date">
-                            <i class="far fa-clock fa-fw icon-date"></i>2024-09-09
-                        </span>
+                            <span class="publish-date">
+                                <i class="far fa-clock fa-fw icon-date"></i>2025-03-19
+                            </span>
                         <span class="publish-author">
                             
                             <i class="fas fa-bookmark fa-fw icon-category"></i>
                             
-                            <a href="/categories/JavaScript/" class="post-category">
-                                    JavaScript
+                            <a href="/categories/%E6%B5%8F%E8%A7%88%E5%99%A8%EF%BC%9A%E6%96%87%E6%A1%A3%E3%80%81%E4%BA%8B%E4%BB%B6%E3%80%81%E6%8E%A5%E5%8F%A3/" class="post-category">
+                                    浏览器：文档、事件、接口
                                 </a>
                             
                             
                         </span>
                     </div>
                 </div>
+
                 
                 <div class="card-action article-tags">
                     
-                    <a href="/tags/JavaScript/">
-                        <span class="chip bg-color">JavaScript</span>
+                    <a href="/tags/%E6%B5%8F%E8%A7%88%E5%99%A8%EF%BC%9A%E6%96%87%E6%A1%A3%E3%80%81%E4%BA%8B%E4%BB%B6%E3%80%81%E6%8E%A5%E5%8F%A3/">
+                        <span class="chip bg-color">浏览器：文档、事件、接口</span>
                     </a>
                     
                 </div>
@@ -1089,13 +1046,13 @@ user<span class="token punctuation">.</span><span class="token function">sayNow<
                 Next&nbsp;<i class="fas fa-chevron-right"></i>
             </div>
             <div class="card">
-                <a href="/posts/5a7f0b53.html">
+                <a href="/posts/ffa8b000.html">
                     <div class="card-image">
                         
                         
-                        <img src="/medias/featureimages/22.jpg" class="responsive-img" alt="四十三、JavaScript 装饰器模式和转发，call/apply">
+                        <img src="/medias/featureimages/16.jpg" class="responsive-img" alt="十六、创建自定义事件">
                         
-                        <span class="card-title">四十三、JavaScript 装饰器模式和转发，call/apply</span>
+                        <span class="card-title">十六、创建自定义事件</span>
                     </div>
                 </a>
                 <div class="card-content article-content">
@@ -1106,14 +1063,14 @@ user<span class="token punctuation">.</span><span class="token function">sayNow<
                     </div>
                     <div class="publish-info">
                             <span class="publish-date">
-                                <i class="far fa-clock fa-fw icon-date"></i>2024-09-05
+                                <i class="far fa-clock fa-fw icon-date"></i>2025-03-18
                             </span>
                         <span class="publish-author">
                             
                             <i class="fas fa-bookmark fa-fw icon-category"></i>
                             
-                            <a href="/categories/JavaScript/" class="post-category">
-                                    JavaScript
+                            <a href="/categories/%E6%B5%8F%E8%A7%88%E5%99%A8%EF%BC%9A%E6%96%87%E6%A1%A3%E3%80%81%E4%BA%8B%E4%BB%B6%E3%80%81%E6%8E%A5%E5%8F%A3/" class="post-category">
+                                    浏览器：文档、事件、接口
                                 </a>
                             
                             
@@ -1123,8 +1080,8 @@ user<span class="token punctuation">.</span><span class="token function">sayNow<
                 
                 <div class="card-action article-tags">
                     
-                    <a href="/tags/JavaScript/">
-                        <span class="chip bg-color">JavaScript</span>
+                    <a href="/tags/%E6%B5%8F%E8%A7%88%E5%99%A8%EF%BC%9A%E6%96%87%E6%A1%A3%E3%80%81%E4%BA%8B%E4%BB%B6%E3%80%81%E6%8E%A5%E5%8F%A3/">
+                        <span class="chip bg-color">浏览器：文档、事件、接口</span>
                     </a>
                     
                 </div>
