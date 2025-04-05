@@ -1,0 +1,2133 @@
+<!DOCTYPE HTML>
+<html lang="en">
+
+
+<head>
+    <meta charset="utf-8">
+    <meta name="keywords" content="十九、JVM 监控&amp;诊断命令行, 西伯">
+    <meta name="description" content="十九、JVM 监控&amp;amp;诊断命令行1、概述​	性能诊断是软件工程师在日常工作中需要经常面对和解决的问题，在用户体验至上的今天，解决好应用的性能问题能带来非常大的收益。
+​	Java 作为最流行的编程语言之一，其应用性能诊断一直受到业界广">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <meta name="renderer" content="webkit|ie-stand|ie-comp">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="format-detection" content="telephone=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="referrer" content="no-referrer-when-downgrade">
+    <!-- Global site tag (gtag.js) - Google Analytics -->
+
+
+    <title>十九、JVM 监控&amp;诊断命令行 | 西伯</title>
+    <link rel="icon" type="image/png" href="/favicon.png">
+    
+
+
+    <!-- bg-cover style     -->
+
+
+
+<link rel="stylesheet" type="text/css" href="/libs/awesome/css/all.min.css">
+<link rel="stylesheet" type="text/css" href="/libs/materialize/materialize.min.css">
+<link rel="stylesheet" type="text/css" href="/libs/aos/aos.css">
+<link rel="stylesheet" type="text/css" href="/libs/animate/animate.min.css">
+<link rel="stylesheet" type="text/css" href="/libs/lightGallery/css/lightgallery.min.css">
+<link rel="stylesheet" type="text/css" href="/css/matery.css">
+<link rel="stylesheet" type="text/css" href="/css/my.css">
+<link rel="stylesheet" type="text/css" href="/css/dark.css" media="none" onload="if(media!='all')media='all'">
+
+
+
+
+    <link rel="stylesheet" href="/libs/tocbot/tocbot.css">
+    <link rel="stylesheet" href="/css/post.css">
+
+
+
+
+    
+
+
+
+    <script src="/libs/jquery/jquery-3.6.0.min.js"></script>
+
+<meta name="generator" content="Hexo 7.2.0"></head>
+
+<!-- 预加载动画 -->
+
+    <style type="text/css" lang="css">
+    #loading-container{
+        position: fixed;
+        top: 0;
+        left: 0;
+        min-height: 100vh;
+        width: 100vw;
+        z-index: 9999;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        background: #2c3561;
+        text-align: center;
+        /* loader页面消失采用渐隐的方式*/
+        -webkit-transition: opacity 1s ease;
+        -moz-transition: opacity 1s ease;
+        -o-transition: opacity 1s ease;
+        transition: opacity 1s ease;
+    }
+    .loading-image{
+        width: 120px;
+        height: 50px;
+        transform: translate(-50%);
+    }
+
+    .loading-image div:nth-child(2) {
+        -webkit-animation: pacman-balls 1s linear 0s infinite;
+        animation: pacman-balls 1s linear 0s infinite
+    }
+
+    .loading-image div:nth-child(3) {
+        -webkit-animation: pacman-balls 1s linear .33s infinite;
+        animation: pacman-balls 1s linear .33s infinite
+    }
+
+    .loading-image div:nth-child(4) {
+        -webkit-animation: pacman-balls 1s linear .66s infinite;
+        animation: pacman-balls 1s linear .66s infinite
+    }
+
+    .loading-image div:nth-child(5) {
+        -webkit-animation: pacman-balls 1s linear .99s infinite;
+        animation: pacman-balls 1s linear .99s infinite
+    }
+
+    .loading-image div:first-of-type {
+        width: 0;
+        height: 0;
+        border: 25px solid #49b1f5;
+        border-right-color: transparent;
+        border-radius: 25px;
+        -webkit-animation: rotate_pacman_half_up .5s 0s infinite;
+        animation: rotate_pacman_half_up .5s 0s infinite;
+    }
+    .loading-image div:nth-child(2) {
+        width: 0;
+        height: 0;
+        border: 25px solid #49b1f5;
+        border-right-color: transparent;
+        border-radius: 25px;
+        -webkit-animation: rotate_pacman_half_down .5s 0s infinite;
+        animation: rotate_pacman_half_down .5s 0s infinite;
+        margin-top: -50px;
+    }
+    @-webkit-keyframes rotate_pacman_half_up {0% {transform: rotate(270deg)}50% {transform: rotate(1turn)}to {transform: rotate(270deg)}}
+
+    @keyframes rotate_pacman_half_up {0% {transform: rotate(270deg)}50% {transform: rotate(1turn)}to {transform: rotate(270deg)}}
+
+    @-webkit-keyframes rotate_pacman_half_down {0% {transform: rotate(90deg)}50% {transform: rotate(0deg)}to {transform: rotate(90deg)}}
+
+    @keyframes rotate_pacman_half_down {0% {transform: rotate(90deg)}50% {transform: rotate(0deg)}to {transform: rotate(90deg)}}
+
+    @-webkit-keyframes pacman-balls {75% {opacity: .7}to {transform: translate(-100px, -6.25px)}}
+
+    @keyframes pacman-balls {75% {opacity: .7}to {transform: translate(-100px, -6.25px)}}
+
+
+    .loading-image div:nth-child(3),
+    .loading-image div:nth-child(4),
+    .loading-image div:nth-child(5),
+    .loading-image div:nth-child(6){
+        background-color: #49b1f5;
+        width: 15px;
+        height: 15px;
+        border-radius: 100%;
+        margin: 2px;
+        width: 10px;
+        height: 10px;
+        position: absolute;
+        transform: translateY(-6.25px);
+        top: 25px;
+        left: 100px;
+    }
+    .loading-text{
+        margin-bottom: 20vh;
+        text-align: center;
+        color: #f8c471;
+        font-size: 2rem;
+        box-sizing: border-box;
+        padding: 0 10px;
+        text-shadow: 0 2px 10px rgba(0,0,0,0.2);
+    }
+    @media only screen and (max-width: 500px) {
+        .loading-text{
+            font-size: 1.5rem;
+        }
+    }
+    .fadeout {
+        opacity: 0;
+        filter: alpha(opacity=0);
+    }
+    /* logo出现动画 */
+    @-webkit-keyframes fadeInDown{0%{opacity:0;-webkit-transform:translate3d(0,-100%,0);transform:translate3d(0,-100%,0)}100%{opacity:1;-webkit-transform:none;transform:none}}
+    @keyframes fadeInDown{0%{opacity:0;-webkit-transform:translate3d(0,-100%,0);}}
+</style>
+<script>
+    (function () {
+        const loaded = function(){
+            setTimeout(function(){
+                const loader = document.getElementById("loading-container");
+                loader.className="fadeout" ;//使用渐隐的方法淡出loading page
+                // document.getElementById("body-wrap").style.display="flex";
+                setTimeout(function(){
+                    loader.style.display="none";
+                },2500);
+            },800);//强制显示loading page 0.8s
+        };
+        loaded();
+    })()
+</script>
+
+<body>
+    <!--动态背景-->
+    <div id="bg"><canvas></canvas><canvas></canvas><canvas></canvas></div>
+    <script src="/js/canva_moving_effect.js"></script>
+
+    
+        <div id="loading-container">
+            <p class="loading-text">客官坐会儿，请稍等片刻. . . </p>
+            <div class="loading-image">
+                <div></div>
+                <div></div>
+                <div></div>
+                <div></div>
+                <div></div>
+            </div>
+        </div>
+    
+
+    <header class="navbar-fixed">
+    <nav id="headNav" class="bg-color nav-transparent">
+        <div id="navContainer" class="nav-wrapper">
+            <div class="brand-logo">
+                <a href="/" class="waves-effect waves-light">
+                    <div>&nbsp;
+                        
+                            <img src="/medias/logo2.png" class="logo-img" alt="LOGO">
+                        
+                        <span class="logo-span">西伯</span>
+                    </div>
+                </a>
+            </div>
+            
+
+<a href="#" data-target="mobile-nav" class="sidenav-trigger button-collapse"><i class="fas fa-bars"></i></a>
+<ul class="right nav-menu">
+  
+  <li class="hide-on-med-and-down nav-item">
+    
+    <a href="/" class="waves-effect waves-light">
+      
+      <i class="fas fa-home" style="zoom: 0.6;"></i>
+      
+      <span>Index</span>
+    </a>
+    
+  </li>
+  
+  <li class="hide-on-med-and-down nav-item">
+    
+    <a href="/tags" class="waves-effect waves-light">
+      
+      <i class="fas fa-tags" style="zoom: 0.6;"></i>
+      
+      <span>Tags</span>
+    </a>
+    
+  </li>
+  
+  <li class="hide-on-med-and-down nav-item">
+    
+    <a href="/categories" class="waves-effect waves-light">
+      
+      <i class="fas fa-bookmark" style="zoom: 0.6;"></i>
+      
+      <span>Categories</span>
+    </a>
+    
+  </li>
+  
+  <li class="hide-on-med-and-down nav-item">
+    
+    <a href="/archives" class="waves-effect waves-light">
+      
+      <i class="fas fa-archive" style="zoom: 0.6;"></i>
+      
+      <span>Archives</span>
+    </a>
+    
+  </li>
+  
+  <li class="hide-on-med-and-down nav-item">
+    
+    <a href="/about" class="waves-effect waves-light">
+      
+      <i class="fas fa-user-circle" style="zoom: 0.6;"></i>
+      
+      <span>About</span>
+    </a>
+    
+  </li>
+  
+  <li class="hide-on-med-and-down nav-item">
+    
+    <a href="/contact" class="waves-effect waves-light">
+      
+      <i class="fas fa-comments" style="zoom: 0.6;"></i>
+      
+      <span>Contact</span>
+    </a>
+    
+  </li>
+  
+  <li class="hide-on-med-and-down nav-item">
+    
+    <a href="/friends" class="waves-effect waves-light">
+      
+      <i class="fas fa-address-book" style="zoom: 0.6;"></i>
+      
+      <span>Friends</span>
+    </a>
+    
+  </li>
+  
+  <li>
+    <a href="#searchModal" class="modal-trigger waves-effect waves-light">
+      <i id="searchIcon" class="fas fa-search" title="Search" style="zoom: 0.95;"></i>
+    </a>
+  </li>
+
+  <!-- 全屏 -->
+<!--   <li id="fullscreen_li" class="fullscreen"> -->
+<!--     <a href="javascript:void(0);" class="modal-trigger waves-effect waves-light"> -->
+<!--       <i id="fullscreen" class="fas fa-expand-arrows-alt" title="全屏" style="zoom: 0.85;"></i> -->
+<!--     </a> -->
+<!--   </li> -->
+
+  <!-- 主题背景 -->
+  <li>
+    <a href="javascript:;" class="modal-trigger waves-effect waves-light" onclick="switchNightMode()" title="深色/浅色模式" >
+      <i id="sum-moon-icon" class="fas fa-sun" style="zoom: 0.85;"></i>
+    </a>
+  </li>
+  &nbsp;
+</ul>
+
+
+<div id="mobile-nav" class="side-nav sidenav">
+
+    <div class="mobile-head bg-color">
+        
+        <img src="/medias/logo2.png" class="logo-img circle responsive-img">
+        
+        <div class="logo-name">西伯</div>
+        <div class="logo-desc">
+            
+            Never give up and never give in...
+            
+        </div>
+    </div>
+
+    <ul class="menu-list mobile-menu-list">
+        
+        <li class="m-nav-item">
+	  
+		<a href="/" class="waves-effect waves-light">
+			
+			    <i class="fa-fw fas fa-home"></i>
+			
+			Index
+		</a>
+          
+        </li>
+        
+        <li class="m-nav-item">
+	  
+		<a href="/tags" class="waves-effect waves-light">
+			
+			    <i class="fa-fw fas fa-tags"></i>
+			
+			Tags
+		</a>
+          
+        </li>
+        
+        <li class="m-nav-item">
+	  
+		<a href="/categories" class="waves-effect waves-light">
+			
+			    <i class="fa-fw fas fa-bookmark"></i>
+			
+			Categories
+		</a>
+          
+        </li>
+        
+        <li class="m-nav-item">
+	  
+		<a href="/archives" class="waves-effect waves-light">
+			
+			    <i class="fa-fw fas fa-archive"></i>
+			
+			Archives
+		</a>
+          
+        </li>
+        
+        <li class="m-nav-item">
+	  
+		<a href="/about" class="waves-effect waves-light">
+			
+			    <i class="fa-fw fas fa-user-circle"></i>
+			
+			About
+		</a>
+          
+        </li>
+        
+        <li class="m-nav-item">
+	  
+		<a href="/contact" class="waves-effect waves-light">
+			
+			    <i class="fa-fw fas fa-comments"></i>
+			
+			Contact
+		</a>
+          
+        </li>
+        
+        <li class="m-nav-item">
+	  
+		<a href="/friends" class="waves-effect waves-light">
+			
+			    <i class="fa-fw fas fa-address-book"></i>
+			
+			Friends
+		</a>
+          
+        </li>
+        
+        
+    </ul>
+</div>
+
+
+        </div>
+
+        
+    </nav>
+
+</header>
+
+    
+
+
+
+<div class="bg-cover pd-header post-cover" style="background-image: url('/medias/featureimages/18.jpg')">
+    <div class="container" style="right: 0px;left: 0px;">
+        <div class="row">
+            <div class="col s12 m12 l12">
+                <div class="brand">
+                    <h1 class="description center-align post-title">十九、JVM 监控&amp;诊断命令行</h1>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+<main class="post-container content">
+
+    
+    <div class="row">
+    <div id="main-content" class="col s12 m12 l9">
+        <!-- 文章内容详情 -->
+<div id="artDetail">
+    <div class="card">
+        <div class="card-content article-info">
+            <div class="row tag-cate">
+                <div class="col s7">
+                    
+                    <div class="article-tag">
+                        
+                            <a href="/tags/JVM/">
+                                <span class="chip bg-color">JVM</span>
+                            </a>
+                        
+                    </div>
+                    
+                </div>
+                <div class="col s5 right-align">
+                    
+                    <div class="post-cate">
+                        <i class="fas fa-bookmark fa-fw icon-category"></i>
+                        
+                            <a href="/categories/JVM/" class="post-category">
+                                JVM
+                            </a>
+                        
+                    </div>
+                    
+                </div>
+            </div>
+
+            <div class="post-info">
+                
+                <div class="post-date info-break-policy">
+                    <i class="far fa-calendar-minus fa-fw"></i>Publish Date:&nbsp;&nbsp;
+                    2025-04-06
+                </div>
+                
+
+                
+
+                
+                <div class="info-break-policy">
+                    <i class="far fa-file-word fa-fw"></i>Word Count:&nbsp;&nbsp;
+                    6k
+                </div>
+                
+
+                
+                <div class="info-break-policy">
+                    <i class="far fa-clock fa-fw"></i>Read Times:&nbsp;&nbsp;
+                    23 Min
+                </div>
+                
+
+                
+                    <div id="busuanzi_container_page_pv" class="info-break-policy">
+                        <i class="far fa-eye fa-fw"></i>Read Count:&nbsp;&nbsp;
+                        <span id="busuanzi_value_page_pv"></span>
+                    </div>
+				
+            </div>
+        </div>
+        <hr class="clearfix">
+
+        
+        <!-- 是否加载使用自带的 prismjs. -->
+        <link rel="stylesheet" href="/libs/prism/prism.min.css">
+        
+
+        
+        <!-- 代码块折行 -->
+        <style type="text/css">
+            code[class*="language-"], pre[class*="language-"] { white-space: pre-wrap !important; }
+        </style>
+        
+
+        <div class="card-content article-card-content">
+            <div id="articleContent">
+                <h1 id="十九、JVM-监控-诊断命令行"><a href="#十九、JVM-监控-诊断命令行" class="headerlink" title="十九、JVM 监控&amp;诊断命令行"></a>十九、JVM 监控&amp;诊断命令行</h1><h2 id="1、概述"><a href="#1、概述" class="headerlink" title="1、概述"></a>1、概述</h2><p>​	性能诊断是软件工程师在日常工作中需要经常面对和解决的问题，在用户体验至上的今天，解决好应用的性能问题能带来非常大的收益。</p>
+<p>​	Java 作为最流行的编程语言之一，其应用性能诊断一直受到业界广泛关注。可能造成 Java 应用出现性能问题的因素非常多，例如线程控制、磁盘读写、数据库访问、网络 I&#x2F;O、垃圾收集等。想要定位这些问题，一款优秀的性能诊断工具必不可少。</p>
+<p>​	体会 1：使用数据说明问题，使用知识分析问题，使用工具处理问题。</p>
+<p>​	体会 2：无监控、不调优！</p>
+<h3 id="简单命令行工具"><a href="#简单命令行工具" class="headerlink" title="简单命令行工具"></a>简单命令行工具</h3><p>​	在我们刚接触 java 学习的时候，大家肯定最先了解的两个命令就是 javac，java，那么除此之外，还有没有其他的命令可以供我们使用呢？</p>
+<p>​	我们进入到安装 jdk 的 bin 目录，发现还有一系列辅助工具。这些辅助工具用来获取目标 JVM 不同方面、不同层次的信息，帮助开发人员很好地解决 Java 应用程序的一些疑难杂症。</p>
+<p><img src="/medias/loading.gif" data-original="https://raw.githubusercontent.com/luyaguo/pictures-guo/main/jvm/202504051649425.png" alt="image-20230330233632233"></p>
+<p>这些命令的代码位于：<code>**\jdk1.8\lib\tools\sun\tools</code></p>
+<p><img src="/medias/loading.gif" data-original="https://raw.githubusercontent.com/luyaguo/pictures-guo/main/jvm/202504051649112.png" alt="image-20230330233909101"></p>
+<p>例如 javac 字节码如下：</p>
+<p><img src="/medias/loading.gif" data-original="https://raw.githubusercontent.com/luyaguo/pictures-guo/main/jvm/202504051649896.png" alt="image-20230330234046186"></p>
+<p><img src="/medias/loading.gif" data-original="https://raw.githubusercontent.com/luyaguo/pictures-guo/main/jvm/202504051649645.png" alt="image-20230330234237724"></p>
+<p>官方源码地址：<a target="_blank" rel="noopener" href="http://hg.openjdk.java.net/jdk/jdk11/file/1ddf9a99e4ad/src/jdk.jcmd/share/classes/sun/tools">http://hg.openjdk.java.net/jdk/jdk11/file/1ddf9a99e4ad/src/jdk.jcmd/share/classes/sun/tools</a></p>
+<p><img src="/medias/loading.gif" data-original="https://raw.githubusercontent.com/luyaguo/pictures-guo/main/jvm/202504051649071.png" alt="image-20230330233447274"></p>
+<h2 id="2、jps：查看正在运行的-Java-进程"><a href="#2、jps：查看正在运行的-Java-进程" class="headerlink" title="2、jps：查看正在运行的 Java 进程"></a>2、jps：查看正在运行的 Java 进程</h2><h3 id="jps-Java-Process-Status"><a href="#jps-Java-Process-Status" class="headerlink" title="jps(Java Process Status)"></a>jps(Java Process Status)</h3><p>​	<strong>显示指定系统内所有的 HotSpot 虚拟机进程（查看虚拟机进程信息），可用于查询正在运行的虚拟机进程。</strong></p>
+<p>​	说明：对于本地虚拟机进程来说，进程的本地虚拟机 ID 与操作系统的进程 ID 是一致的，是唯一的。</p>
+<p><img src="/medias/loading.gif" data-original="https://raw.githubusercontent.com/luyaguo/pictures-guo/main/jvm/202504051649160.png" alt="image-20230330235418585"></p>
+<p>基本使用语法为：<code>jps [options] [hostid]</code></p>
+<pre class="line-numbers language-ini" data-language="ini"><code class="language-ini">C:\Users\guo>jps -help
+usage: jps [-help]
+       jps [-q] [-mlvV] [&lt;hostid>]
+
+Definitions:
+    &lt;hostid>:      &lt;hostname>[:&lt;port>]<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<h3 id="options-参数"><a href="#options-参数" class="headerlink" title="options 参数"></a>options 参数</h3><ul>
+<li><p>-q：仅仅显示 LVMID（local virtual machine id），即本地虚拟机唯一 id。不显示主类的名称等</p>
+<pre class="line-numbers language-ini" data-language="ini"><code class="language-ini">C:\Users\guo>jps -q
+7348
+8740
+1544
+10812<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+</li>
+<li><p>-l：输出应用程序主类的全类名 或 如果进程执行的是 jar 包，则输出 jar 完整路径</p>
+<pre class="line-numbers language-ini" data-language="ini"><code class="language-ini">C:\Users\guo>jps -l
+7348 com.atguigu.java.ScannerTest
+8740
+10812 org.jetbrains.jps.cmdline.Launcher
+6956 sun.tools.jps.Jps<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+</li>
+<li><p>-m：输出虚拟机进程启动时传递给主类 main()的参数</p>
+<pre class="line-numbers language-ini" data-language="ini"><code class="language-ini">C:\Users\guo>jps -m
+14708 Jps -m
+7348 ScannerTest
+8740
+10812 Launcher 
+D:/IntelliJ IDEA 2019.3.5/plugins/java/lib/jps-builders-6.jar;
+D:/IntelliJ IDEA 2019.3.5/plugins/java/lib/javac2.jar;
+D:/IntelliJ IDEA 2019.3.5/lib/asm-all-7.0.1.jar;
+D:/IntelliJ IDEA 2019.3.5/lib/annotations.jar;
+D:/IntelliJ IDEA 2019.3.5/lib/qdox-2.0-M10.jar;
+...<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+</li>
+<li><p>-v：列出虚拟机进程启动时的 JVM 参数。比如：-Xms20m -Xmx50m 是启动程序指定的 jvm 参数。</p>
+<pre class="line-numbers language-ini" data-language="ini"><code class="language-ini">C:\Users\guo>jps -v
+<span class="token key attr-name">7348 ScannerTest -agentlib: jdwp</span><span class="token punctuation">=</span><span class="token value attr-value">transport=dt_socket,address=127.0.0.1:9201,suspend=y,server=n -Dvisualvm.id=870500228168200 -Dfile.encoding=UTF-8</span>
+
+<span class="token key attr-name">8740  exit -Xms128m -Xmx1002m -XX:ReservedCodeCacheSize</span><span class="token punctuation">=</span><span class="token value attr-value">240m -XX:+UseConcMarkSweepGC -XX:SoftRefLRUPolicyMSPerMB=50 -ea -XX:CICompilerCount=2 -Dsun.io.useCanonPrefixCache=false</span> 
+...
+
+<span class="token key attr-name">10812 Launcher -Xmx700m -Djava.awt.headless</span><span class="token punctuation">=</span><span class="token value attr-value">true -Djava.endorsed.dirs="" -Djdt.compiler.useSingleThread=true -Dpreload.project.path=F:/百度网盘/代码/JVMDemo -Dpreload.config.path=C:/Users/guo/.IntelliJIdea2019.3/config/options -Dcompile.parallel=false -Drebuild.on.dependency.change=true -Djava.net.preferIPv4Stack=true</span> 
+
+<span class="token key attr-name">8684 Jps -Dapplication.home</span><span class="token punctuation">=</span><span class="token value attr-value">D:\java\jdk1.8 -Xms8m</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre></li>
+</ul>
+<p>说明：以上参数可以综合使用：<code>jps -q -mlvV</code></p>
+<p><img src="/medias/loading.gif" data-original="https://raw.githubusercontent.com/luyaguo/pictures-guo/main/jvm/202504051649743.png" alt="image-20230331001246704"></p>
+<p>补充：如果某 Java 进程关闭了默认开启的 UsePerfData 参数（即使用参数-XX：-UsePerfData），那么 jps 命令（以及下面介绍的 jstat）将无法探知该 Java 进程。</p>
+<pre class="line-numbers language-java" data-language="java"><code class="language-java"><span class="token keyword">public</span> <span class="token keyword">class</span> <span class="token class-name">ScannerTest</span> <span class="token punctuation">&#123;</span>
+    <span class="token keyword">public</span> <span class="token keyword">static</span> <span class="token keyword">void</span> <span class="token function">main</span><span class="token punctuation">(</span><span class="token class-name">String</span><span class="token punctuation">[</span><span class="token punctuation">]</span> args<span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+        <span class="token class-name">Scanner</span> scanner <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">Scanner</span><span class="token punctuation">(</span><span class="token class-name">System</span><span class="token punctuation">.</span>in<span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token class-name">String</span> info <span class="token operator">=</span> scanner<span class="token punctuation">.</span><span class="token function">next</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">&#125;</span>
+<span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<p><img src="/medias/loading.gif" data-original="https://raw.githubusercontent.com/luyaguo/pictures-guo/main/jvm/202504051649088.png" alt="image-20230331001511333"></p>
+<p><img src="/medias/loading.gif" data-original="https://raw.githubusercontent.com/luyaguo/pictures-guo/main/jvm/202504051649801.png" alt="image-20230331001611537"></p>
+<h3 id="hostid-参数"><a href="#hostid-参数" class="headerlink" title="hostid 参数"></a>hostid 参数</h3><p>RMI 注册表中注册的主机名。如果想要远程监控主机上的 java 程序，需要安装 jstatd。</p>
+<p>对于具有更严格的安全实践的网络场所而言，可能使用一个自定义的策略文件来显示对特定的可信主机或网络的访问，尽管这种技术容易受到 IP 地址欺诈攻击。</p>
+<p>如果安全问题无法使用一个定制的策略文件来处理，那么最安全的操作是不运行 jstatd 服务器，而是在本地使用 jstat 和 jps 工具。</p>
+<h2 id="3、jstat：查看-JVM-统计信息"><a href="#3、jstat：查看-JVM-统计信息" class="headerlink" title="3、jstat：查看 JVM 统计信息"></a>3、jstat：查看 JVM 统计信息</h2><h3 id="概念"><a href="#概念" class="headerlink" title="概念"></a>概念</h3><p>​	jstat（JVM Statistics Monitoring Tool）：用于监视虚拟机各种运行状态信息的命令行工具。它可以显示本地或者远程虚拟机进程中的类装载、内存、垃圾收集、JIT 编译等运行数据。</p>
+<p>​	在没有 GUI 图形界面，只提供了纯文本控制台环境的服务器上，它将是运行期定位虚拟机性能问题的首选工具。常用于检测垃圾回收问题以及内存泄漏问题。</p>
+<h3 id="官方文档"><a href="#官方文档" class="headerlink" title="官方文档"></a>官方文档</h3><p><a target="_blank" rel="noopener" href="https://docs.oracle.com/javase/8/docs/technotes/tools/unix/jstat.html">https://docs.oracle.com/javase/8/docs/technotes/tools/unix/jstat.html</a></p>
+<h3 id="基本使用语法"><a href="#基本使用语法" class="headerlink" title="基本使用语法"></a>基本使用语法</h3><ul>
+<li>jstat -&lt;option&gt; [-t] [-h&lt;lines&gt;] &lt;vmid&gt; [&lt;interval&gt; [&lt;count&gt;]]</li>
+<li>查看命令相关参数：jstat -h  或  jstat -help</li>
+<li>其中 vmid 是进程 id 号，也就是 jps 之后看到的前面的号码，如下：</li>
+</ul>
+<p><img src="/medias/loading.gif" data-original="https://raw.githubusercontent.com/luyaguo/pictures-guo/main/jvm/202504051648664.png" alt="image-20210504201703222"></p>
+<h3 id="option-参数"><a href="#option-参数" class="headerlink" title="option 参数"></a>option 参数</h3><p>选项 option 可以由以下值构成。</p>
+<h4 id="类装载相关的"><a href="#类装载相关的" class="headerlink" title="类装载相关的"></a>类装载相关的</h4><ul>
+<li>-class：显示 ClassLoader 的相关信息：类的装载、卸载数量、总空间、类装载所消耗的时间等</li>
+</ul>
+<h4 id="垃圾回收相关的"><a href="#垃圾回收相关的" class="headerlink" title="垃圾回收相关的"></a>垃圾回收相关的</h4><ul>
+<li><p>-gc：显示与 GC 相关的堆信息。包括 Eden 区、两个 Survivor 区、老年代、永久代等的容量、已用空间、GC 时间合计等信息。</p>
+<p><img src="/medias/loading.gif" data-original="https://raw.githubusercontent.com/luyaguo/pictures-guo/main/jvm/202504051648248.png" alt="image-20230331233338757"></p>
+</li>
+<li><p>-gccapacity：显示内容与-gc 基本相同，但输出主要关注 Java 堆各个区域使用到的最大、最小空间。</p>
+</li>
+<li><p>-gcutil：显示内容与-gc 基本相同，但输出主要关注已使用空间占总空间的百分比。</p>
+</li>
+<li><p>-gccause：与-gcutil 功能一样，但是会额外输出导致最后一次或当前正在发生的 GC 产生的原因。</p>
+</li>
+<li><p>-gcnew：显示新生代 GC 状况</p>
+</li>
+<li><p>-gcnewcapacity：显示内容与-gcnew 基本相同，输出主要关注使用到的最大、最小空间</p>
+</li>
+<li><p>-geold：显示老年代 GC 状况</p>
+</li>
+<li><p>-gcoldcapacity：显示内容与-gcold 基本相同，输出主要关注使用到的最大、最小空间</p>
+</li>
+<li><p>-gcpermcapacity：显示永久代使用到的最大、最小空间。</p>
+</li>
+</ul>
+<h4 id="JIT-相关的："><a href="#JIT-相关的：" class="headerlink" title="JIT 相关的："></a>JIT 相关的：</h4><ul>
+<li>-compiler：显示 JIT 编译器编译过的方法、耗时等信息</li>
+<li>-printcompilation：输出已经被 JIT 编译的方法</li>
+</ul>
+<h4 id="Case"><a href="#Case" class="headerlink" title="Case"></a>Case</h4><p><strong>jstat -class</strong></p>
+<p><img src="/medias/loading.gif" data-original="https://raw.githubusercontent.com/luyaguo/pictures-guo/main/jvm/202504051648159.png" alt="img"></p>
+<p><strong>jstat -compiler</strong></p>
+<p><img src="/medias/loading.gif" data-original="https://raw.githubusercontent.com/luyaguo/pictures-guo/main/jvm/202504051648584.png" alt="img"></p>
+<p><strong>jstat -printcompilation</strong></p>
+<p><img src="/medias/loading.gif" data-original="https://raw.githubusercontent.com/luyaguo/pictures-guo/main/jvm/202504051648782.png" alt="img"></p>
+<p><strong>jstat -gc</strong></p>
+<p><img src="/medias/loading.gif" data-original="https://raw.githubusercontent.com/luyaguo/pictures-guo/main/jvm/202504051648919.png" alt="img"></p>
+<p><strong>jstat -gccapacity</strong></p>
+<p><img src="/medias/loading.gif" data-original="https://raw.githubusercontent.com/luyaguo/pictures-guo/main/jvm/202504051648150.png" alt="img"></p>
+<p><strong>jstat -gcutil</strong></p>
+<p><img src="/medias/loading.gif" data-original="https://raw.githubusercontent.com/luyaguo/pictures-guo/main/jvm/202504051648846.png" alt="img"></p>
+<p><strong>jstat -gccause</strong></p>
+<p><img src="/medias/loading.gif" data-original="https://raw.githubusercontent.com/luyaguo/pictures-guo/main/jvm/202504051648726.png" alt="img"></p>
+<p><strong>jstat -gcnew</strong></p>
+<p><img src="/medias/loading.gif" data-original="https://raw.githubusercontent.com/luyaguo/pictures-guo/main/jvm/202504051648592.png" alt="img"></p>
+<p><strong>jstat -gcnewcapacity</strong></p>
+<p><img src="/medias/loading.gif" data-original="https://raw.githubusercontent.com/luyaguo/pictures-guo/main/jvm/202504051648623.png" alt="img"></p>
+<p><strong>jstat -gcold</strong></p>
+<p><img src="/medias/loading.gif" data-original="https://raw.githubusercontent.com/luyaguo/pictures-guo/main/jvm/202504051648607.png" alt="img"></p>
+<p><strong>jstat -gcoldcapacity</strong></p>
+<p><img src="/medias/loading.gif" data-original="https://raw.githubusercontent.com/luyaguo/pictures-guo/main/jvm/202504051648119.png" alt="img"></p>
+<p><strong>jstat -t</strong></p>
+<p><img src="/medias/loading.gif" data-original="https://raw.githubusercontent.com/luyaguo/pictures-guo/main/jvm/202504051648858.png" alt="img"></p>
+<p><strong>jstat -t -h</strong></p>
+<p><img src="/medias/loading.gif" data-original="https://raw.githubusercontent.com/luyaguo/pictures-guo/main/jvm/202504051648904.png" alt="img"></p>
+<table>
+<thead>
+<tr>
+<th align="left">表头</th>
+<th align="left">含义（字节）</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left">EC</td>
+<td align="left">Eden 区的大小</td>
+</tr>
+<tr>
+<td align="left">EU</td>
+<td align="left">Eden 区已使用的大小</td>
+</tr>
+<tr>
+<td align="left">S0C</td>
+<td align="left">幸存者 0 区的大小</td>
+</tr>
+<tr>
+<td align="left">S1C</td>
+<td align="left">幸存者 1 区的大小</td>
+</tr>
+<tr>
+<td align="left">S0U</td>
+<td align="left">幸存者 0 区已使用的大小</td>
+</tr>
+<tr>
+<td align="left">S1U</td>
+<td align="left">幸存者 1 区已使用的大小</td>
+</tr>
+<tr>
+<td align="left">MC</td>
+<td align="left">元空间的大小</td>
+</tr>
+<tr>
+<td align="left">MU</td>
+<td align="left">元空间已使用的大小</td>
+</tr>
+<tr>
+<td align="left">OC</td>
+<td align="left">老年代的大小</td>
+</tr>
+<tr>
+<td align="left">OU</td>
+<td align="left">老年代已使用的大小</td>
+</tr>
+<tr>
+<td align="left">CCSC</td>
+<td align="left">压缩类空间的大小</td>
+</tr>
+<tr>
+<td align="left">CCSU</td>
+<td align="left">压缩类空间已使用的大小</td>
+</tr>
+<tr>
+<td align="left">YGC</td>
+<td align="left">从应用程序启动到采样时 young gc 的次数</td>
+</tr>
+<tr>
+<td align="left">YGCT</td>
+<td align="left">从应用程序启动到采样时 young gc 消耗时间（秒）</td>
+</tr>
+<tr>
+<td align="left">FGC</td>
+<td align="left">从应用程序启动到采样时 full gc 的次数</td>
+</tr>
+<tr>
+<td align="left">FGCT</td>
+<td align="left">从应用程序启动到采样时的 full gc 的消耗时间（秒）</td>
+</tr>
+<tr>
+<td align="left">GCT</td>
+<td align="left">从应用程序启动到采样时 gc 的总时间</td>
+</tr>
+</tbody></table>
+<h3 id="interval-参数"><a href="#interval-参数" class="headerlink" title="interval 参数"></a>interval 参数</h3><p>用于指定输出统计数据的周期，单位为毫秒。即：查询间隔</p>
+<h3 id="count-参数"><a href="#count-参数" class="headerlink" title="count 参数"></a>count 参数</h3><p>用于指定查询的总次数</p>
+<h3 id="t-参数"><a href="#t-参数" class="headerlink" title="-t 参数"></a>-t 参数</h3><p>可以在输出信息前加上一个 Timestamp 列，显示程序的运行时间。单位：秒</p>
+<p><img src="/medias/loading.gif" data-original="https://raw.githubusercontent.com/luyaguo/pictures-guo/main/jvm/202504051648152.png" alt="image-20230331231729067"></p>
+<p>​	我们执行jstat -gc -t 13152 1000 10，这代表1秒打印出1行，一共10行，-t代表打印出Timestamp总运行时间，结果如下所示：</p>
+<p><img src="/medias/loading.gif" data-original="https://raw.githubusercontent.com/luyaguo/pictures-guo/main/jvm/202504051648537.png" alt="image-20230331233442024"></p>
+<p>​	上方红色框框中代表Timestamp，而蓝色框框中代表垃圾回收时间，单位都是秒，如果让红色框框中的某两个值相减，假设这个值是 num1，然后让对应行的蓝色框框中的另外两个值相减，假设这个值是num2，之后让num2&#x2F;num1，得出的差值就是上述所说的GC时间占运行时间的比例。<br>​	虽然这种方式比较繁琐，但是在项目部署之后就需要使用命令行去看了，就没有可视化界面了，所以这种方式也要会</p>
+<h3 id="h-参数"><a href="#h-参数" class="headerlink" title="-h 参数"></a>-h 参数</h3><p> 可以在周期性数据输出时，输出多少行数据后输出一个表头信息</p>
+<h3 id="补充"><a href="#补充" class="headerlink" title="补充"></a>补充</h3><p> jstat 还可以用来判断是否出现内存泄漏:</p>
+<p>​	第 1 步：在长时间运行的 Java 程序中，我们可以运行 jstat 命令连续获取多行性能数据，并取这几行数据中 OU 列（即已占用的老年代内存）的最小值。</p>
+<p>​	第 2 步：然后，我们每隔一段较长的时间重复一次上述操作，来获得多组 OU 最小值。如果这些值呈上涨趋势，则说明该 Java 程序的老年代内存已使用量在不断上涨，这意味着无法回收的对象在不断增加，因此很有可能存在内存泄漏。</p>
+<h2 id="4、jinfo：实时查看和修改-JVM-配置参数"><a href="#4、jinfo：实时查看和修改-JVM-配置参数" class="headerlink" title="4、jinfo：实时查看和修改 JVM 配置参数"></a>4、jinfo：实时查看和修改 JVM 配置参数</h2><h3 id="概念-1"><a href="#概念-1" class="headerlink" title="概念"></a>概念</h3><p>​	jinfo(Configuration Info for Java)：查看虚拟机配置参数信息，也可用于调整虚拟机的配置参数。</p>
+<p>​	在很多情况卡，Java 应用程序不会指定所有的 Java 虚拟机参数。而此时，开发人员可能不知道某一个具体的 Java 虚拟机参数的默认值。在这种情况下，可能需要通过查找文档获取某个参数的默认值。这个查找过程可能是非常艰难的。但有了 jinfo 工具，开发人员可以很方便地找到 Java 虚拟机参数的当前值。</p>
+<h3 id="基本语法"><a href="#基本语法" class="headerlink" title="基本语法"></a>基本语法</h3><p>基本使用语法为：jinfo [options] pid</p>
+<blockquote>
+<p>java 进程 ID 必须要加上</p>
+</blockquote>
+<table>
+<thead>
+<tr>
+<th>选项</th>
+<th>选项说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>no option</td>
+<td>输出全部的参数和系统属性</td>
+</tr>
+<tr>
+<td>-flag name</td>
+<td>输出对应名称的参数</td>
+</tr>
+<tr>
+<td>-flag [+-]name</td>
+<td>开启或者关闭对应名称的参数 只有被标记为 manageable 的参数才可以被动态修改</td>
+</tr>
+<tr>
+<td>-flag name&#x3D;value</td>
+<td>设定对应名称的参数</td>
+</tr>
+<tr>
+<td>-flags</td>
+<td>输出全部的参数</td>
+</tr>
+<tr>
+<td>-sysprops</td>
+<td>输出系统属性</td>
+</tr>
+</tbody></table>
+<h3 id="查看"><a href="#查看" class="headerlink" title="查看"></a>查看</h3><h4 id="jinfo-sysprops-进程id"><a href="#jinfo-sysprops-进程id" class="headerlink" title="jinfo -sysprops 进程id"></a>jinfo -sysprops 进程id</h4><p>可以查看由 System.getProperties() 取得的参数。进程 id 可以通过 jps 命令查看，操作结果如下：</p>
+<p><img src="/medias/loading.gif" data-original="https://raw.githubusercontent.com/luyaguo/pictures-guo/main/jvm/202504051647503.png" alt="image-20230331233753999"></p>
+<h4 id="jinfo-flags-进程id"><a href="#jinfo-flags-进程id" class="headerlink" title="jinfo -flags 进程id"></a>jinfo -flags 进程id</h4><p>查看曾经赋过值的一些参数。进程id可以通过jps命令查看，参数赋值的一部分是我们自己设置的，另外一部分是系统自动优化设置的参数信息，具体操作如下：</p>
+<p><img src="/medias/loading.gif" data-original="https://raw.githubusercontent.com/luyaguo/pictures-guo/main/jvm/202504051647458.png" alt="image-20230331233838253"></p>
+<h4 id="jinfo-flag-参数名称-进程id"><a href="#jinfo-flag-参数名称-进程id" class="headerlink" title="jinfo -flag 参数名称 进程id"></a>jinfo -flag 参数名称 进程id</h4><p>查看某个java进程的具体参数信息。</p>
+<p><img src="/medias/loading.gif" data-original="https://raw.githubusercontent.com/luyaguo/pictures-guo/main/jvm/202504051647080.png" alt="image-20230331234017384"></p>
+<p><strong>jinfo -flag</strong></p>
+<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash"><span class="token operator">></span> jinfo <span class="token parameter variable">-flag</span> UseParallelGC <span class="token number">25592</span>
+<span class="token parameter variable">-XX:+UseParallelGC</span>
+
+<span class="token operator">></span> jinfo <span class="token parameter variable">-flag</span> UseG1GC <span class="token number">25592</span>
+<span class="token parameter variable">-XX:-UseG1GC</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<p><strong>jinfo -flag name</strong></p>
+<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash"><span class="token operator">></span> jinfo <span class="token parameter variable">-flag</span> UseParallelGC <span class="token number">25592</span>
+<span class="token parameter variable">-XX:+UseParallelGC</span>
+
+<span class="token operator">></span> jinfo <span class="token parameter variable">-flag</span> UseG1GC <span class="token number">25592</span>
+<span class="token parameter variable">-XX:-UseG1GC</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<p><strong>jinfo -flag [+-]name</strong></p>
+<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash"><span class="token operator">></span> jinfo <span class="token parameter variable">-flag</span> +PrintGCDetails <span class="token number">25592</span>
+<span class="token operator">></span> jinfo <span class="token parameter variable">-flag</span> PrintGCDetails <span class="token number">25592</span>
+<span class="token parameter variable">-XX:+PrintGCDetails</span>
+
+<span class="token operator">></span> jinfo <span class="token parameter variable">-flag</span> <span class="token parameter variable">-PrintGCDetails</span> <span class="token number">25592</span>
+<span class="token operator">></span> jinfo <span class="token parameter variable">-flag</span> PrintGCDetails <span class="token number">25592</span>
+<span class="token parameter variable">-XX:-PrintGCDetails</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<h3 id="修改"><a href="#修改" class="headerlink" title="修改"></a>修改</h3><p><img src="/medias/loading.gif" data-original="https://raw.githubusercontent.com/luyaguo/pictures-guo/main/jvm/202504051647831.png" alt="image-20230331234534005"></p>
+<p><img src="/medias/loading.gif" data-original="https://raw.githubusercontent.com/luyaguo/pictures-guo/main/jvm/202504051647658.png" alt="image-20230331234824772"></p>
+<h4 id="针对boolean类型"><a href="#针对boolean类型" class="headerlink" title="针对boolean类型"></a>针对boolean类型</h4><p>jinfo -flag [+|-]参数名称 进程id</p>
+<p>PID可以通过jps命令查看，如果使用+号，那就可以让该参数起作用，否则使用-号就让该参数不起作用，具体例子如下：</p>
+<p><img src="/medias/loading.gif" data-original="https://raw.githubusercontent.com/luyaguo/pictures-guo/main/jvm/202504051647670.png" alt="image-20230331234940425"></p>
+<h4 id="针对非boolean类型"><a href="#针对非boolean类型" class="headerlink" title="针对非boolean类型"></a>针对非boolean类型</h4><p>jinfo -flag 参数名称&#x3D;参数值 进程id</p>
+<p>PID可以通过jps命令查看，如果使用+号，那就可以让该参数起作用，否则使用-号就让该参数不起作用，具体例子如下：</p>
+<p><img src="/medias/loading.gif" data-original="https://raw.githubusercontent.com/luyaguo/pictures-guo/main/jvm/202504051647203.png" alt="image-20230331234958106"></p>
+<h3 id="拓展"><a href="#拓展" class="headerlink" title="拓展"></a>拓展</h3><ul>
+<li><p>java -XX:+PrintFlagsInitial： 查看所有 JVM 参数启动的初始值</p>
+<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash"><span class="token punctuation">[</span>Global flags<span class="token punctuation">]</span>
+intx ActiveProcessorCount                      <span class="token operator">=</span> <span class="token parameter variable">-1</span>     <span class="token punctuation">&#123;</span>product<span class="token punctuation">&#125;</span>
+uintx AdaptiveSizeDecrementScaleFactor          <span class="token operator">=</span> <span class="token number">4</span>     <span class="token punctuation">&#123;</span>product<span class="token punctuation">&#125;</span>
+uintx AdaptiveSizeMajorGCDecayTimeScale         <span class="token operator">=</span> <span class="token number">10</span>    <span class="token punctuation">&#123;</span>product<span class="token punctuation">&#125;</span>
+uintx AdaptiveSizePausePolicy                   <span class="token operator">=</span> <span class="token number">0</span>     <span class="token punctuation">&#123;</span>product<span class="token punctuation">&#125;</span>
+<span class="token punctuation">..</span>.<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+</li>
+<li><p>java -XX:+PrintFlagsFinal： 查看所有 JVM 参数的最终值</p>
+<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash"><span class="token punctuation">[</span>Global flags<span class="token punctuation">]</span>
+intx ActiveProcessorCount      <span class="token operator">=</span> <span class="token parameter variable">-1</span>    （默认值）  <span class="token punctuation">&#123;</span>product<span class="token punctuation">&#125;</span>
+<span class="token punctuation">..</span>.
+intx CICompilerCount           :<span class="token operator">=</span> <span class="token number">4</span>    （修改的）  <span class="token punctuation">&#123;</span>product<span class="token punctuation">&#125;</span>
+uintx InitialHeapSize          :<span class="token operator">=</span> <span class="token number">333447168</span>      <span class="token punctuation">&#123;</span>product<span class="token punctuation">&#125;</span>
+uintx MaxHeapSize              :<span class="token operator">=</span> <span class="token number">1029701632</span>     <span class="token punctuation">&#123;</span>product<span class="token punctuation">&#125;</span>
+uintx MaxNewSize               :<span class="token operator">=</span> <span class="token number">1774714880</span>     <span class="token punctuation">&#123;</span>product<span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+</li>
+<li><p>java -XX:+PrintCommandLineFlags： 查看哪些已经被用户或者 JVM 设置过的详细的 XX 参数的名称和值</p>
+<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash"><span class="token parameter variable">-XX:InitialHeapSize</span><span class="token operator">=</span><span class="token number">332790016</span> <span class="token parameter variable">-XX:MaxHeapSize</span><span class="token operator">=</span><span class="token number">5324640256</span> <span class="token parameter variable">-XX:+PrintCommandLineFlags</span> <span class="token parameter variable">-XX:+UseCompressedClassPointers</span> <span class="token parameter variable">-XX:+UseCompressedOops</span> <span class="token parameter variable">-XX:-UseLargePagesIndividualAllocation</span> <span class="token parameter variable">-XX:+UseParallelGC</span><span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre></li>
+</ul>
+<h2 id="5、jmap：导出内存映像文件-内存使用情况"><a href="#5、jmap：导出内存映像文件-内存使用情况" class="headerlink" title="5、jmap：导出内存映像文件&amp;内存使用情况"></a>5、jmap：导出内存映像文件&amp;内存使用情况</h2><h3 id="概念-2"><a href="#概念-2" class="headerlink" title="概念"></a>概念</h3><p>​	jmap（JVM Memory Map）：作用一方面是获取 dump 文件（堆转储快照文件，二进制文件），它还可以获取目标 Java 进程的内存相关信息，包括 Java 堆各区域的使用情况、堆中对象的统计信息、类加载信息等。</p>
+<p>​	开发人员可以在控制台中输入命令“jmap -help”查阅 jmap 工具的具体使用方式和一些标准选项配置。</p>
+<p>​	官方帮助文档：<a target="_blank" rel="noopener" href="https://docs.oracle.com/en/java/javase/11/tools/jmap.html">https://docs.oracle.com/en/java/javase/11/tools/jmap.html</a></p>
+<h3 id="基本语法-1"><a href="#基本语法-1" class="headerlink" title="基本语法"></a>基本语法</h3><p>基本使用语法：</p>
+<ul>
+<li>jmap [option] &lt;pid&gt;</li>
+<li>jmap [option] &lt;executable &lt;core&gt;</li>
+<li>jmap [option] [server_id@] &lt;remote server IP or hostname&gt;</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th align="left">选项</th>
+<th align="left">作用</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left">-dump</td>
+<td align="left">生成 dump 文件（Java 堆转储快照），-dump:live 只保存堆中的存活对象</td>
+</tr>
+<tr>
+<td align="left">-heap</td>
+<td align="left">输出整个堆空间的详细信息，包括 GC 的使用、堆配置信息，以及内存的使用信息等</td>
+</tr>
+<tr>
+<td align="left">-histo</td>
+<td align="left">输出堆空间中对象的统计信息，包括类、实例数量和合计容量，-histo:live 只统计堆中的存活对象</td>
+</tr>
+<tr>
+<td align="left">-J &lt;flag&gt;</td>
+<td align="left">传递参数给 jmap 启动的 jvm</td>
+</tr>
+<tr>
+<td align="left">-finalizerinfo</td>
+<td align="left">显示在 F-Queue 中等待 Finalizer 线程执行 finalize 方法的对象，仅 linux&#x2F;solaris 平台有效</td>
+</tr>
+<tr>
+<td align="left">-permstat</td>
+<td align="left">以 ClassLoader 为统计口径输出永久代的内存状态信息，仅 linux&#x2F;solaris 平台有效</td>
+</tr>
+<tr>
+<td align="left">-F</td>
+<td align="left">当虚拟机进程对-dump 选项没有任何响应时，强制执行生成 dump 文件，仅 linux&#x2F;solaris 平台有效</td>
+</tr>
+</tbody></table>
+<p>说明：这些参数和 linux 下输入显示的命令多少会有不同，包括也受 jdk 版本的影响。</p>
+<ul>
+<li>使用语法可以通过在 DOS 窗口中使用 jmap &#x2F; jmap -h &#x2F; jmap -help 查看</li>
+<li>&lt;executable <core> 代表可执行的代码，比如使用&gt; 文件名称来指定生成的dump文件的生成位置</li>
+<li>[server_id@]&lt;……&gt; 是为远程连接准备的</li>
+</ul>
+<h4 id="dump"><a href="#dump" class="headerlink" title="-dump"></a>-dump</h4><ul>
+<li>生成Java堆转储快照：dump文件</li>
+<li>特别的：-dump:live 只保存堆中的存活对象</li>
+</ul>
+<h4 id="heap"><a href="#heap" class="headerlink" title="-heap"></a>-heap</h4><ul>
+<li>输出整个堆空间的详细信息，包括GC的使用、堆配置信息，以及内存的使用信息等</li>
+</ul>
+<h4 id="histo"><a href="#histo" class="headerlink" title="-histo"></a>-histo</h4><ul>
+<li>输出堆中对象的同级信息，包括类、实例数量和合计容量</li>
+<li>特别的：-histo:live 只统计堆中的存活对象</li>
+</ul>
+<h4 id="permstat"><a href="#permstat" class="headerlink" title="-permstat"></a>-permstat</h4><ul>
+<li>以ClassLoader为统计口径输出永久代的内存状态信息</li>
+<li>仅linux&#x2F;solaris平台有效</li>
+</ul>
+<h4 id="finalizerinfo"><a href="#finalizerinfo" class="headerlink" title="-finalizerinfo"></a>-finalizerinfo</h4><ul>
+<li>显示在 F-Queue 中等待 Finalizer 线程执行 finalize 方法的对象</li>
+<li>仅 linux&#x2F;solaris 平台有效</li>
+</ul>
+<h4 id="F"><a href="#F" class="headerlink" title="-F"></a>-F</h4><ul>
+<li>当虚拟机进程对 -dump 选项没有任何响应时，可使用此选项强制执行生成 dump 文件</li>
+<li>仅 linux &#x2F; solaris 平台有效</li>
+</ul>
+<h4 id="h-help"><a href="#h-help" class="headerlink" title="-h | -help"></a>-h | -help</h4><ul>
+<li>jamp 工具使用的帮助命令</li>
+</ul>
+<h4 id="J"><a href="#J" class="headerlink" title="-J "></a>-J <flag></h4><ul>
+<li>传递参数给 jmap 启动的 jvm</li>
+</ul>
+<h3 id="使用1：导出内存映像文件"><a href="#使用1：导出内存映像文件" class="headerlink" title="使用1：导出内存映像文件"></a>使用1：导出内存映像文件</h3><h4 id="介绍"><a href="#介绍" class="headerlink" title="介绍"></a>介绍</h4><p>​	一般来说，使用 jmap 指令生成 dump 文件的操作算得上是最常用的 jmap 命令之一,将堆中所有存活对象导出至一个文件之中。</p>
+<p>​	Heap Dump 又叫做堆存储文件，指一个 Java 进程在某个时间点的内存快照。Heap Dump在触发内存快照的时候会保存此刻的信息如下:</p>
+<p><strong>All objects</strong></p>
+<p>​	class,fields,primitive values and references</p>
+<p><strong>All classes</strong></p>
+<p>​	ClassLoader,name, super class,static fields. </p>
+<p><strong>Garbage collection Roots</strong></p>
+<p>​	objects defined to be reachable by the JVM. </p>
+<p><strong>Thread Stacks and Local Variables</strong></p>
+<p>​	The call-stacks of threads at the moment of the snapshot,and per-frameinformation about local objects</p>
+<h4 id="说明"><a href="#说明" class="headerlink" title="说明"></a>说明</h4><p>1．通常在写 Heap Dump 文件前会触发一次 Full Gc，所以 heap dump 文件里保存的都是Fu11 GC 后留下的对象信息。<br>2．由于生成 dump 文件比较耗时，因此大家需要耐心等待，尤其是大内存镜像生成 dump 文件则需要耗费更长的时间来完成。</p>
+<h4 id="手动的方式"><a href="#手动的方式" class="headerlink" title="手动的方式"></a>手动的方式</h4><h5 id="生成堆中所有对象的快照"><a href="#生成堆中所有对象的快照" class="headerlink" title="生成堆中所有对象的快照"></a>生成堆中所有对象的快照</h5><pre class="line-numbers language-bash" data-language="bash"><code class="language-bash">jmap <span class="token parameter variable">-dump:format</span><span class="token operator">=</span>b,file<span class="token operator">=</span><span class="token operator">&lt;</span>filename.hprof<span class="token operator">></span> <span class="token operator">&lt;</span>pid<span class="token operator">></span><span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+
+<ul>
+<li>&lt;filename.hprof&gt; 中的 filename 是文件名称，而 .hprof 是后缀名</li>
+<li>&lt;***&gt;代表该值可以省略&lt;&gt;</li>
+<li>当然后面的<pid>是进程id，需要通过jps查询出来</li>
+<li>format&#x3D;b 表示生成的是标准的 dump 文件，用来进行格式限定</li>
+<li>file&#x3D; 后面的是生成的 dump 文件地址</li>
+</ul>
+<h5 id="生成堆中存活对象的快照"><a href="#生成堆中存活对象的快照" class="headerlink" title="生成堆中存活对象的快照"></a>生成堆中存活对象的快照</h5><pre class="line-numbers language-bash" data-language="bash"><code class="language-bash">jmap -dump:live,format<span class="token operator">=</span>b,file<span class="token operator">=</span><span class="token operator">&lt;</span>filename.hprof<span class="token operator">></span> <span class="token operator">&lt;</span>pid<span class="token operator">></span><span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+
+<h5 id="Case-1"><a href="#Case-1" class="headerlink" title="Case"></a>Case</h5><pre class="line-numbers language-java" data-language="java"><code class="language-java"><span class="token keyword">public</span> <span class="token keyword">class</span> <span class="token class-name">GCTest</span> <span class="token punctuation">&#123;</span>
+  <span class="token keyword">public</span> <span class="token keyword">static</span> <span class="token keyword">void</span> <span class="token function">main</span><span class="token punctuation">(</span><span class="token class-name">String</span><span class="token punctuation">[</span><span class="token punctuation">]</span> args<span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+    <span class="token class-name">ArrayList</span><span class="token operator">&lt;</span><span class="token keyword">byte</span><span class="token punctuation">[</span><span class="token punctuation">]</span><span class="token operator">></span> list <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">ArrayList</span><span class="token generics"><span class="token punctuation">&lt;</span><span class="token punctuation">></span></span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+    <span class="token keyword">for</span> <span class="token punctuation">(</span><span class="token keyword">int</span> i <span class="token operator">=</span> <span class="token number">0</span><span class="token punctuation">;</span> i <span class="token operator">&lt;</span> <span class="token number">1000</span><span class="token punctuation">;</span> i<span class="token operator">++</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+      <span class="token keyword">byte</span><span class="token punctuation">[</span><span class="token punctuation">]</span> arr <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token keyword">byte</span><span class="token punctuation">[</span><span class="token number">1024</span> <span class="token operator">*</span> <span class="token number">100</span><span class="token punctuation">]</span><span class="token punctuation">;</span><span class="token comment">//100KB</span>
+      list<span class="token punctuation">.</span><span class="token function">add</span><span class="token punctuation">(</span>arr<span class="token punctuation">)</span><span class="token punctuation">;</span>
+      <span class="token keyword">try</span> <span class="token punctuation">&#123;</span>
+        <span class="token class-name">Thread</span><span class="token punctuation">.</span><span class="token function">sleep</span><span class="token punctuation">(</span><span class="token number">60</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+      <span class="token punctuation">&#125;</span> <span class="token keyword">catch</span> <span class="token punctuation">(</span><span class="token class-name">InterruptedException</span> e<span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+        e<span class="token punctuation">.</span><span class="token function">printStackTrace</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+      <span class="token punctuation">&#125;</span>
+    <span class="token punctuation">&#125;</span>
+  <span class="token punctuation">&#125;</span>
+<span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<p><img src="/medias/loading.gif" data-original="https://raw.githubusercontent.com/luyaguo/pictures-guo/main/jvm/202504051647023.png" alt="image-20230401153611732"></p>
+<p><img src="/medias/loading.gif" data-original="https://raw.githubusercontent.com/luyaguo/pictures-guo/main/jvm/202504051647191.png" alt="image-20230401153926180"></p>
+<p><img src="/medias/loading.gif" data-original="https://raw.githubusercontent.com/luyaguo/pictures-guo/main/jvm/202504051647686.png" alt="image-20230401154213127"></p>
+<ul>
+<li>一般使用的是第二种方式，也就是生成堆中存活对象的快照，毕竟这种方式生成的dump文件更小，我们传输处理都更方便</li>
+</ul>
+<h4 id="自动的方式"><a href="#自动的方式" class="headerlink" title="自动的方式"></a>自动的方式</h4><p>​	当程序发生OOM退出系统时，一些瞬时信息都随着程序的终止而消失，而重现oOM问题往往比较困难或者耗时。此时若能在OOM时，自动导出dump文件就显得非常迫切。</p>
+<p>这里介绍一种比较常用的取得堆快照文件的方法，即使用:</p>
+<ul>
+<li><code>-XX:+HeapDumpOnoutOfMemoryError</code>: 在程序发生OOM时，导出应用程序的当前堆快照。</li>
+<li><code>-XX:HeapDumpPath=&lt;filename.hprof&gt;</code>: 可以指定堆快照的保存位置。</li>
+</ul>
+<p>比如:<br>-Xmx100m -XX:+HeapDumpOnoutOFMemoryError -XX:HeapDumpPath&#x3D;D: \m.hprof</p>
+<p><img src="/medias/loading.gif" data-original="https://raw.githubusercontent.com/luyaguo/pictures-guo/main/jvm/202504051647890.png" alt="image-20230401154521791"></p>
+<p><img src="/medias/loading.gif" data-original="https://raw.githubusercontent.com/luyaguo/pictures-guo/main/jvm/202504051646967.png" alt="image-20230401154650383"></p>
+<p><img src="/medias/loading.gif" data-original="https://raw.githubusercontent.com/luyaguo/pictures-guo/main/jvm/202504051646912.png" alt="image-20230401154711455"></p>
+<h4 id="注意"><a href="#注意" class="headerlink" title="注意"></a>注意</h4><ol>
+<li>手动不会在 Full GC 之后生成Dump。使用手动方式生成 dump 文件，一般指令执行之后就会生成，不用等到快出现 OOM 的时候</li>
+<li>使用自动方式生成 dump 文件，当出现 OOM 之前先生成 dump 文件</li>
+<li>如果使用手动方式，一般使用第 2 种，毕竟生成堆中存活对象的 dump 文件是比较小的，便于传输和分析</li>
+</ol>
+<h3 id="使用2：显示堆内存相关信息"><a href="#使用2：显示堆内存相关信息" class="headerlink" title="使用2：显示堆内存相关信息"></a>使用2：显示堆内存相关信息</h3><pre class="line-numbers language-bash" data-language="bash"><code class="language-bash">jmap <span class="token parameter variable">-heap</span> 进程id<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+
+<p>显示时间点上的堆信息，而 jstat 后面可以添加参数，可以指定时间动态观察数据改变情况，而图形化界面工具，例如jvisualvm等，它们可以用图表的方式动态展示出相关信息，更加直观明了。</p>
+<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash">jmap <span class="token parameter variable">-histo</span> 进程id<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+
+<p>输出堆中对象的同级信息，包括类、实例数量和合计容量，也是这一时刻的内存中的对象信息</p>
+<p><img src="/medias/loading.gif" data-original="https://raw.githubusercontent.com/luyaguo/pictures-guo/main/jvm/202504051646327.png" alt="image-20230401155223548"></p>
+<p><img src="/medias/loading.gif" data-original="https://raw.githubusercontent.com/luyaguo/pictures-guo/main/jvm/202504051646743.png" alt="image-20230401155636552"></p>
+<p><img src="/medias/loading.gif" data-original="https://raw.githubusercontent.com/luyaguo/pictures-guo/main/jvm/202504051646933.png" alt="image-20230401155530880"></p>
+<h3 id="使用3：其他作用"><a href="#使用3：其他作用" class="headerlink" title="使用3：其他作用"></a>使用3：其他作用</h3><h4 id="jmap-permstat-进程id"><a href="#jmap-permstat-进程id" class="headerlink" title="jmap -permstat 进程id"></a>jmap -permstat 进程id</h4><ul>
+<li>查看系统的 ClassLoader 信息</li>
+<li>linux 环境</li>
+</ul>
+<h4 id="jmap-finalizerinfo"><a href="#jmap-finalizerinfo" class="headerlink" title="jmap -finalizerinfo"></a>jmap -finalizerinfo</h4><ul>
+<li>查看堆积在 finalizer 队列中的对象</li>
+<li>linux 环境</li>
+</ul>
+<h3 id="小结"><a href="#小结" class="headerlink" title="小结"></a>小结</h3><p>​	由于 jmap 将访问堆中的所有对象，为了保证在此过程中不被应用线程干扰，jmap 需要借助安全点机制，让所有线程停留在不改变堆中数据的状态。也就是说，由 jmap 导出的堆快照必定是安全点位置的。这可能导致基于该堆快照的分析结果存在偏差。</p>
+<p>​	举个例子，假设在编译生成的机器码中，某些对象的生命周期在两个安全点之间，那么:live 选项将无法探知到这些对象。</p>
+<p>​	另外，如果某个线程长时间无法跑到安全点，jmap 将一直等下去。与前面讲的 jstat 则不同，垃圾回收器会主动将 jstat 所需要的摘要数据保存至固定位置之中，而 jstat 只需直接读取即可。</p>
+<h2 id="6、jhat：JDK-自带堆分析工具"><a href="#6、jhat：JDK-自带堆分析工具" class="headerlink" title="6、jhat：JDK 自带堆分析工具"></a>6、jhat：JDK 自带堆分析工具</h2><h3 id="概念-3"><a href="#概念-3" class="headerlink" title="概念"></a>概念</h3><p>​	<code>jhat(JVM Heap Analysis Tool)</code>：Sun JDK 提供的 jhat 命令与 jmap 命令搭配使用，用于分析 jmap 生成的 heap dump 文件（堆转储快照）。jhat 内置了一个微型的 HTTP&#x2F;HTML 服务器，生成 dump 文件的分析结果后，用户可以在浏览器中查看分析结果（分析虚拟机转储快照信息）。</p>
+<p>​	使用了 jhat 命令，就启动了一个 http 服务，端口是 7000，即 <a target="_blank" rel="noopener" href="http://localhost:7000/%EF%BC%8C%E5%B0%B1%E5%8F%AF%E4%BB%A5%E5%9C%A8%E6%B5%8F%E8%A7%88%E5%99%A8%E9%87%8C%E5%88%86%E6%9E%90%E3%80%82">http://localhost:7000/，就可以在浏览器里分析。</a></p>
+<p>​	说明：jhat 命令在 JDK9、JDK10 中已经被删除，官方建议用 VisualVM 代替。</p>
+<h3 id="基本语法-2"><a href="#基本语法-2" class="headerlink" title="基本语法"></a>基本语法</h3><p>基本适用语法：jhat &lt;option&gt; &lt;dumpfile&gt;</p>
+<ul>
+<li>其中 dumpfile 代表 dump 文件的地址以及名称</li>
+</ul>
+<p><img src="/medias/loading.gif" data-original="https://raw.githubusercontent.com/luyaguo/pictures-guo/main/jvm/202504051646277.png" alt="image-20230401161621078"></p>
+<p><img src="/medias/loading.gif" data-original="https://raw.githubusercontent.com/luyaguo/pictures-guo/main/jvm/202504051646762.png" alt="image-20230401161656086"></p>
+<p><img src="/medias/loading.gif" data-original="https://raw.githubusercontent.com/luyaguo/pictures-guo/main/jvm/202504051646329.png" alt="image-20230401161756066"></p>
+<p><img src="/medias/loading.gif" data-original="https://raw.githubusercontent.com/luyaguo/pictures-guo/main/jvm/202504051646450.png" alt="image-20230401161934283"></p>
+<h4 id="option-参数-1"><a href="#option-参数-1" class="headerlink" title="option 参数"></a>option 参数</h4><table>
+<thead>
+<tr>
+<th align="left">option 参数</th>
+<th align="left">作用</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left">-stack false ｜ true</td>
+<td align="left">关闭｜打开对象分配调用栈跟踪</td>
+</tr>
+<tr>
+<td align="left">-refs false ｜ true</td>
+<td align="left">关闭｜打开对象引用跟踪</td>
+</tr>
+<tr>
+<td align="left">-port port-number</td>
+<td align="left">设置 jhat HTTP Server 的端口号，默认 7000</td>
+</tr>
+<tr>
+<td align="left">-exclude exclude-file</td>
+<td align="left">执行对象查询时需要排除的数据成员</td>
+</tr>
+<tr>
+<td align="left">-baseline exclude-file</td>
+<td align="left">指定一个基准堆转储</td>
+</tr>
+<tr>
+<td align="left">-debug int</td>
+<td align="left">设置 debug 级别</td>
+</tr>
+<tr>
+<td align="left">-version</td>
+<td align="left">启动后显示版本信息就退出</td>
+</tr>
+<tr>
+<td align="left">-J &lt;flag&gt;</td>
+<td align="left">传入启动参数，比如-J-Xmx512m</td>
+</tr>
+</tbody></table>
+<p><img src="/medias/loading.gif" data-original="https://raw.githubusercontent.com/luyaguo/pictures-guo/main/jvm/202504051645378.png" alt="image-20230401162139989"></p>
+<blockquote>
+<p>jhat 命令在 jdk9 及其之后就被移除了，官方建议使用 jvisualvm 代替 jhat，所以该指令只需简单了解一下即可</p>
+</blockquote>
+<h2 id="7、jstack：打印-JVM-中线程快照"><a href="#7、jstack：打印-JVM-中线程快照" class="headerlink" title="7、jstack：打印 JVM 中线程快照"></a>7、jstack：打印 JVM 中线程快照</h2><h3 id="概念-4"><a href="#概念-4" class="headerlink" title="概念"></a>概念</h3><p>​	jstack（JVM Stack Trace）：用于生成虚拟机指定进程当前时刻的线程快照（虚拟机堆栈跟踪）。线程快照就是当前虚拟机内指定进程的每一条线程正在执行的方法堆栈的集合。</p>
+<p>​	生成线程快照的作用：可用于定位线程出现长时间停顿的原因，如线程间死锁、死循环、请求外部资源导致的长时间等待等问题。这些都是导致线程长时间停顿的常见原因。当线程出现停顿时，就可以用 jstack 显示各个线程调用的堆栈情况。</p>
+<p>​	官方帮助文档：<a target="_blank" rel="noopener" href="https://docs.oracle.com/en/java/javase/11/tools/jstack.html">https://docs.oracle.com/en/java/javase/11/tools/jstack.html</a></p>
+<p>在 thread dump 中，要留意下面几种状态</p>
+<ul>
+<li><strong>死锁，Deadlock（重点关注）</strong></li>
+<li><strong>等待资源，Waiting on condition（重点关注）</strong></li>
+<li><strong>等待获取监视器，Waiting on monitor entry（重点关注）</strong></li>
+<li><strong>阻塞，Blocked（重点关注）</strong></li>
+<li>执行中，Runnable</li>
+<li>暂停，Suspended</li>
+<li>对象等待中，Object.wait() 或 TIMED＿WAITING</li>
+<li>停止，Parked</li>
+</ul>
+<p><img src="/medias/loading.gif" data-original="https://raw.githubusercontent.com/luyaguo/pictures-guo/main/jvm/202504051645489.png" alt="image-20230401163117195"></p>
+<h4 id="基本语法-3"><a href="#基本语法-3" class="headerlink" title="基本语法"></a>基本语法</h4><p>它的基本使用语法为：<code>jstack option pid</code></p>
+<p>jstack管理远程进程的话，需要在远程程序的启动参数中增加:-</p>
+<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash"><span class="token assign-left variable">Djava.rmi.server.hostname</span><span class="token operator">=</span>… 
+<span class="token parameter variable">-Dcom.sun.management.jmxremote</span>
+-Dcom. <span class="token assign-left variable">sun.management.jmxremote.port</span><span class="token operator">=</span><span class="token number">8888</span>
+<span class="token parameter variable">-Dcom.sun.management.jmxremote.authenticate</span><span class="token operator">=</span>false-Dcom.sun.management.jmxremote.ssl<span class="token operator">=</span>false<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span></span></code></pre>
+
+<h4 id="option-参数-2"><a href="#option-参数-2" class="headerlink" title="option 参数"></a>option 参数</h4><table>
+<thead>
+<tr>
+<th align="left">option 参数</th>
+<th align="left">作用</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left">-F</td>
+<td align="left">当正常输出的请求不被响应时，强制输出线程堆栈</td>
+</tr>
+<tr>
+<td align="left">-l</td>
+<td align="left">除堆栈外，显示关于锁的附加信息</td>
+</tr>
+<tr>
+<td align="left">-m</td>
+<td align="left">如果调用本地方法的话，可以显示 C&#x2F;C++的堆栈</td>
+</tr>
+</tbody></table>
+<h2 id="8、jcmd：多功能命令行"><a href="#8、jcmd：多功能命令行" class="headerlink" title="8、jcmd：多功能命令行"></a>8、jcmd：多功能命令行</h2><h3 id="概念-5"><a href="#概念-5" class="headerlink" title="概念"></a>概念</h3><p>​	在 JDK 1.7 以后，新增了一个命令行工具 jcmd。它是一个多功能的工具，可以用来实现前面除了 jstat 之外所有命令的功能。比如：用它来导出堆、内存使用、查看 Java 进程、导出线程信息、执行 GC、JVM 运行时间等。</p>
+<p>​	官方帮助文档：<a target="_blank" rel="noopener" href="https://docs.oracle.com/en/java/javase/11/tools/jcmd.html">https://docs.oracle.com/en/java/javase/11/tools/jcmd.html</a></p>
+<p>​	jcmd 拥有 jmap 的大部分功能，并且在 Oracle 的官方网站上也推荐使用 jcmd 命令代 jmap 命令。</p>
+<h3 id="基本语法-4"><a href="#基本语法-4" class="headerlink" title="基本语法"></a>基本语法</h3><p><strong><code>jcmd -l</code>：</strong>列出所有的 JVM 进程</p>
+<p><strong><code>jcmd 进程号 help</code>：</strong>针对指定的进程，列出支持的所有具体命令</p>
+<p><img src="/medias/loading.gif" data-original="https://raw.githubusercontent.com/luyaguo/pictures-guo/main/jvm/202504051645881.png" alt="image-20210504213044819"></p>
+<p><strong><code>jcmd 进程号 具体命令</code>：</strong>显示指定进程的指令命令的数据</p>
+<p><img src="/medias/loading.gif" data-original="https://raw.githubusercontent.com/luyaguo/pictures-guo/main/jvm/202504051645346.png" alt="image-20230401161112299"></p>
+<ul>
+<li>Thread.print 可以替换 jstack 指令</li>
+<li>GC.class_histogram 可以替换 jmap 中的-histo 操作</li>
+<li>GC.heap_dump 可以替换 jmap 中的-dump 操作</li>
+<li>GC.run 可以查看 GC 的执行情况</li>
+<li>VM.uptime 可以查看程序的总执行时间，可以替换 jstat 指令中的-t 操作</li>
+<li>VM.system_properties 可以替换 jinfo -sysprops 进程 id</li>
+<li>VM.flags 可以获取 JVM 的配置参数信息</li>
+</ul>
+<h2 id="9、jstatd：远程主机信息收集"><a href="#9、jstatd：远程主机信息收集" class="headerlink" title="9、jstatd：远程主机信息收集"></a>9、jstatd：远程主机信息收集</h2><p>​	之前的指令只涉及到监控本机的 Java 应用程序，而在这些工具中，一些监控工具也支持对远程计算机的监控（如 jps、jstat）。为了启用远程监控，则需要配合使用 jstatd 工具。</p>
+<p>​	命令 jstatd 是一个 RMI 服务端程序，它的作用相当于代理服务器，建立本地计算机与远程监控工具的通信。jstatd 服务器将本机的 Java 应用程序信息传递到远程计算机。</p>
+<p><img src="/medias/loading.gif" data-original="https://raw.githubusercontent.com/luyaguo/pictures-guo/main/jvm/202504051645026.png" alt="image-20230401164359249"></p>
+<hr/>
+                
+            </div>
+            <hr/>
+
+            
+
+
+
+            <div class="tag_share" style="display: block;">
+                <div class="post-meta__tag-list" style="display: inline-block;">
+                    
+                        <div class="article-tag">
+                            
+                                <a href="/tags/JVM/">
+                                    <span class="chip bg-color">JVM</span>
+                                </a>
+                            
+                        </div>
+                    
+                </div>
+                <div class="post_share" style="zoom: 80%; width: fit-content; display: inline-block; float: right; margin: -0.15rem 0;">
+                    <link rel="stylesheet" type="text/css" href="/libs/share/css/share.min.css">
+<div id="article-share">
+
+    
+    <div class="social-share" data-sites="twitter,facebook,google,qq,qzone,wechat,weibo,douban,linkedin" data-wechat-qrcode-helper="<p>微信扫一扫即可分享！</p>"></div>
+    <script src="/libs/share/js/social-share.min.js"></script>
+    
+
+    
+
+</div>
+
+                </div>
+            </div>
+            
+        </div>
+    </div>
+
+    
+
+    
+
+    
+
+    
+
+    
+        <style>
+    .valine-card {
+        margin: 1.5rem auto;
+    }
+
+    .valine-card .card-content {
+        padding: 20px 20px 5px 20px;
+    }
+
+    #vcomments textarea {
+        box-sizing: border-box;
+        background: url("/medias/bg.webp") 100% 100% no-repeat;
+    }
+
+    #vcomments p {
+        margin: 2px 2px 10px;
+        font-size: 1.05rem;
+        line-height: 1.78rem;
+    }
+
+    #vcomments blockquote p {
+        text-indent: 0.2rem;
+    }
+
+    #vcomments a {
+        padding: 0 2px;
+        color: #4cbf30;
+        font-weight: 500;
+        text-decoration: none;
+    }
+
+    #vcomments img {
+        max-width: 100%;
+        height: auto;
+        cursor: pointer;
+    }
+
+    #vcomments ol li {
+        list-style-type: decimal;
+    }
+
+    #vcomments ol,
+    ul {
+        display: block;
+        padding-left: 2em;
+        word-spacing: 0.05rem;
+    }
+
+    #vcomments ul li,
+    ol li {
+        display: list-item;
+        line-height: 1.8rem;
+        font-size: 1rem;
+    }
+
+    #vcomments ul li {
+        list-style-type: disc;
+    }
+
+    #vcomments ul ul li {
+        list-style-type: circle;
+    }
+
+    #vcomments table, th, td {
+        padding: 12px 13px;
+        border: 1px solid #dfe2e5;
+    }
+
+    #vcomments table, th, td {
+        border: 0;
+    }
+
+    table tr:nth-child(2n), thead {
+        background-color: #fafafa;
+    }
+
+    #vcomments table th {
+        background-color: #f2f2f2;
+        min-width: 80px;
+    }
+
+    #vcomments table td {
+        min-width: 80px;
+    }
+
+    #vcomments h1 {
+        font-size: 1.85rem;
+        font-weight: bold;
+        line-height: 2.2rem;
+    }
+
+    #vcomments h2 {
+        font-size: 1.65rem;
+        font-weight: bold;
+        line-height: 1.9rem;
+    }
+
+    #vcomments h3 {
+        font-size: 1.45rem;
+        font-weight: bold;
+        line-height: 1.7rem;
+    }
+
+    #vcomments h4 {
+        font-size: 1.25rem;
+        font-weight: bold;
+        line-height: 1.5rem;
+    }
+
+    #vcomments h5 {
+        font-size: 1.1rem;
+        font-weight: bold;
+        line-height: 1.4rem;
+    }
+
+    #vcomments h6 {
+        font-size: 1rem;
+        line-height: 1.3rem;
+    }
+
+    #vcomments p {
+        font-size: 1rem;
+        line-height: 1.5rem;
+    }
+
+    #vcomments hr {
+        margin: 12px 0;
+        border: 0;
+        border-top: 1px solid #ccc;
+    }
+
+    #vcomments blockquote {
+        margin: 15px 0;
+        border-left: 5px solid #42b983;
+        padding: 1rem 0.8rem 0.3rem 0.8rem;
+        color: #666;
+        background-color: rgba(66, 185, 131, .1);
+    }
+
+    #vcomments pre {
+        font-family: monospace, monospace;
+        padding: 1.2em;
+        margin: .5em 0;
+        background: #272822;
+        overflow: auto;
+        border-radius: 0.3em;
+        tab-size: 4;
+    }
+
+    #vcomments code {
+        font-family: monospace, monospace;
+        padding: 1px 3px;
+        font-size: 0.92rem;
+        color: #e96900;
+        background-color: #f8f8f8;
+        border-radius: 2px;
+    }
+
+    #vcomments pre code {
+        font-family: monospace, monospace;
+        padding: 0;
+        color: #e8eaf6;
+        background-color: #272822;
+    }
+
+    #vcomments pre[class*="language-"] {
+        padding: 1.2em;
+        margin: .5em 0;
+    }
+
+    #vcomments code[class*="language-"],
+    pre[class*="language-"] {
+        color: #e8eaf6;
+    }
+
+    #vcomments [type="checkbox"]:not(:checked), [type="checkbox"]:checked {
+        position: inherit;
+        margin-left: -1.3rem;
+        margin-right: 0.4rem;
+        margin-top: -1px;
+        vertical-align: middle;
+        left: unset;
+        visibility: visible;
+    }
+
+    #vcomments b,
+    strong {
+        font-weight: bold;
+    }
+
+    #vcomments dfn {
+        font-style: italic;
+    }
+
+    #vcomments small {
+        font-size: 85%;
+    }
+
+    #vcomments cite {
+        font-style: normal;
+    }
+
+    #vcomments mark {
+        background-color: #fcf8e3;
+        padding: .2em;
+    }
+
+    #vcomments table, th, td {
+        padding: 12px 13px;
+        border: 1px solid #dfe2e5;
+    }
+
+    table tr:nth-child(2n), thead {
+        background-color: #fafafa;
+    }
+
+    #vcomments table th {
+        background-color: #f2f2f2;
+        min-width: 80px;
+    }
+
+    #vcomments table td {
+        min-width: 80px;
+    }
+
+    #vcomments [type="checkbox"]:not(:checked), [type="checkbox"]:checked {
+        position: inherit;
+        margin-left: -1.3rem;
+        margin-right: 0.4rem;
+        margin-top: -1px;
+        vertical-align: middle;
+        left: unset;
+        visibility: visible;
+    }
+</style>
+
+<div class="card valine-card" data-aos="fade-up">
+    <div class="comment_headling" style="font-size: 20px; font-weight: 700; position: relative; padding-left: 20px; top: 15px; padding-bottom: 5px;">
+        <i class="fas fa-comments fa-fw" aria-hidden="true"></i>
+        <span>评论</span>
+    </div>
+    <div id="vcomments" class="card-content" style="display: grid">
+    </div>
+</div>
+
+<script src="/libs/valine/av-min.js"></script>
+<script src="/libs/valine/Valine.min.js"></script>
+<script>
+    new Valine({
+        el: '#vcomments',
+        appId: 'XGAJufgp6Z2bX17baB3E7enQ-gzGzoHsz',
+        appKey: 'j9yun8pjBYMNT3Gg8ehomdsf',
+        serverURLs: 'https://xgajufgp.lc-cn-n1-shared.com',
+        notify: 'false' === 'true',
+        verify: 'false' === 'true',
+        visitor: 'true' === 'true',
+        avatar: 'wavatar',
+        pageSize: '10',
+        lang: 'en',
+        placeholder: '支持markdown格式以及丰富的小表情，快来留下些记忆吧~'
+    });
+</script>
+
+<!--酷Q推送-->
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+<article id="prenext-posts" class="prev-next articles">
+    <div class="row article-row">
+        
+        <div class="article col s12 m6" data-aos="fade-up">
+            <div class="article-badge left-badge text-color">
+                <i class="fas fa-chevron-left"></i>&nbsp;Previous</div>
+            <div class="card">
+                <a href="/posts/27794c76.html">
+                    <div class="card-image">
+                        
+                        
+                        <img src="/medias/featureimages/19.jpg" class="responsive-img" alt="二十、JVM 监控&amp;诊断GUI">
+                        
+                        <span class="card-title">二十、JVM 监控&amp;诊断GUI</span>
+                    </div>
+                </a>
+                <div class="card-content article-content">
+                    <div class="summary block-with-text">
+                        
+                            
+                        
+                    </div>
+                    <div class="publish-info">
+                        <span class="publish-date">
+                            <i class="far fa-clock fa-fw icon-date"></i>2025-04-06
+                        </span>
+                        <span class="publish-author">
+                            
+                            <i class="fas fa-bookmark fa-fw icon-category"></i>
+                            
+                            <a href="/categories/JVM/" class="post-category">
+                                    JVM
+                                </a>
+                            
+                            
+                        </span>
+                    </div>
+                </div>
+                
+                <div class="card-action article-tags">
+                    
+                    <a href="/tags/JVM/">
+                        <span class="chip bg-color">JVM</span>
+                    </a>
+                    
+                </div>
+                
+            </div>
+        </div>
+        
+        
+        <div class="article col s12 m6" data-aos="fade-up">
+            <div class="article-badge right-badge text-color">
+                Next&nbsp;<i class="fas fa-chevron-right"></i>
+            </div>
+            <div class="card">
+                <a href="/posts/a405102f.html">
+                    <div class="card-image">
+                        
+                        
+                        <img src="/medias/featureimages/1.jpg" class="responsive-img" alt="十八、JVM监控&amp;调优概述">
+                        
+                        <span class="card-title">十八、JVM监控&amp;调优概述</span>
+                    </div>
+                </a>
+                <div class="card-content article-content">
+                    <div class="summary block-with-text">
+                        
+                            
+                        
+                    </div>
+                    <div class="publish-info">
+                            <span class="publish-date">
+                                <i class="far fa-clock fa-fw icon-date"></i>2025-04-06
+                            </span>
+                        <span class="publish-author">
+                            
+                            <i class="fas fa-bookmark fa-fw icon-category"></i>
+                            
+                            <a href="/categories/JVM/" class="post-category">
+                                    JVM
+                                </a>
+                            
+                            
+                        </span>
+                    </div>
+                </div>
+                
+                <div class="card-action article-tags">
+                    
+                    <a href="/tags/JVM/">
+                        <span class="chip bg-color">JVM</span>
+                    </a>
+                    
+                </div>
+                
+            </div>
+        </div>
+        
+    </div>
+</article>
+
+</div>
+
+
+<script>
+    $('#articleContent').on('copy', function (e) {
+        // IE8 or earlier browser is 'undefined'
+        if (typeof window.getSelection === 'undefined') return;
+
+        var selection = window.getSelection();
+        // if the selection is short let's not annoy our users.
+        if (('' + selection).length < Number.parseInt('120')) {
+            return;
+        }
+
+        // create a div outside of the visible area and fill it with the selected text.
+        var bodyElement = document.getElementsByTagName('body')[0];
+        var newdiv = document.createElement('div');
+        newdiv.style.position = 'absolute';
+        newdiv.style.left = '-99999px';
+        bodyElement.appendChild(newdiv);
+        newdiv.appendChild(selection.getRangeAt(0).cloneContents());
+
+        // we need a <pre> tag workaround.
+        // otherwise the text inside "pre" loses all the line breaks!
+        if (selection.getRangeAt(0).commonAncestorContainer.nodeName === 'PRE' || selection.getRangeAt(0).commonAncestorContainer.nodeName === 'CODE') {
+            newdiv.innerHTML = "<pre>" + newdiv.innerHTML + "</pre>";
+        }
+
+        var url = document.location.href;
+        newdiv.innerHTML += '<br />'
+            + 'From: 西伯<br />'
+            + 'Author: 西伯<br />'
+            + 'Link: <a href="' + url + '">' + url + '</a><br />'
+            + '本文章著作权归作者所有，任何形式的转载都请注明出处。';
+
+        selection.selectAllChildren(newdiv);
+        window.setTimeout(function () {bodyElement.removeChild(newdiv);}, 200);
+    });
+</script>
+
+
+<!-- 代码块功能依赖 -->
+<script type="text/javascript" src="/libs/codeBlock/codeBlockFuction.js"></script>
+
+
+  <!-- 是否加载使用自带的 prismjs. -->
+  <script type="text/javascript" src="/libs/prism/prism.min.js"></script>
+
+
+<!-- 代码语言 -->
+
+<script type="text/javascript" src="/libs/codeBlock/codeLang.js"></script>
+
+
+<!-- 代码块复制 -->
+
+<script type="text/javascript" src="/libs/codeBlock/codeCopy.js"></script>
+
+
+<!-- 代码块收缩 -->
+
+<script type="text/javascript" src="/libs/codeBlock/codeShrink.js"></script>
+
+
+
+    </div>
+    <div id="toc-aside" class="expanded col l3 hide-on-med-and-down">
+        <div class="toc-widget card" style="background-color: white;">
+            <div class="toc-title"><i class="far fa-list-alt"></i>&nbsp;&nbsp;TOC</div>
+            <div id="toc-content"></div>
+        </div>
+    </div>
+</div>
+
+<!-- TOC 悬浮按钮. -->
+
+<div id="floating-toc-btn" class="hide-on-med-and-down">
+    <a class="btn-floating btn-large bg-color">
+        <i class="fas fa-list-ul"></i>
+    </a>
+</div>
+
+
+<script src="/libs/tocbot/tocbot.min.js"></script>
+<script>
+    $(function () {
+        tocbot.init({
+            tocSelector: '#toc-content',
+            contentSelector: '#articleContent',
+            headingsOffset: -($(window).height() * 0.4 - 45),
+            collapseDepth: Number('0'),
+            headingSelector: 'h2, h3, h4'
+        });
+
+        // Set scroll toc fixed.
+        let tocHeight = parseInt($(window).height() * 0.4 - 64);
+        let $tocWidget = $('.toc-widget');
+        $(window).scroll(function () {
+            let scroll = $(window).scrollTop();
+            /* add post toc fixed. */
+            if (scroll > tocHeight) {
+                $tocWidget.addClass('toc-fixed');
+            } else {
+                $tocWidget.removeClass('toc-fixed');
+            }
+        });
+
+        
+        /* 修复文章卡片 div 的宽度. */
+        let fixPostCardWidth = function (srcId, targetId) {
+            let srcDiv = $('#' + srcId);
+            if (srcDiv.length === 0) {
+                return;
+            }
+
+            let w = srcDiv.width();
+            if (w >= 450) {
+                w = w + 21;
+            } else if (w >= 350 && w < 450) {
+                w = w + 18;
+            } else if (w >= 300 && w < 350) {
+                w = w + 16;
+            } else {
+                w = w + 14;
+            }
+            $('#' + targetId).width(w);
+        };
+
+        // 切换TOC目录展开收缩的相关操作.
+        const expandedClass = 'expanded';
+        let $tocAside = $('#toc-aside');
+        let $mainContent = $('#main-content');
+        $('#floating-toc-btn .btn-floating').click(function () {
+            if ($tocAside.hasClass(expandedClass)) {
+                $tocAside.removeClass(expandedClass).hide();
+                $mainContent.removeClass('l9');
+            } else {
+                $tocAside.addClass(expandedClass).show();
+                $mainContent.addClass('l9');
+            }
+            fixPostCardWidth('artDetail', 'prenext-posts');
+        });
+        
+    });
+</script>
+
+    
+
+</main>
+
+
+
+
+    <footer class="page-footer bg-color">
+    
+        <link rel="stylesheet" href="/libs/aplayer/APlayer.min.css">
+<style>
+    .aplayer .aplayer-lrc p {
+        
+        display: none;
+        
+        font-size: 12px;
+        font-weight: 700;
+        line-height: 16px !important;
+    }
+
+    .aplayer .aplayer-lrc p.aplayer-lrc-current {
+        
+        display: none;
+        
+        font-size: 15px;
+        color: #42b983;
+    }
+
+    
+    .aplayer.aplayer-fixed.aplayer-narrow .aplayer-body {
+        left: -66px !important;
+    }
+
+    .aplayer.aplayer-fixed.aplayer-narrow .aplayer-body:hover {
+        left: 0px !important;
+    }
+
+    
+</style>
+<div class="">
+    
+    <div class="row">
+        <meting-js class="col l8 offset-l2 m10 offset-m1 s12"
+                   server="netease"
+                   type="playlist"
+                   id="8428618004"
+                   fixed='true'
+                   autoplay='false'
+                   theme='#42b983'
+                   loop='all'
+                   order='random'
+                   preload='auto'
+                   volume='0.7'
+                   list-folded='true'
+        >
+        </meting-js>
+    </div>
+</div>
+
+<script src="/libs/aplayer/APlayer.min.js"></script>
+<script src="/libs/aplayer/Meting.min.js"></script>
+
+    
+
+    <div class="container row center-align"
+         style="margin-bottom: 15px !important;">
+        <div class="col s12 m8 l8 copy-right">
+            Copyright&nbsp;&copy;
+            
+                <span id="year">2024-2025</span>
+            
+            <a href="/about" target="_blank">西伯</a>
+            
+            <br>
+            
+                &nbsp;<i class="fas fa-chart-area"></i>&nbsp;Total Words:&nbsp;<span
+                        class="white-color">603.5k</span>
+            
+            
+            
+                
+            
+            
+                <span id="busuanzi_container_site_pv">
+                &nbsp;|&nbsp;<i class="far fa-eye"></i>&nbsp;Total visits:&nbsp;
+                    <span id="busuanzi_value_site_pv" class="white-color"></span>
+            </span>
+            
+            
+                <span id="busuanzi_container_site_uv">
+                &nbsp;|&nbsp;<i class="fas fa-users"></i>&nbsp;Total visitors:&nbsp;
+                    <span id="busuanzi_value_site_uv" class="white-color"></span>
+            </span>
+            
+            <br>
+
+            <a style="margin-inline:5px" target="_blank" href="https://hexo.io"><img src="https://img.shields.io/badge/Frame-Hexo-blue?style=flat&logo=hexo" title="基于Hexo框架"></a>
+            <a style="margin-inline:5px" target="_blank" href="https://github.com/blinkfox/hexo-theme-matery"><img src="https://img.shields.io/badge/Theme-Matery-7138b6?style=flat&logo=MEGA" title="Themes Matery"></a>
+            <a style="margin-inline:5px" target="_blank" href="https://cloudflare.com"><img src="https://img.shields.io/badge/Hosted-Cloudflare-brightgreen?style=flat&logo=Cloudflare" title="基于Cloudflare Pages托管部署"></a>
+            <a style="margin-inline:5px" target="_blank" href="https://github.com"><img src="https://img.shields.io/badge/Source-Github-67e1fb?style=flat&logo=GitHub" title="静态文件托管于GitHub"></a>
+            <br>
+
+            <!-- 运行天数提醒. -->
+            
+                <span id="sitetime"> Loading ...</span>
+                <script>
+                    var calcSiteTime = function () {
+                        var seconds = 1000;
+                        var minutes = seconds * 60;
+                        var hours = minutes * 60;
+                        var days = hours * 24;
+                        var years = days * 365;
+                        var today = new Date();
+                        var startYear = "2024";
+                        var startMonth = "5";
+                        var startDate = "20";
+                        var startHour = "0";
+                        var startMinute = "0";
+                        var startSecond = "0";
+                        var todayYear = today.getFullYear();
+                        var todayMonth = today.getMonth() + 1;
+                        var todayDate = today.getDate();
+                        var todayHour = today.getHours();
+                        var todayMinute = today.getMinutes();
+                        var todaySecond = today.getSeconds();
+                        var t1 = Date.UTC(startYear, startMonth, startDate, startHour, startMinute, startSecond);
+                        var t2 = Date.UTC(todayYear, todayMonth, todayDate, todayHour, todayMinute, todaySecond);
+                        var diff = t2 - t1;
+                        var diffYears = Math.floor(diff / years);
+                        var diffDays = Math.floor((diff / days) - diffYears * 365);
+
+                        // 区分是否有年份.
+                        var language = 'en';
+                        if (startYear === String(todayYear)) {
+                            document.getElementById("year").innerHTML = todayYear;
+                            var daysTip = 'This site has been running for ' + diffDays + ' days';
+                            if (language === 'zh-CN') {
+                                daysTip = '本站已运行 ' + diffDays + ' 天';
+                            } else if (language === 'zh-HK') {
+                                daysTip = '本站已運行 ' + diffDays + ' 天';
+                            }
+                            document.getElementById("sitetime").innerHTML = daysTip;
+                        } else {
+                            document.getElementById("year").innerHTML = startYear + " - " + todayYear;
+                            var yearsAndDaysTip = 'This site has been running for ' + diffYears + ' years and '
+                                + diffDays + ' days';
+                            if (language === 'zh-CN') {
+                                yearsAndDaysTip = '本站已运行 ' + diffYears + ' 年 ' + diffDays + ' 天';
+                            } else if (language === 'zh-HK') {
+                                yearsAndDaysTip = '本站已運行 ' + diffYears + ' 年 ' + diffDays + ' 天';
+                            }
+                            document.getElementById("sitetime").innerHTML = yearsAndDaysTip;
+                        }
+                    }
+
+                    calcSiteTime();
+                </script>
+            
+            <br>
+            
+        </div>
+        <div class="col s12 m4 l4 social-link social-statis">
+    <a href="https://github.com/luyaguo" class="tooltipped" target="_blank" data-tooltip="访问我的GitHub" data-position="top" data-delay="50">
+        <i class="fab fa-github"></i>
+    </a>
+
+
+
+    <a href="mailto:luyaguo839@gmail.com" class="tooltipped" target="_blank" data-tooltip="邮件联系我" data-position="top" data-delay="50">
+        <i class="fas fa-envelope-open"></i>
+    </a>
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <a href="/atom.xml" class="tooltipped" target="_blank" data-tooltip="RSS 订阅" data-position="top" data-delay="50">
+        <i class="fas fa-rss"></i>
+    </a>
+
+</div>
+    </div>
+</footer>
+
+<div class="progress-bar"></div>
+
+
+    <!-- 搜索遮罩框 -->
+<div id="searchModal" class="modal">
+    <div class="modal-content">
+        <div class="search-header">
+            <span class="title"><i class="fas fa-search"></i>&nbsp;&nbsp;Search</span>
+            <input type="search" id="searchInput" name="s" placeholder="Please enter a search keyword"
+                   class="search-input">
+        </div>
+        <div id="searchResult"></div>
+    </div>
+</div>
+
+<script type="text/javascript">
+$(function () {
+    var searchFunc = function (path, search_id, content_id) {
+        'use strict';
+        $.ajax({
+            url: path,
+            dataType: "xml",
+            success: function (xmlResponse) {
+                // get the contents from search data
+                var datas = $("entry", xmlResponse).map(function () {
+                    return {
+                        title: $("title", this).text(),
+                        content: $("content", this).text(),
+                        url: $("url", this).text()
+                    };
+                }).get();
+                var $input = document.getElementById(search_id);
+                var $resultContent = document.getElementById(content_id);
+                $input.addEventListener('input', function () {
+                    var str = '<ul class=\"search-result-list\">';
+                    var keywords = this.value.trim().toLowerCase().split(/[\s\-]+/);
+                    $resultContent.innerHTML = "";
+                    if (this.value.trim().length <= 0) {
+                        return;
+                    }
+                    // perform local searching
+                    datas.forEach(function (data) {
+                        var isMatch = true;
+                        var data_title = data.title.trim().toLowerCase();
+                        var data_content = data.content.trim().replace(/<[^>]+>/g, "").toLowerCase();
+                        var data_url = data.url;
+                        data_url = data_url.indexOf('/') === 0 ? data.url : '/' + data_url;
+                        var index_title = -1;
+                        var index_content = -1;
+                        var first_occur = -1;
+                        // only match artiles with not empty titles and contents
+                        if (data_title !== '' && data_content !== '') {
+                            keywords.forEach(function (keyword, i) {
+                                index_title = data_title.indexOf(keyword);
+                                index_content = data_content.indexOf(keyword);
+                                if (index_title < 0 && index_content < 0) {
+                                    isMatch = false;
+                                } else {
+                                    if (index_content < 0) {
+                                        index_content = 0;
+                                    }
+                                    if (i === 0) {
+                                        first_occur = index_content;
+                                    }
+                                }
+                            });
+                        }
+                        // show search results
+                        if (isMatch) {
+                            str += "<li><a href='" + data_url + "' class='search-result-title'>" + data_title + "</a>";
+                            var content = data.content.trim().replace(/<[^>]+>/g, "");
+                            if (first_occur >= 0) {
+                                // cut out 100 characters
+                                var start = first_occur - 20;
+                                var end = first_occur + 80;
+                                if (start < 0) {
+                                    start = 0;
+                                }
+                                if (start === 0) {
+                                    end = 100;
+                                }
+                                if (end > content.length) {
+                                    end = content.length;
+                                }
+                                var match_content = content.substr(start, end);
+                                // highlight all keywords
+                                keywords.forEach(function (keyword) {
+                                    var regS = new RegExp(keyword, "gi");
+                                    match_content = match_content.replace(regS, "<em class=\"search-keyword\">" + keyword + "</em>");
+                                });
+
+                                str += "<p class=\"search-result\">" + match_content + "...</p>"
+                            }
+                            str += "</li>";
+                        }
+                    });
+                    str += "</ul>";
+                    $resultContent.innerHTML = str;
+                });
+            }
+        });
+    };
+
+    searchFunc('/search.xml', 'searchInput', 'searchResult');
+});
+</script>
+
+    <!-- 白天和黑夜主题 -->
+<div class="stars-con">
+    <div id="stars"></div>
+    <div id="stars2"></div>
+    <div id="stars3"></div>  
+</div>
+
+<script>
+    function switchNightMode() {
+        $('<div class="Cuteen_DarkSky"><div class="Cuteen_DarkPlanet"></div></div>').appendTo($('body')),
+        setTimeout(function () {
+            $('body').hasClass('DarkMode') 
+            ? ($('body').removeClass('DarkMode'), localStorage.setItem('isDark', '0'), $('#sum-moon-icon').removeClass("fa-sun").addClass('fa-moon')) 
+            : ($('body').addClass('DarkMode'), localStorage.setItem('isDark', '1'), $('#sum-moon-icon').addClass("fa-sun").removeClass('fa-moon')),
+            
+            setTimeout(function () {
+            $('.Cuteen_DarkSky').fadeOut(1e3, function () {
+                $(this).remove()
+            })
+            }, 2e3)
+        })
+    }
+</script>
+
+    <!-- 回到顶部按钮 -->
+<div id="backTop" class="top-scroll">
+    <a class="btn-floating btn-large waves-effect waves-light" href="#!">
+        <i class="fas fa-arrow-up"></i>
+    </a>
+</div>
+
+
+    <script src="/libs/materialize/materialize.min.js"></script>
+    <script src="/libs/masonry/masonry.pkgd.min.js"></script>
+    <script src="/libs/aos/aos.js"></script>
+    <script src="/libs/scrollprogress/scrollProgress.min.js"></script>
+    <script src="/libs/lightGallery/js/lightgallery-all.min.js"></script>
+    <script src="/js/matery.js"></script>
+
+    
+
+    
+    
+    
+
+    <!-- 雪花特效 -->
+    
+
+    <!-- 鼠标星星特效 -->
+     
+        <script type="text/javascript">
+            // 只在桌面版网页启用特效
+            var windowWidth = $(window).width();
+            if (windowWidth > 768) {
+                document.write('<script type="text/javascript" src="/libs/others/star.js"><\/script>');
+            }
+        </script>
+    
+
+     
+        <script src="https://ssl.captcha.qq.com/TCaptcha.js"></script>
+        <script src="/libs/others/TencentCaptcha.js"></script>
+        <button id="TencentCaptcha" data-appid="xxxxxxxxxx" data-cbfn="callback" type="button" hidden></button>
+    
+
+    <!-- Baidu Analytics -->
+
+    <!-- Baidu Push -->
+
+<script>
+    (function () {
+        var bp = document.createElement('script');
+        var curProtocol = window.location.protocol.split(':')[0];
+        if (curProtocol === 'https') {
+            bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+        } else {
+            bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+        }
+        var s = document.getElementsByTagName("script")[0];
+        s.parentNode.insertBefore(bp, s);
+    })();
+</script>
+
+    
+    <script src="/libs/others/clicklove.js" async="async"></script>
+    
+    
+    <script async src="/libs/others/busuanzi.pure.mini.js"></script>
+    
+
+    
+
+    
+
+    <!--腾讯兔小巢-->
+    
+    
+
+    
+
+    
+
+    
+    <script src="/libs/instantpage/instantpage.js" type="module"></script>
+    
+
+    <!-- 冒泡 -->
+    
+
+    <!--全屏-->
+    <script src="/js/fullscreen.js" type="module"></script>
+
+        <style>
+            [bg-lazy] {
+                background-image: none !important;
+                background-color: #eee !important;
+            }
+        </style>
+        <script>
+            window.imageLazyLoadSetting = {
+                isSPA: false,
+                preloadRatio: 1,
+                processImages: null,
+            };
+        </script><script>window.addEventListener("load",function(){var t=/\.(gif|jpg|jpeg|tiff|png)$/i,r=/^data:image\/[a-z\d\-\.\+]+;base64,/;Array.prototype.slice.call(document.querySelectorAll("img[data-original]")).forEach(function(a){var e=a.parentNode;"A"===e.tagName&&(t.test(e.href)||r.test(e.href))&&(e.href=a.dataset.original)})});</script><script>!function(r){r.imageLazyLoadSetting.processImages=t;var a=r.imageLazyLoadSetting.isSPA,n=r.imageLazyLoadSetting.preloadRatio||1,d=o();function o(){var t=Array.prototype.slice.call(document.querySelectorAll("img[data-original]")),e=Array.prototype.slice.call(document.querySelectorAll("[bg-lazy]"));return t.concat(e)}function t(t){(a||t)&&(d=o());for(var e,i=0;i<d.length;i++)0<=(e=(e=d[i]).getBoundingClientRect()).bottom&&0<=e.left&&e.top<=(r.innerHeight*n||document.documentElement.clientHeight*n)&&function(){var t,e,a,n,o=d[i];e=function(){d=d.filter(function(t){return o!==t}),r.imageLazyLoadSetting.onImageLoaded&&r.imageLazyLoadSetting.onImageLoaded(o)},(t=o).dataset.loaded||(t.hasAttribute("bg-lazy")?(t.removeAttribute("bg-lazy"),e&&e()):(a=new Image,n=t.getAttribute("data-original"),a.onload=function(){t.src=n,t.removeAttribute("data-original"),t.setAttribute("data-loaded",!0),e&&e()},a.onerror=function(){t.removeAttribute("data-original"),t.setAttribute("data-loaded",!1),t.src=n},t.src!==n&&(a.src=n)))}()}function e(){clearTimeout(t.tId),t.tId=setTimeout(t,500)}t(),document.addEventListener("scroll",e),r.addEventListener("resize",e),r.addEventListener("orientationchange",e)}(this);</script></body>
+
+</html>
