@@ -1,0 +1,1753 @@
+<!DOCTYPE HTML>
+<html lang="en">
+
+
+<head>
+    <meta charset="utf-8">
+    <meta name="keywords" content="第一章 Docker核心实现技术, 西伯">
+    <meta name="description" content="第一章 Docker 核心实现技术作为一种容器虚拟化技术，Docker 深度应用了操作系统的多项底层支持技术。
+早期版本的 Docker 是基于已经成熟的 Linux Container（LXC）技术实现的。
+自 Docker 0.9 版本">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <meta name="renderer" content="webkit|ie-stand|ie-comp">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="format-detection" content="telephone=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="referrer" content="no-referrer-when-downgrade">
+    <!-- Global site tag (gtag.js) - Google Analytics -->
+
+
+    <title>第一章 Docker核心实现技术 | 西伯</title>
+    <link rel="icon" type="image/png" href="/favicon.png">
+    
+
+
+    <!-- bg-cover style     -->
+
+
+
+<link rel="stylesheet" type="text/css" href="/libs/awesome/css/all.min.css">
+<link rel="stylesheet" type="text/css" href="/libs/materialize/materialize.min.css">
+<link rel="stylesheet" type="text/css" href="/libs/aos/aos.css">
+<link rel="stylesheet" type="text/css" href="/libs/animate/animate.min.css">
+<link rel="stylesheet" type="text/css" href="/libs/lightGallery/css/lightgallery.min.css">
+<link rel="stylesheet" type="text/css" href="/css/matery.css">
+<link rel="stylesheet" type="text/css" href="/css/my.css">
+<link rel="stylesheet" type="text/css" href="/css/dark.css" media="none" onload="if(media!='all')media='all'">
+
+
+
+
+    <link rel="stylesheet" href="/libs/tocbot/tocbot.css">
+    <link rel="stylesheet" href="/css/post.css">
+
+
+
+
+    
+
+
+
+    <script src="/libs/jquery/jquery-3.6.0.min.js"></script>
+
+<meta name="generator" content="Hexo 7.2.0"></head>
+
+<!-- 预加载动画 -->
+
+    <style type="text/css" lang="css">
+    #loading-container{
+        position: fixed;
+        top: 0;
+        left: 0;
+        min-height: 100vh;
+        width: 100vw;
+        z-index: 9999;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        background: #2c3561;
+        text-align: center;
+        /* loader页面消失采用渐隐的方式*/
+        -webkit-transition: opacity 1s ease;
+        -moz-transition: opacity 1s ease;
+        -o-transition: opacity 1s ease;
+        transition: opacity 1s ease;
+    }
+    .loading-image{
+        width: 120px;
+        height: 50px;
+        transform: translate(-50%);
+    }
+
+    .loading-image div:nth-child(2) {
+        -webkit-animation: pacman-balls 1s linear 0s infinite;
+        animation: pacman-balls 1s linear 0s infinite
+    }
+
+    .loading-image div:nth-child(3) {
+        -webkit-animation: pacman-balls 1s linear .33s infinite;
+        animation: pacman-balls 1s linear .33s infinite
+    }
+
+    .loading-image div:nth-child(4) {
+        -webkit-animation: pacman-balls 1s linear .66s infinite;
+        animation: pacman-balls 1s linear .66s infinite
+    }
+
+    .loading-image div:nth-child(5) {
+        -webkit-animation: pacman-balls 1s linear .99s infinite;
+        animation: pacman-balls 1s linear .99s infinite
+    }
+
+    .loading-image div:first-of-type {
+        width: 0;
+        height: 0;
+        border: 25px solid #49b1f5;
+        border-right-color: transparent;
+        border-radius: 25px;
+        -webkit-animation: rotate_pacman_half_up .5s 0s infinite;
+        animation: rotate_pacman_half_up .5s 0s infinite;
+    }
+    .loading-image div:nth-child(2) {
+        width: 0;
+        height: 0;
+        border: 25px solid #49b1f5;
+        border-right-color: transparent;
+        border-radius: 25px;
+        -webkit-animation: rotate_pacman_half_down .5s 0s infinite;
+        animation: rotate_pacman_half_down .5s 0s infinite;
+        margin-top: -50px;
+    }
+    @-webkit-keyframes rotate_pacman_half_up {0% {transform: rotate(270deg)}50% {transform: rotate(1turn)}to {transform: rotate(270deg)}}
+
+    @keyframes rotate_pacman_half_up {0% {transform: rotate(270deg)}50% {transform: rotate(1turn)}to {transform: rotate(270deg)}}
+
+    @-webkit-keyframes rotate_pacman_half_down {0% {transform: rotate(90deg)}50% {transform: rotate(0deg)}to {transform: rotate(90deg)}}
+
+    @keyframes rotate_pacman_half_down {0% {transform: rotate(90deg)}50% {transform: rotate(0deg)}to {transform: rotate(90deg)}}
+
+    @-webkit-keyframes pacman-balls {75% {opacity: .7}to {transform: translate(-100px, -6.25px)}}
+
+    @keyframes pacman-balls {75% {opacity: .7}to {transform: translate(-100px, -6.25px)}}
+
+
+    .loading-image div:nth-child(3),
+    .loading-image div:nth-child(4),
+    .loading-image div:nth-child(5),
+    .loading-image div:nth-child(6){
+        background-color: #49b1f5;
+        width: 15px;
+        height: 15px;
+        border-radius: 100%;
+        margin: 2px;
+        width: 10px;
+        height: 10px;
+        position: absolute;
+        transform: translateY(-6.25px);
+        top: 25px;
+        left: 100px;
+    }
+    .loading-text{
+        margin-bottom: 20vh;
+        text-align: center;
+        color: #f8c471;
+        font-size: 2rem;
+        box-sizing: border-box;
+        padding: 0 10px;
+        text-shadow: 0 2px 10px rgba(0,0,0,0.2);
+    }
+    @media only screen and (max-width: 500px) {
+        .loading-text{
+            font-size: 1.5rem;
+        }
+    }
+    .fadeout {
+        opacity: 0;
+        filter: alpha(opacity=0);
+    }
+    /* logo出现动画 */
+    @-webkit-keyframes fadeInDown{0%{opacity:0;-webkit-transform:translate3d(0,-100%,0);transform:translate3d(0,-100%,0)}100%{opacity:1;-webkit-transform:none;transform:none}}
+    @keyframes fadeInDown{0%{opacity:0;-webkit-transform:translate3d(0,-100%,0);}}
+</style>
+<script>
+    (function () {
+        const loaded = function(){
+            setTimeout(function(){
+                const loader = document.getElementById("loading-container");
+                loader.className="fadeout" ;//使用渐隐的方法淡出loading page
+                // document.getElementById("body-wrap").style.display="flex";
+                setTimeout(function(){
+                    loader.style.display="none";
+                },2500);
+            },800);//强制显示loading page 0.8s
+        };
+        loaded();
+    })()
+</script>
+
+<body>
+    <!--动态背景-->
+    <div id="bg"><canvas></canvas><canvas></canvas><canvas></canvas></div>
+    <script src="/js/canva_moving_effect.js"></script>
+
+    
+        <div id="loading-container">
+            <p class="loading-text">客官坐会儿，请稍等片刻. . . </p>
+            <div class="loading-image">
+                <div></div>
+                <div></div>
+                <div></div>
+                <div></div>
+                <div></div>
+            </div>
+        </div>
+    
+
+    <header class="navbar-fixed">
+    <nav id="headNav" class="bg-color nav-transparent">
+        <div id="navContainer" class="nav-wrapper">
+            <div class="brand-logo">
+                <a href="/" class="waves-effect waves-light">
+                    <div>&nbsp;
+                        
+                            <img src="/medias/logo2.png" class="logo-img" alt="LOGO">
+                        
+                        <span class="logo-span">西伯</span>
+                    </div>
+                </a>
+            </div>
+            
+
+<a href="#" data-target="mobile-nav" class="sidenav-trigger button-collapse"><i class="fas fa-bars"></i></a>
+<ul class="right nav-menu">
+  
+  <li class="hide-on-med-and-down nav-item">
+    
+    <a href="/" class="waves-effect waves-light">
+      
+      <i class="fas fa-home" style="zoom: 0.6;"></i>
+      
+      <span>Index</span>
+    </a>
+    
+  </li>
+  
+  <li class="hide-on-med-and-down nav-item">
+    
+    <a href="/tags" class="waves-effect waves-light">
+      
+      <i class="fas fa-tags" style="zoom: 0.6;"></i>
+      
+      <span>Tags</span>
+    </a>
+    
+  </li>
+  
+  <li class="hide-on-med-and-down nav-item">
+    
+    <a href="/categories" class="waves-effect waves-light">
+      
+      <i class="fas fa-bookmark" style="zoom: 0.6;"></i>
+      
+      <span>Categories</span>
+    </a>
+    
+  </li>
+  
+  <li class="hide-on-med-and-down nav-item">
+    
+    <a href="/archives" class="waves-effect waves-light">
+      
+      <i class="fas fa-archive" style="zoom: 0.6;"></i>
+      
+      <span>Archives</span>
+    </a>
+    
+  </li>
+  
+  <li class="hide-on-med-and-down nav-item">
+    
+    <a href="/about" class="waves-effect waves-light">
+      
+      <i class="fas fa-user-circle" style="zoom: 0.6;"></i>
+      
+      <span>About</span>
+    </a>
+    
+  </li>
+  
+  <li class="hide-on-med-and-down nav-item">
+    
+    <a href="/contact" class="waves-effect waves-light">
+      
+      <i class="fas fa-comments" style="zoom: 0.6;"></i>
+      
+      <span>Contact</span>
+    </a>
+    
+  </li>
+  
+  <li class="hide-on-med-and-down nav-item">
+    
+    <a href="/friends" class="waves-effect waves-light">
+      
+      <i class="fas fa-address-book" style="zoom: 0.6;"></i>
+      
+      <span>Friends</span>
+    </a>
+    
+  </li>
+  
+  <li>
+    <a href="#searchModal" class="modal-trigger waves-effect waves-light">
+      <i id="searchIcon" class="fas fa-search" title="Search" style="zoom: 0.95;"></i>
+    </a>
+  </li>
+
+  <!-- 全屏 -->
+<!--   <li id="fullscreen_li" class="fullscreen"> -->
+<!--     <a href="javascript:void(0);" class="modal-trigger waves-effect waves-light"> -->
+<!--       <i id="fullscreen" class="fas fa-expand-arrows-alt" title="全屏" style="zoom: 0.85;"></i> -->
+<!--     </a> -->
+<!--   </li> -->
+
+  <!-- 主题背景 -->
+  <li>
+    <a href="javascript:;" class="modal-trigger waves-effect waves-light" onclick="switchNightMode()" title="深色/浅色模式" >
+      <i id="sum-moon-icon" class="fas fa-sun" style="zoom: 0.85;"></i>
+    </a>
+  </li>
+  &nbsp;
+</ul>
+
+
+<div id="mobile-nav" class="side-nav sidenav">
+
+    <div class="mobile-head bg-color">
+        
+        <img src="/medias/logo2.png" class="logo-img circle responsive-img">
+        
+        <div class="logo-name">西伯</div>
+        <div class="logo-desc">
+            
+            Never give up and never give in...
+            
+        </div>
+    </div>
+
+    <ul class="menu-list mobile-menu-list">
+        
+        <li class="m-nav-item">
+	  
+		<a href="/" class="waves-effect waves-light">
+			
+			    <i class="fa-fw fas fa-home"></i>
+			
+			Index
+		</a>
+          
+        </li>
+        
+        <li class="m-nav-item">
+	  
+		<a href="/tags" class="waves-effect waves-light">
+			
+			    <i class="fa-fw fas fa-tags"></i>
+			
+			Tags
+		</a>
+          
+        </li>
+        
+        <li class="m-nav-item">
+	  
+		<a href="/categories" class="waves-effect waves-light">
+			
+			    <i class="fa-fw fas fa-bookmark"></i>
+			
+			Categories
+		</a>
+          
+        </li>
+        
+        <li class="m-nav-item">
+	  
+		<a href="/archives" class="waves-effect waves-light">
+			
+			    <i class="fa-fw fas fa-archive"></i>
+			
+			Archives
+		</a>
+          
+        </li>
+        
+        <li class="m-nav-item">
+	  
+		<a href="/about" class="waves-effect waves-light">
+			
+			    <i class="fa-fw fas fa-user-circle"></i>
+			
+			About
+		</a>
+          
+        </li>
+        
+        <li class="m-nav-item">
+	  
+		<a href="/contact" class="waves-effect waves-light">
+			
+			    <i class="fa-fw fas fa-comments"></i>
+			
+			Contact
+		</a>
+          
+        </li>
+        
+        <li class="m-nav-item">
+	  
+		<a href="/friends" class="waves-effect waves-light">
+			
+			    <i class="fa-fw fas fa-address-book"></i>
+			
+			Friends
+		</a>
+          
+        </li>
+        
+        
+    </ul>
+</div>
+
+
+        </div>
+
+        
+    </nav>
+
+</header>
+
+    
+
+
+
+<div class="bg-cover pd-header post-cover" style="background-image: url('/medias/featureimages/8.jpg')">
+    <div class="container" style="right: 0px;left: 0px;">
+        <div class="row">
+            <div class="col s12 m12 l12">
+                <div class="brand">
+                    <h1 class="description center-align post-title">第一章 Docker核心实现技术</h1>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+<main class="post-container content">
+
+    
+    <div class="row">
+    <div id="main-content" class="col s12 m12 l9">
+        <!-- 文章内容详情 -->
+<div id="artDetail">
+    <div class="card">
+        <div class="card-content article-info">
+            <div class="row tag-cate">
+                <div class="col s7">
+                    
+                    <div class="article-tag">
+                        
+                            <a href="/tags/Docker-%E8%BF%9B%E9%98%B6/">
+                                <span class="chip bg-color">Docker 进阶</span>
+                            </a>
+                        
+                    </div>
+                    
+                </div>
+                <div class="col s5 right-align">
+                    
+                    <div class="post-cate">
+                        <i class="fas fa-bookmark fa-fw icon-category"></i>
+                        
+                            <a href="/categories/Docker-%E8%BF%9B%E9%98%B6/" class="post-category">
+                                Docker 进阶
+                            </a>
+                        
+                    </div>
+                    
+                </div>
+            </div>
+
+            <div class="post-info">
+                
+                <div class="post-date info-break-policy">
+                    <i class="far fa-calendar-minus fa-fw"></i>Publish Date:&nbsp;&nbsp;
+                    2025-04-19
+                </div>
+                
+
+                
+
+                
+                <div class="info-break-policy">
+                    <i class="far fa-file-word fa-fw"></i>Word Count:&nbsp;&nbsp;
+                    4.4k
+                </div>
+                
+
+                
+                <div class="info-break-policy">
+                    <i class="far fa-clock fa-fw"></i>Read Times:&nbsp;&nbsp;
+                    17 Min
+                </div>
+                
+
+                
+                    <div id="busuanzi_container_page_pv" class="info-break-policy">
+                        <i class="far fa-eye fa-fw"></i>Read Count:&nbsp;&nbsp;
+                        <span id="busuanzi_value_page_pv"></span>
+                    </div>
+				
+            </div>
+        </div>
+        <hr class="clearfix">
+
+        
+        <!-- 是否加载使用自带的 prismjs. -->
+        <link rel="stylesheet" href="/libs/prism/prism.min.css">
+        
+
+        
+        <!-- 代码块折行 -->
+        <style type="text/css">
+            code[class*="language-"], pre[class*="language-"] { white-space: pre-wrap !important; }
+        </style>
+        
+
+        <div class="card-content article-card-content">
+            <div id="articleContent">
+                <h1 id="第一章-Docker-核心实现技术"><a href="#第一章-Docker-核心实现技术" class="headerlink" title="第一章 Docker 核心实现技术"></a>第一章 Docker 核心实现技术</h1><p>作为一种容器虚拟化技术，Docker 深度应用了操作系统的多项底层支持技术。</p>
+<p>早期版本的 Docker 是基于已经成熟的 Linux Container（LXC）技术实现的。</p>
+<p>自 Docker 0.9 版本起，Docker 逐渐从 LXC 转移到新的 libcontainer（<a target="_blank" rel="noopener" href="https://github.com/docker/libcontainer%EF%BC%89%E4%B8%8A%EF%BC%8C%E5%B9%B6%E4%B8%94%E7%A7%AF%E6%9E%81%E6%8E%A8%E5%8A%A8%E5%BC%80%E6%94%BE%E5%AE%B9%E5%99%A8%E8%A7%84%E8%8C%83">https://github.com/docker/libcontainer）上，并且积极推动开放容器规范</a> runc，试图打造更通用的底层容器虚拟化库。</p>
+<p>从操作系统功能上看，目前 Docker 底层依赖的核心技术主要包括 Linux 操作系统的 <strong>命名空间（Namespace）、控制组（Control Group）、联合文件系统（Union File System）和Linux 网络虚拟化</strong> 支持。</p>
+<h2 id="1、基本架构"><a href="#1、基本架构" class="headerlink" title="1、基本架构"></a>1、基本架构</h2><p>Docker 目前采用了标准的 <code>C/S</code> 架构，如图所示。客户端和服务端既可以运行在一个机器上，也可运行在不同机器上通过 socket 或者 RESTful API 来进行通信。</p>
+<p><img src="/medias/loading.gif" data-original="https://raw.githubusercontent.com/luyaguo/pictures-guo/main/docker/202504191202614.png" alt="image-20230530223649427"></p>
+<h3 id="服务端"><a href="#服务端" class="headerlink" title="服务端"></a>服务端</h3><blockquote>
+<p>Docker Daemon 是 Docker 引擎的后台进程，是运行 Docker 容器的核心组件之一。它负责管理 Docker 容器、镜像、网络和存储卷等资源，并提供 Docker API 供客户端和其他工具与其交互。Docker Daemon 运行在宿主机上，监听来自客户端的请求，并根据请求启动、停止、管理容器等操作。</p>
+</blockquote>
+<p><code>Docker Daemon</code> 一般在宿主主机后台运行，作为服务端接受来自客户的请求，并处理这些请求（创建、运行、分发容器）。</p>
+<p>在设计上，Docker Daemon 是一个模块化的架构，通过专门的 <code>Engine</code> 模块来分发管理各个来自客户端的任务。</p>
+<p>Docker 服务端默认监听本地的 <code>unix:///var/run/docker.sock</code> 套接字，只允许本地的 <code>root</code> 用户或 <code>docker</code> 用户组成员访问。<strong>可以通过 <code>-H</code> 选项来修改监听的方式</strong>。</p>
+<p>例如，让服务端监听本地的 TCP 连接 1234 端口，如下所示：</p>
+<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash">$ <span class="token function">docker</span> daemon <span class="token parameter variable">-H</span> <span class="token number">0.0</span>.0.0:1234
+WARN<span class="token punctuation">[</span>0000<span class="token punctuation">]</span> /<span class="token operator">!</span><span class="token punctuation">\</span> DON<span class="token string">'T BIND ON ANY IP ADDRESS WITHOUT setting -tlsverify IF YOU DONT KNOW WHAT YOU'</span>RE DOING /<span class="token operator">!</span><span class="token punctuation">\</span>
+INFO<span class="token punctuation">[</span>0000<span class="token punctuation">]</span> New containerd process, pid: <span class="token number">22385</span>
+INFO<span class="token punctuation">[</span>0001<span class="token punctuation">]</span> <span class="token punctuation">[</span>graphdriver<span class="token punctuation">]</span> using prior storage driver <span class="token string">"aufs"</span>
+INFO<span class="token punctuation">[</span>0001<span class="token punctuation">]</span> Graph migration to content-addressability took <span class="token number">0.00</span> seconds
+INFO<span class="token punctuation">[</span>0001<span class="token punctuation">]</span> Firewalld running: <span class="token boolean">false</span>
+INFO<span class="token punctuation">[</span>0001<span class="token punctuation">]</span> Default bridge <span class="token punctuation">(</span>docker0<span class="token punctuation">)</span> is assigned with an IP address <span class="token number">172.17</span>.0.0/16. Daemon option <span class="token parameter variable">--bip</span> can be used to <span class="token builtin class-name">set</span> a preferred IP address
+WARN<span class="token punctuation">[</span>0002<span class="token punctuation">]</span> Your kernel does not support swap memory limit.
+WARN<span class="token punctuation">[</span>0002<span class="token punctuation">]</span> mountpoint <span class="token keyword">for</span> pids not found
+INFO<span class="token punctuation">[</span>0002<span class="token punctuation">]</span> Loading containers: start.
+<span class="token punctuation">..</span>.<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<p>此外，Docker 还支持通过 <code>HTTPS</code> 认证方式来验证访问。</p>
+<p>Debian&#x2F;Ubuntu 14.04 等使用 <code>upstart</code> 管理启动服务的系统中，Docker 服务端的默认启动配置文件在 <code>/etc/default/docker</code>。对于使用 <code>systemd</code> 管理启动服务的系统，配置文件在 <code>/etc/systemd/system/docker.service.d/docker.conf</code>。</p>
+<h3 id="客户端"><a href="#客户端" class="headerlink" title="客户端"></a>客户端</h3><p>Docker 客户端为用户提供一系列可执行命令，用户使用的 Docker 可执行命令即为客户端程序。用户用这些命令与 Docker Daemon 交互。</p>
+<p>与 Docker Daemon 不同的是，客户端发送命令后，等待服务端返回，一旦收到返回后，客户端立刻执行结束并退出。</p>
+<p>同样，客户端默认通过本地的 <code>unix:///var/run/docker.sock</code> 套接字向服务端发送命令。如果服务端没有监听在默认的地址，则需要客户端在执行命令的时候显式指定服务端地址。</p>
+<p>例如，假定服务端监听在本地的 TCP 连接 1234 端口 tcp:&#x2F;&#x2F;127.0.0.1:1234，只有通过 <code>-H</code> 参数指定了正确的地址信息才能连接到服务端，如下所示：</p>
+<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash">$ <span class="token function">docker</span> version
+Client:
+    Version:      <span class="token number">1.12</span>.0
+    API version:  <span class="token number">1.24</span>
+    Go version:   go1.6.3
+    Git commit:   8eab29e
+    Built:        Thu Sep <span class="token number">28</span> <span class="token number">22</span>:00:36 <span class="token number">2016</span>
+    OS/Arch:      linux/amd64
+Cannot connect to the Docker daemon. Is the <span class="token function">docker</span> daemon running on this host?
+
+$ <span class="token function">docker</span> <span class="token parameter variable">-H</span> tcp://127.0.0.1:1234 version
+Client:
+    Version:      <span class="token number">1.12</span>.0
+    API version:  <span class="token number">1.24</span>
+    Go version:   go1.6.3
+    Git commit:   8eab29e
+    Built:        Thu Sep <span class="token number">28</span> <span class="token number">22</span>:00:36 <span class="token number">2016</span>
+    OS/Arch:      linux/amd64
+Server:
+    Version:      <span class="token number">1.12</span>.0
+    API version:  <span class="token number">1.24</span>
+    Go version:   go1.6.3
+    Git commit:   8eab29e
+    Built:        Thu Sep <span class="token number">28</span> <span class="token number">22</span>:00:36 <span class="token number">2016</span>
+    OS/Arch:      linux/amd64<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<h2 id="2、命名空间"><a href="#2、命名空间" class="headerlink" title="2、命名空间"></a>2、命名空间</h2><p>命名空间（namespace）是 Linux 内核的一个强大特性，为容器虚拟化的实现带来极大便利。命名空间机制保证了容器之间彼此互不影响。</p>
+<h3 id="进程命名空间"><a href="#进程命名空间" class="headerlink" title="进程命名空间"></a>进程命名空间</h3><p>Linux 通过命名空间管理进程号，对于同一进程（即同一个 task_struct），在不同的命名空间中，看到的进程号不相同，每个进程命名空间有一套自己的进程号管理方法。</p>
+<p>进程命名空间是一个父子关系的结构，<strong>子空间中的进程对于父空间是可见的</strong>。新 fork 出的进程在父命名空间和子命名空间将分别有一个进程号来对应。</p>
+<p>例如，查看 Docker 主进程的 pid 进程号是 <strong>5989</strong>，如下所示：</p>
+<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash">$ <span class="token function">ps</span> <span class="token parameter variable">-ef</span> <span class="token operator">|</span><span class="token function">grep</span> <span class="token function">docker</span>
+root      <span class="token number">5989</span>  <span class="token number">5988</span>  <span class="token number">0</span> <span class="token number">14</span>:38 pts/6    00:00:00 <span class="token function">docker</span> <span class="token parameter variable">-d</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre>
+
+<p>新建一个 Ubuntu 的“hello world”容器：</p>
+<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash">$ <span class="token function">docker</span> run <span class="token parameter variable">-d</span> ubuntu:14.04  /bin/sh <span class="token parameter variable">-c</span> <span class="token string">"while true; do echo hello world; sleep 1; done"</span>
+ec559327572b5bf99d0f80b98ed3a3b62023844c7fdbea3f8caed4ffa5c62e86
+<span class="token punctuation">..</span>.<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span></span></code></pre>
+
+<p>查看新建容器进程的父进程，正是 Docker 主进程 <strong>5989</strong>：</p>
+<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash">$ <span class="token function">ps</span> <span class="token parameter variable">-ef</span> <span class="token operator">|</span><span class="token function">grep</span> <span class="token keyword">while</span>
+root <span class="token number">6126</span>  <span class="token number">5989</span>  <span class="token number">0</span> <span class="token number">14</span>:41 ? 00:00:00 /bin/sh <span class="token parameter variable">-c</span> <span class="token keyword">while</span> <span class="token boolean">true</span><span class="token punctuation">;</span> <span class="token keyword">do</span> <span class="token builtin class-name">echo</span> hello world<span class="token punctuation">;</span> <span class="token function">sleep</span> <span class="token number">1</span><span class="token punctuation">;</span> <span class="token keyword">done</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre>
+
+<h3 id="网络命名空间"><a href="#网络命名空间" class="headerlink" title="网络命名空间"></a>网络命名空间</h3><p>如果有了 pid 命名空间，那么每个命名空间中的进程就可以相互隔离，但是网络端口还是共享本地系统的端口。</p>
+<p>通过网络命名空间，可以<strong>实现网络隔离</strong>。网络命名空间为进程提供了一个完全独立的网络协议栈的视图，包括网络设备接口、IPv4 和 IPv6 协议栈、IP 路由表、防火墙规则、sockets等，这样每个容器的网络就能隔离开来。</p>
+<p>Docker 采用<strong>虚拟网络设备</strong>（Virtual Network Device）的方式，将不同命名空间的网络设备连接到一起。<strong>默认情况下，容器中的虚拟网卡将同本地主机上的 docker0 网桥连接在一起</strong>。</p>
+<p><img src="/medias/loading.gif" data-original="https://raw.githubusercontent.com/luyaguo/pictures-guo/main/docker/202504191202786.png" alt="image-20230531232525524"></p>
+<p>使用 brctl 工具可以看到桥接到宿主主机 docker0 网桥上的虚拟网口：</p>
+<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash">$ brctl show
+bridge name     bridge <span class="token function">id</span>               STP enabled     interfaces
+docker0         <span class="token number">8000</span>.56847afe9799       no              veth4148
+                                                        vethd166
+                                                        vethd533<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<h3 id="IPC-命名空间"><a href="#IPC-命名空间" class="headerlink" title="IPC 命名空间"></a>IPC 命名空间</h3><p>容器中进程交互还是采用了 Linux 常见的进程间交互方法（Interprocess Communication，IPC），包括信号量、消息队列和共享内存等。</p>
+<p><strong>PID Namespace 和 IPC Namespace 可以组合起来一起使用，同一个 IPC 命名空间内的进程可以彼此可见，允许进行交互；不同空间的进程则无法交互。</strong></p>
+<h3 id="挂载命名空间"><a href="#挂载命名空间" class="headerlink" title="挂载命名空间"></a>挂载命名空间</h3><p>类似于 chroot，将一个进程放到一个特定的目录执行。挂载命名空间允许不同命名空间的进程看到的文件结构不同，这样每个命名空间中的进程所看到的文件目录彼此被隔离。</p>
+<h3 id="UTS-命名空间"><a href="#UTS-命名空间" class="headerlink" title="UTS 命名空间"></a>UTS 命名空间</h3><p>UTS（UNIX Time-sharing System）命名空间允许每个容器拥有独立的主机名和域名，从而可以虚拟出一个有独立主机名和网络空间的环境，就跟网络上一台独立的主机一样。</p>
+<p>默认情况下，Docker 容器的主机名就是返回的容器 ID：</p>
+<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash">$ <span class="token function">docker</span> <span class="token function">ps</span>
+CONTAINER ID    IMAGE      COMMAND    CREATED    STATUS   PORTS     NAMES
+ec559327572b    ubuntu:14.04   /bin/sh <span class="token parameter variable">-c</span> <span class="token string">'while tr'</span>   <span class="token number">18</span> minutes ago Up <span class="token number">18</span> minutes    furious_goodall
+
+$ <span class="token function">docker</span> inspect  <span class="token parameter variable">-f</span> <span class="token punctuation">&#123;</span><span class="token punctuation">&#123;</span><span class="token string">".Config.Hostname"</span><span class="token punctuation">&#125;</span><span class="token punctuation">&#125;</span>  ec5
+ec559327572b<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<h3 id="用户命名空间"><a href="#用户命名空间" class="headerlink" title="用户命名空间"></a>用户命名空间</h3><p><strong>每个容器可以有不同的用户和组 id</strong>，也就是说可以在容器内使用特定的内部用户执行程序，而非本地系统上存在的用户。</p>
+<p>每个容器内部都可以有 root 帐号，但跟宿主主机不在一个命名空间。</p>
+<p>通过使用隔离的用户命名空间可以提高安全性，避免容器内进程获取到额外的权限。</p>
+<h2 id="3、控制组"><a href="#3、控制组" class="headerlink" title="3、控制组"></a>3、控制组</h2><p><strong>控制组</strong>（CGroups）是Linux内核的一个特性，主要用来对共享资源进行<strong>隔离、限制、审计</strong>等。只有能控制分配到容器的资源，才能避免多个容器同时运行时对宿主机系统的资源竞争。</p>
+<p>控制组技术最早是由 Google 的程序员 2006 年起提出，Linux 内核自 2.6.24 开始原生支持。</p>
+<p><strong>控制组可以提供对容器的内存、CPU、磁盘 IO 等资源进行限制和计费管理</strong>。控制组的设计目标是为不同的应用情况提供统一的接口，从控制单一进程（比如 nice 工具）到系统级虚拟化（包括 OpenVZ、Linux-VServer、LXC 等）。</p>
+<p>具体来看，控制组提供：</p>
+<ul>
+<li><strong>资源限制（Resource limiting）</strong>：可以将组设置为不超过设定的内存限制。比如：内存子系统可以为进程组设定一个内存使用上限，一旦进程组使用的内存达到限额再申请内存，就会出发 Out of Memory 警告。</li>
+<li><strong>优先级（Prioritization）</strong>：通过优先级让一些组优先得到更多的 CPU 等资源。</li>
+<li><strong>资源审计（Accounting）</strong>：用来统计系统实际上把多少资源用到适合的目的上，可以使用 cpuacct 子系统记录某个进程组使用的 CPU 时间。</li>
+<li><strong>隔离（isolation）</strong>：为组隔离命名空间，这样一个组不会看到另一个组的进程、网络连接和文件系统。</li>
+<li><strong>控制（Control）</strong>：挂起、恢复和重启动等操作。</li>
+</ul>
+<p>安装 Docker 后，用户可以在 <code>/sys/fs/cgroup/memory/docker/</code> 目录下看到对 Docker 组应用的各种限制项，包括：</p>
+<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash">$ <span class="token builtin class-name">cd</span> /sys/fs/cgroup/memory/docker
+$ <span class="token function">ls</span>
+1b3591fb9451d11292f2
+    memory.kmem.limit_in_bytes          memory.limit_in_bytes           
+    memory.swappiness
+6cac1e322cb8fd185b8e  
+    memory.kmem.max_usage_in_bytes      memory.max_usage_in_bytes       
+    memory.usage_in_bytes
+<span class="token punctuation">..</span><span class="token punctuation">..</span><span class="token punctuation">..</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<p>用户可以通过修改这些文件值来控制组限制 Docker 应用资源。例如，通过下面的命令可限制 Docker 组中所有进程使用的物理内存总量不超过 100MB：</p>
+<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash">$ <span class="token function">sudo</span> <span class="token builtin class-name">echo</span> <span class="token number">104857600</span> <span class="token operator">></span>/sys/fs/cgroup/memory/docker/memory.limit_in_bytes<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+
+<p>进入对应的容器文件夹，可以看到对应容器的一些状态：</p>
+<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash">$ <span class="token builtin class-name">cd</span> 42352bb6c1d1c5c411be8fa04e97842da87d14623495189c4d865dfc444d12ae/
+$ <span class="token function">ls</span>
+cgroup.clone_children  memory.max_usage_in_bytes        memory.stat
+cgroup.event_control   memory.move_charge_at_immigrate  memory.swappiness
+cgroup.procs           memory.numa_stat                 memory.usage_in_bytes
+memory.failcnt         memory.oom_control               memory.use_hierarchy
+memory.force_empty     memory.pressure_level            notify_on_release
+memory.limit_in_bytes  memory.soft_limit_in_bytes       tasks
+$ <span class="token function">cat</span> memory.stat
+cache <span class="token number">110592</span>
+rss <span class="token number">107286528</span>
+rss_huge <span class="token number">16777216</span>
+mapped_file <span class="token number">0</span>
+writeback <span class="token number">0</span>
+pgpgin <span class="token number">74766</span>
+pgpgout <span class="token number">52634</span>
+pgfault <span class="token number">115722</span>
+pgmajfault <span class="token number">0</span>
+inactive_anon <span class="token number">12288</span>
+active_anon <span class="token number">107384832</span>
+inactive_file <span class="token number">0</span>
+active_file <span class="token number">0</span>
+unevictable <span class="token number">0</span>
+hierarchical_memory_limit <span class="token number">18446744073709551615</span>
+total_cache <span class="token number">110592</span>
+total_rss <span class="token number">107286528</span>
+total_rss_huge <span class="token number">16777216</span>
+total_mapped_file <span class="token number">0</span>
+total_writeback <span class="token number">0</span>
+total_pgpgin <span class="token number">74766</span>
+total_pgpgout <span class="token number">52634</span>
+total_pgfault <span class="token number">115722</span>
+total_pgmajfault <span class="token number">0</span>
+total_inactive_anon <span class="token number">12288</span>
+total_active_anon <span class="token number">107384832</span>
+total_inactive_file <span class="token number">0</span>
+total_active_file <span class="token number">0</span>
+total_unevictable <span class="token number">0</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<p>在开发容器工具时，往往需要一些容器运行状态数据，这时就可以从这里得到更多的信息。</p>
+<p>可以在创建或启动容器时为每个容器指定资源的限制，例如使用 <code>-c|--cpu-shares[=0]</code> 参数来调整容器使用 CPU 的权重；使用 <code>-m|--memory[=MEMORY]</code> 参数来调整容器使用内存的大小。</p>
+<h2 id="4、联合文件系统"><a href="#4、联合文件系统" class="headerlink" title="4、联合文件系统"></a>4、联合文件系统</h2><p>联合文件系统（UnionFS）是一种<strong>轻量级的高性能分层文件系统</strong>，它支持将文件系统中的修改信息作为一次提交，并层层叠加，同时可以将不同目录挂载到同一个虚拟文件系统下，应用看到的是挂载的最终结果。</p>
+<p>联合文件系统是实现 Docker 镜像的技术基础。<strong>Docker 镜像可以通过分层来进行继承</strong>。</p>
+<p>例如，用户基于基础镜像来制作各种不同的应用镜像。这些镜像共享同一个基础镜像层，提高了存储效率。此外，<strong>当用户改变了一个 Docker 镜像（比如升级程序到新的版本），则会创建一个新的层（layer）</strong>。因此，用户不用替换整个原镜像或者重新建立，只需要添加新层即可。用户分发镜像的时候，也只需要分发被改动的新层内容（增量部分）。这让 Docker 的镜像管理变得十分轻量级和快速。</p>
+<h3 id="Docker-存储"><a href="#Docker-存储" class="headerlink" title="Docker 存储"></a>Docker 存储</h3><p>Docker 目前通过插件化方式支持多种文件系统后端。</p>
+<p>Docker 镜像自身就是由多个文件层组成，每一层有唯一的编号（层 ID）。</p>
+<p>可以通过 <code>docker history</code> 查看一个镜像由哪些层组成。</p>
+<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash">$ <span class="token function">docker</span> <span class="token function">history</span> ubuntu:14.04
+IMAGE         CREATED        CREATED BY     SIZE     COMMENT
+2a274e3405ec  <span class="token number">13</span> months ago  /bin/sh <span class="token parameter variable">-c</span> <span class="token comment">#(nop) CMD ["/bin/bash"] 0 B</span>
+df697c8b1bf4  <span class="token number">13</span> months ago  /bin/sh <span class="token parameter variable">-c</span> <span class="token function">sed</span> <span class="token parameter variable">-i</span> <span class="token string">'s/^#\s*...'</span>  <span class="token number">1.895</span> kB
+371166fb96e0  <span class="token number">13</span> months ago  /bin/sh <span class="token parameter variable">-c</span> <span class="token builtin class-name">echo</span> <span class="token string">'#!/bin/sh'</span> <span class="token operator">></span> /usr <span class="token number">194.5</span> kB
+69191ca023af  <span class="token number">13</span> months ago  /bin/sh <span class="token parameter variable">-c</span> <span class="token comment">#(nop) ADD file:c8f0789 188.1 MB</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<p>对于 Docker 镜像来说，这些层的内容都是不可修改的、只读的。而当 Docker 利用镜像启动一个容器时，将在镜像文件系统的最顶端再挂载一个新的可读写的层给容器。容器中的内容更新将会发生在可读写层。</p>
+<p>当所操作对象位于较深的某层时，需要先复制到最上层的可读写层。当数据对象较大时，往往意味着 IO 性能较差。<strong>因此，一般推荐将容器修改的数据通过 volume 方式挂载，而不是直接修改镜像内数据。</strong></p>
+<p>具体看，Docker 所有的存储都在 Docker 目录下，以 Ubuntu 系统为例，默认路径是 &#x2F;var&#x2F;lib&#x2F;docker。在这个目录下面，存储由 Docker 镜像和容器运行相关的文件和目录，可能包括 aufs、containers、graph、image、init、linkgraph.db、network、repositories-aufs、swarm、tmp、trust、volumes 等。</p>
+<p>其中，最关键的就是 <code>aufs</code> 目录，这是 aufs 文件系统所在，保存 Docker 镜像相关数据和信息。该目录包括 layers、diff 和 mnt 三个子目录。1.9版本和之前的版本中，命名跟镜像层的ID是匹配的，而自1.10开始，层数据相关的文件和目录名与层 ID 不再匹配。<br><code>layers</code> 子目录包含层属性文件，用来保存各个镜像层的元数据：某镜像的某层下面包括哪些层。例如：某镜像由5层组成，则文件内容应该如下：</p>
+<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash"><span class="token comment"># cat aufs/layers/78f4601eee00b1f770b1aecf5b6433635b99caa5c11b8858dd6c8cec03b4584f-init</span>
+d2a0ecffe6fa4ef3de9646a75cc629bbd9da7eead7f767cb810f9808d6b3ecb6
+29460ac934423a55802fcad24856827050697b4a9f33550bd93c82762fb6db8f
+b670fb0c7ecd3d2c401fbfd1fa4d7a872fbada0a4b8c2516d0be18911c6b25d6
+83e4dde6b9cfddf46b75a07ec8d65ad87a748b98cf27de7d5b3298c1f3455ae4
+<span class="token comment"># cat aufs/layers/d2a0ecffe6fa4ef3de9646a75cc629bbd9da7eead7f767cb810f9808d6b3ecb6</span>
+29460ac934423a55802fcad24856827050697b4a9f33550bd93c82762fb6db8f
+b670fb0c7ecd3d2c401fbfd1fa4d7a872fbada0a4b8c2516d0be18911c6b25d6
+83e4dde6b9cfddf46b75a07ec8d65ad87a748b98cf27de7d5b3298c1f3455ae4<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<p><code>diff</code> 子目录包含层内容子目录，用来保存所有镜像层的内容数据。例如：</p>
+<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash"><span class="token comment"># ls aufs/diff/78f4601eee00b1f770b1aecf5b6433635b99caa5c11b8858dd6c8cec03b4584f-init/</span>
+dev  etc<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre>
+
+<p><code>mnt</code> 子目录下面的子目录是各个容器最终的挂载点，所有相关的 AUFS 层在这里挂载到一起，形成最终效果。一个运行中容器的根文件系统就挂载在这下面的子目录上。同样，1.10版本之前的 Docker 中，子目录名和容器 ID 是一致的。其中，还包括容器的元数据、配置文件和运行日志等。</p>
+<h3 id="多种文件系统比较"><a href="#多种文件系统比较" class="headerlink" title="多种文件系统比较"></a>多种文件系统比较</h3><p>Docker 目前支持的联合文件系统种类包括 AUFS、OverlayFS、btrfs、vfs、zfs 和 Device Mapper 等。各种文件系统目前的支持情况如下：</p>
+<ul>
+<li>AUFS：最早支持的文件系统，对 Debian&#x2F;Ubuntu 支持好，虽然没有合并到 Linux 内核中，但成熟度很高；</li>
+<li>OverlayFS：类似于AUFS，性能更好一些，已经合并到内核，未来会取代 AUFS，但成熟度有待提高；</li>
+<li>Device Mapper：Redhat 公司和 Docker 团队一起开发用于支持 RHEL 的文件系统，内核支持，性能略慢，成熟度高；</li>
+<li>btrfs：参考zfs等特性设计的文件系统，由Linux社区开发，试图未来取代Device Mapper，成熟度有待提高；</li>
+<li>vfs：基于普通文件系统（ext、nfs等）的中间层抽象，性能差，比较占用空间，成熟度也一般。</li>
+<li>zfs：最初设计为Solaris 10上的写时文件系统，拥有不少好的特性，但对Linux支持还不够成熟。</li>
+</ul>
+<p>总结一下，AUFS 和 Device Mapper 的应用最为广泛，支持也相对成熟，推荐生产环境考虑。长期来看，OverlayFS 将可能具有更好的特性。</p>
+<h2 id="5、Linux-网络虚拟化"><a href="#5、Linux-网络虚拟化" class="headerlink" title="5、Linux 网络虚拟化"></a>5、Linux 网络虚拟化</h2><p>Docker 的本地网络实现其实就是利用了 Linux 上的<strong>网络命名空间</strong>和<strong>虚拟网络设备</strong>（特别是veth pair）。</p>
+<h3 id="基本原理"><a href="#基本原理" class="headerlink" title="基本原理"></a>基本原理</h3><p>Docker 中的网络接口默认都是虚拟的接口。</p>
+<p>虚拟接口的最大优势就是转发效率极高。这是因为 Linux 通过在内核中进行数据复制来实现虚拟接口之间的数据转发，即发送接口的发送缓存中的数据包将被直接复制到接收接口的接收缓存中，而无需通过外部物理网络设备进行交换。对于本地系统和容器内系统来看，虚拟接口跟一个正常的以太网卡相比并无区别，只是它速度要快得多。</p>
+<p>Docker 容器网络就很好地利用了 Linux 虚拟网络技术，在本地主机和容器内分别创建一个虚拟接口，并让它们彼此连通（这样的一对接口叫做 <strong>veth pair</strong>）</p>
+<p><img src="/medias/loading.gif" data-original="https://raw.githubusercontent.com/luyaguo/pictures-guo/main/docker/202504191202150.png" alt="image-20230603165651567"></p>
+<h3 id="网络创建过程"><a href="#网络创建过程" class="headerlink" title="网络创建过程"></a>网络创建过程</h3><p>一般情况下，Docker 创建一个容器的时候，会具体执行如下操作：</p>
+<p>1）创建一对虚拟接口，分别放到本地主机和新容器的命名空间中；</p>
+<p>2）本地主机一端的虚拟接口连接到默认的 docker0 网桥或指定网桥上，并具有一个以 <code>veth</code> 开头的唯一名字，如 veth1234；</p>
+<p>3）容器一端的虚拟接口将放到新创建的容器中，并修改名字作为 <code>eth0</code>。这个接口只在容器的命名空间可见；</p>
+<p>4）从网桥可用地址段中获取一个空闲地址分配给容器的 <code>eth0</code>（例如172.17.0.2&#x2F;16），并配置默认路由网关为 <code>docker0</code> 网卡的内部接口 docker0 的 IP 地址（例如172.17.42.1&#x2F;16）。</p>
+<p>完成这些之后，容器就可以使用它所能看到的 eth0 虚拟网卡来连接其他容器和访问外部网络。</p>
+
+                
+            </div>
+            <hr/>
+
+            
+
+
+
+            <div class="tag_share" style="display: block;">
+                <div class="post-meta__tag-list" style="display: inline-block;">
+                    
+                        <div class="article-tag">
+                            
+                                <a href="/tags/Docker-%E8%BF%9B%E9%98%B6/">
+                                    <span class="chip bg-color">Docker 进阶</span>
+                                </a>
+                            
+                        </div>
+                    
+                </div>
+                <div class="post_share" style="zoom: 80%; width: fit-content; display: inline-block; float: right; margin: -0.15rem 0;">
+                    <link rel="stylesheet" type="text/css" href="/libs/share/css/share.min.css">
+<div id="article-share">
+
+    
+    <div class="social-share" data-sites="twitter,facebook,google,qq,qzone,wechat,weibo,douban,linkedin" data-wechat-qrcode-helper="<p>微信扫一扫即可分享！</p>"></div>
+    <script src="/libs/share/js/social-share.min.js"></script>
+    
+
+    
+
+</div>
+
+                </div>
+            </div>
+            
+        </div>
+    </div>
+
+    
+
+    
+
+    
+
+    
+
+    
+        <style>
+    .valine-card {
+        margin: 1.5rem auto;
+    }
+
+    .valine-card .card-content {
+        padding: 20px 20px 5px 20px;
+    }
+
+    #vcomments textarea {
+        box-sizing: border-box;
+        background: url("/medias/bg.webp") 100% 100% no-repeat;
+    }
+
+    #vcomments p {
+        margin: 2px 2px 10px;
+        font-size: 1.05rem;
+        line-height: 1.78rem;
+    }
+
+    #vcomments blockquote p {
+        text-indent: 0.2rem;
+    }
+
+    #vcomments a {
+        padding: 0 2px;
+        color: #4cbf30;
+        font-weight: 500;
+        text-decoration: none;
+    }
+
+    #vcomments img {
+        max-width: 100%;
+        height: auto;
+        cursor: pointer;
+    }
+
+    #vcomments ol li {
+        list-style-type: decimal;
+    }
+
+    #vcomments ol,
+    ul {
+        display: block;
+        padding-left: 2em;
+        word-spacing: 0.05rem;
+    }
+
+    #vcomments ul li,
+    ol li {
+        display: list-item;
+        line-height: 1.8rem;
+        font-size: 1rem;
+    }
+
+    #vcomments ul li {
+        list-style-type: disc;
+    }
+
+    #vcomments ul ul li {
+        list-style-type: circle;
+    }
+
+    #vcomments table, th, td {
+        padding: 12px 13px;
+        border: 1px solid #dfe2e5;
+    }
+
+    #vcomments table, th, td {
+        border: 0;
+    }
+
+    table tr:nth-child(2n), thead {
+        background-color: #fafafa;
+    }
+
+    #vcomments table th {
+        background-color: #f2f2f2;
+        min-width: 80px;
+    }
+
+    #vcomments table td {
+        min-width: 80px;
+    }
+
+    #vcomments h1 {
+        font-size: 1.85rem;
+        font-weight: bold;
+        line-height: 2.2rem;
+    }
+
+    #vcomments h2 {
+        font-size: 1.65rem;
+        font-weight: bold;
+        line-height: 1.9rem;
+    }
+
+    #vcomments h3 {
+        font-size: 1.45rem;
+        font-weight: bold;
+        line-height: 1.7rem;
+    }
+
+    #vcomments h4 {
+        font-size: 1.25rem;
+        font-weight: bold;
+        line-height: 1.5rem;
+    }
+
+    #vcomments h5 {
+        font-size: 1.1rem;
+        font-weight: bold;
+        line-height: 1.4rem;
+    }
+
+    #vcomments h6 {
+        font-size: 1rem;
+        line-height: 1.3rem;
+    }
+
+    #vcomments p {
+        font-size: 1rem;
+        line-height: 1.5rem;
+    }
+
+    #vcomments hr {
+        margin: 12px 0;
+        border: 0;
+        border-top: 1px solid #ccc;
+    }
+
+    #vcomments blockquote {
+        margin: 15px 0;
+        border-left: 5px solid #42b983;
+        padding: 1rem 0.8rem 0.3rem 0.8rem;
+        color: #666;
+        background-color: rgba(66, 185, 131, .1);
+    }
+
+    #vcomments pre {
+        font-family: monospace, monospace;
+        padding: 1.2em;
+        margin: .5em 0;
+        background: #272822;
+        overflow: auto;
+        border-radius: 0.3em;
+        tab-size: 4;
+    }
+
+    #vcomments code {
+        font-family: monospace, monospace;
+        padding: 1px 3px;
+        font-size: 0.92rem;
+        color: #e96900;
+        background-color: #f8f8f8;
+        border-radius: 2px;
+    }
+
+    #vcomments pre code {
+        font-family: monospace, monospace;
+        padding: 0;
+        color: #e8eaf6;
+        background-color: #272822;
+    }
+
+    #vcomments pre[class*="language-"] {
+        padding: 1.2em;
+        margin: .5em 0;
+    }
+
+    #vcomments code[class*="language-"],
+    pre[class*="language-"] {
+        color: #e8eaf6;
+    }
+
+    #vcomments [type="checkbox"]:not(:checked), [type="checkbox"]:checked {
+        position: inherit;
+        margin-left: -1.3rem;
+        margin-right: 0.4rem;
+        margin-top: -1px;
+        vertical-align: middle;
+        left: unset;
+        visibility: visible;
+    }
+
+    #vcomments b,
+    strong {
+        font-weight: bold;
+    }
+
+    #vcomments dfn {
+        font-style: italic;
+    }
+
+    #vcomments small {
+        font-size: 85%;
+    }
+
+    #vcomments cite {
+        font-style: normal;
+    }
+
+    #vcomments mark {
+        background-color: #fcf8e3;
+        padding: .2em;
+    }
+
+    #vcomments table, th, td {
+        padding: 12px 13px;
+        border: 1px solid #dfe2e5;
+    }
+
+    table tr:nth-child(2n), thead {
+        background-color: #fafafa;
+    }
+
+    #vcomments table th {
+        background-color: #f2f2f2;
+        min-width: 80px;
+    }
+
+    #vcomments table td {
+        min-width: 80px;
+    }
+
+    #vcomments [type="checkbox"]:not(:checked), [type="checkbox"]:checked {
+        position: inherit;
+        margin-left: -1.3rem;
+        margin-right: 0.4rem;
+        margin-top: -1px;
+        vertical-align: middle;
+        left: unset;
+        visibility: visible;
+    }
+</style>
+
+<div class="card valine-card" data-aos="fade-up">
+    <div class="comment_headling" style="font-size: 20px; font-weight: 700; position: relative; padding-left: 20px; top: 15px; padding-bottom: 5px;">
+        <i class="fas fa-comments fa-fw" aria-hidden="true"></i>
+        <span>评论</span>
+    </div>
+    <div id="vcomments" class="card-content" style="display: grid">
+    </div>
+</div>
+
+<script src="/libs/valine/av-min.js"></script>
+<script src="/libs/valine/Valine.min.js"></script>
+<script>
+    new Valine({
+        el: '#vcomments',
+        appId: 'XGAJufgp6Z2bX17baB3E7enQ-gzGzoHsz',
+        appKey: 'j9yun8pjBYMNT3Gg8ehomdsf',
+        serverURLs: 'https://xgajufgp.lc-cn-n1-shared.com',
+        notify: 'false' === 'true',
+        verify: 'false' === 'true',
+        visitor: 'true' === 'true',
+        avatar: 'wavatar',
+        pageSize: '10',
+        lang: 'en',
+        placeholder: '支持markdown格式以及丰富的小表情，快来留下些记忆吧~'
+    });
+</script>
+
+<!--酷Q推送-->
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+<article id="prenext-posts" class="prev-next articles">
+    <div class="row article-row">
+        
+        <div class="article col s12 m6" data-aos="fade-up" data-aos="fade-up">
+            <div class="article-badge left-badge text-color">
+                <i class="far fa-dot-circle"></i>&nbsp;Current
+            </div>
+            <div class="card">
+                <a href="/posts/c6fae49c.html">
+                    <div class="card-image">
+                        
+                        
+                        <img src="/medias/featureimages/8.jpg" class="responsive-img" alt="第一章 Docker核心实现技术">
+                        
+                        <span class="card-title">第一章 Docker核心实现技术</span>
+                    </div>
+                </a>
+                <div class="card-content article-content">
+                    <div class="summary block-with-text">
+                        
+                            
+                        
+                    </div>
+                    <div class="publish-info">
+                            <span class="publish-date">
+                                <i class="far fa-clock fa-fw icon-date"></i>2025-04-19
+                            </span>
+                        <span class="publish-author">
+                            
+                            <i class="fas fa-bookmark fa-fw icon-category"></i>
+                            
+                            <a href="/categories/Docker-%E8%BF%9B%E9%98%B6/" class="post-category">
+                                    Docker 进阶
+                                </a>
+                            
+                            
+                        </span>
+                    </div>
+                </div>
+
+                
+                <div class="card-action article-tags">
+                    
+                    <a href="/tags/Docker-%E8%BF%9B%E9%98%B6/">
+                        <span class="chip bg-color">Docker 进阶</span>
+                    </a>
+                    
+                </div>
+                
+            </div>
+        </div>
+        
+        
+        <div class="article col s12 m6" data-aos="fade-up">
+            <div class="article-badge right-badge text-color">
+                Next&nbsp;<i class="fas fa-chevron-right"></i>
+            </div>
+            <div class="card">
+                <a href="/posts/acb65d62.html">
+                    <div class="card-image">
+                        
+                        
+                        <img src="/medias/featureimages/18.jpg" class="responsive-img" alt="第十一章 IDEA整合Docker">
+                        
+                        <span class="card-title">第十一章 IDEA整合Docker</span>
+                    </div>
+                </a>
+                <div class="card-content article-content">
+                    <div class="summary block-with-text">
+                        
+                            
+                        
+                    </div>
+                    <div class="publish-info">
+                            <span class="publish-date">
+                                <i class="far fa-clock fa-fw icon-date"></i>2025-04-19
+                            </span>
+                        <span class="publish-author">
+                            
+                            <i class="fas fa-bookmark fa-fw icon-category"></i>
+                            
+                            <a href="/categories/Docker-%E5%9F%BA%E7%A1%80/" class="post-category">
+                                    Docker 基础
+                                </a>
+                            
+                            
+                        </span>
+                    </div>
+                </div>
+                
+                <div class="card-action article-tags">
+                    
+                    <a href="/tags/Docker-%E5%9F%BA%E7%A1%80/">
+                        <span class="chip bg-color">Docker 基础</span>
+                    </a>
+                    
+                </div>
+                
+            </div>
+        </div>
+        
+    </div>
+</article>
+
+</div>
+
+
+<script>
+    $('#articleContent').on('copy', function (e) {
+        // IE8 or earlier browser is 'undefined'
+        if (typeof window.getSelection === 'undefined') return;
+
+        var selection = window.getSelection();
+        // if the selection is short let's not annoy our users.
+        if (('' + selection).length < Number.parseInt('120')) {
+            return;
+        }
+
+        // create a div outside of the visible area and fill it with the selected text.
+        var bodyElement = document.getElementsByTagName('body')[0];
+        var newdiv = document.createElement('div');
+        newdiv.style.position = 'absolute';
+        newdiv.style.left = '-99999px';
+        bodyElement.appendChild(newdiv);
+        newdiv.appendChild(selection.getRangeAt(0).cloneContents());
+
+        // we need a <pre> tag workaround.
+        // otherwise the text inside "pre" loses all the line breaks!
+        if (selection.getRangeAt(0).commonAncestorContainer.nodeName === 'PRE' || selection.getRangeAt(0).commonAncestorContainer.nodeName === 'CODE') {
+            newdiv.innerHTML = "<pre>" + newdiv.innerHTML + "</pre>";
+        }
+
+        var url = document.location.href;
+        newdiv.innerHTML += '<br />'
+            + 'From: 西伯<br />'
+            + 'Author: 西伯<br />'
+            + 'Link: <a href="' + url + '">' + url + '</a><br />'
+            + '本文章著作权归作者所有，任何形式的转载都请注明出处。';
+
+        selection.selectAllChildren(newdiv);
+        window.setTimeout(function () {bodyElement.removeChild(newdiv);}, 200);
+    });
+</script>
+
+
+<!-- 代码块功能依赖 -->
+<script type="text/javascript" src="/libs/codeBlock/codeBlockFuction.js"></script>
+
+
+  <!-- 是否加载使用自带的 prismjs. -->
+  <script type="text/javascript" src="/libs/prism/prism.min.js"></script>
+
+
+<!-- 代码语言 -->
+
+<script type="text/javascript" src="/libs/codeBlock/codeLang.js"></script>
+
+
+<!-- 代码块复制 -->
+
+<script type="text/javascript" src="/libs/codeBlock/codeCopy.js"></script>
+
+
+<!-- 代码块收缩 -->
+
+<script type="text/javascript" src="/libs/codeBlock/codeShrink.js"></script>
+
+
+
+    </div>
+    <div id="toc-aside" class="expanded col l3 hide-on-med-and-down">
+        <div class="toc-widget card" style="background-color: white;">
+            <div class="toc-title"><i class="far fa-list-alt"></i>&nbsp;&nbsp;TOC</div>
+            <div id="toc-content"></div>
+        </div>
+    </div>
+</div>
+
+<!-- TOC 悬浮按钮. -->
+
+<div id="floating-toc-btn" class="hide-on-med-and-down">
+    <a class="btn-floating btn-large bg-color">
+        <i class="fas fa-list-ul"></i>
+    </a>
+</div>
+
+
+<script src="/libs/tocbot/tocbot.min.js"></script>
+<script>
+    $(function () {
+        tocbot.init({
+            tocSelector: '#toc-content',
+            contentSelector: '#articleContent',
+            headingsOffset: -($(window).height() * 0.4 - 45),
+            collapseDepth: Number('0'),
+            headingSelector: 'h2, h3, h4'
+        });
+
+        // Set scroll toc fixed.
+        let tocHeight = parseInt($(window).height() * 0.4 - 64);
+        let $tocWidget = $('.toc-widget');
+        $(window).scroll(function () {
+            let scroll = $(window).scrollTop();
+            /* add post toc fixed. */
+            if (scroll > tocHeight) {
+                $tocWidget.addClass('toc-fixed');
+            } else {
+                $tocWidget.removeClass('toc-fixed');
+            }
+        });
+
+        
+        /* 修复文章卡片 div 的宽度. */
+        let fixPostCardWidth = function (srcId, targetId) {
+            let srcDiv = $('#' + srcId);
+            if (srcDiv.length === 0) {
+                return;
+            }
+
+            let w = srcDiv.width();
+            if (w >= 450) {
+                w = w + 21;
+            } else if (w >= 350 && w < 450) {
+                w = w + 18;
+            } else if (w >= 300 && w < 350) {
+                w = w + 16;
+            } else {
+                w = w + 14;
+            }
+            $('#' + targetId).width(w);
+        };
+
+        // 切换TOC目录展开收缩的相关操作.
+        const expandedClass = 'expanded';
+        let $tocAside = $('#toc-aside');
+        let $mainContent = $('#main-content');
+        $('#floating-toc-btn .btn-floating').click(function () {
+            if ($tocAside.hasClass(expandedClass)) {
+                $tocAside.removeClass(expandedClass).hide();
+                $mainContent.removeClass('l9');
+            } else {
+                $tocAside.addClass(expandedClass).show();
+                $mainContent.addClass('l9');
+            }
+            fixPostCardWidth('artDetail', 'prenext-posts');
+        });
+        
+    });
+</script>
+
+    
+
+</main>
+
+
+
+
+    <footer class="page-footer bg-color">
+    
+        <link rel="stylesheet" href="/libs/aplayer/APlayer.min.css">
+<style>
+    .aplayer .aplayer-lrc p {
+        
+        display: none;
+        
+        font-size: 12px;
+        font-weight: 700;
+        line-height: 16px !important;
+    }
+
+    .aplayer .aplayer-lrc p.aplayer-lrc-current {
+        
+        display: none;
+        
+        font-size: 15px;
+        color: #42b983;
+    }
+
+    
+    .aplayer.aplayer-fixed.aplayer-narrow .aplayer-body {
+        left: -66px !important;
+    }
+
+    .aplayer.aplayer-fixed.aplayer-narrow .aplayer-body:hover {
+        left: 0px !important;
+    }
+
+    
+</style>
+<div class="">
+    
+    <div class="row">
+        <meting-js class="col l8 offset-l2 m10 offset-m1 s12"
+                   server="netease"
+                   type="playlist"
+                   id="8428618004"
+                   fixed='true'
+                   autoplay='false'
+                   theme='#42b983'
+                   loop='all'
+                   order='random'
+                   preload='auto'
+                   volume='0.7'
+                   list-folded='true'
+        >
+        </meting-js>
+    </div>
+</div>
+
+<script src="/libs/aplayer/APlayer.min.js"></script>
+<script src="/libs/aplayer/Meting.min.js"></script>
+
+    
+
+    <div class="container row center-align"
+         style="margin-bottom: 15px !important;">
+        <div class="col s12 m8 l8 copy-right">
+            Copyright&nbsp;&copy;
+            
+                <span id="year">2024-2025</span>
+            
+            <a href="/about" target="_blank">西伯</a>
+            
+            <br>
+            
+                &nbsp;<i class="fas fa-chart-area"></i>&nbsp;Total Words:&nbsp;<span
+                        class="white-color">866.5k</span>
+            
+            
+            
+                
+            
+            
+                <span id="busuanzi_container_site_pv">
+                &nbsp;|&nbsp;<i class="far fa-eye"></i>&nbsp;Total visits:&nbsp;
+                    <span id="busuanzi_value_site_pv" class="white-color"></span>
+            </span>
+            
+            
+                <span id="busuanzi_container_site_uv">
+                &nbsp;|&nbsp;<i class="fas fa-users"></i>&nbsp;Total visitors:&nbsp;
+                    <span id="busuanzi_value_site_uv" class="white-color"></span>
+            </span>
+            
+            <br>
+
+            <a style="margin-inline:5px" target="_blank" href="https://hexo.io"><img src="https://img.shields.io/badge/Frame-Hexo-blue?style=flat&logo=hexo" title="基于Hexo框架"></a>
+            <a style="margin-inline:5px" target="_blank" href="https://github.com/blinkfox/hexo-theme-matery"><img src="https://img.shields.io/badge/Theme-Matery-7138b6?style=flat&logo=MEGA" title="Themes Matery"></a>
+            <a style="margin-inline:5px" target="_blank" href="https://cloudflare.com"><img src="https://img.shields.io/badge/Hosted-Cloudflare-brightgreen?style=flat&logo=Cloudflare" title="基于Cloudflare Pages托管部署"></a>
+            <a style="margin-inline:5px" target="_blank" href="https://github.com"><img src="https://img.shields.io/badge/Source-Github-67e1fb?style=flat&logo=GitHub" title="静态文件托管于GitHub"></a>
+            <br>
+
+            <!-- 运行天数提醒. -->
+            
+                <span id="sitetime"> Loading ...</span>
+                <script>
+                    var calcSiteTime = function () {
+                        var seconds = 1000;
+                        var minutes = seconds * 60;
+                        var hours = minutes * 60;
+                        var days = hours * 24;
+                        var years = days * 365;
+                        var today = new Date();
+                        var startYear = "2024";
+                        var startMonth = "5";
+                        var startDate = "20";
+                        var startHour = "0";
+                        var startMinute = "0";
+                        var startSecond = "0";
+                        var todayYear = today.getFullYear();
+                        var todayMonth = today.getMonth() + 1;
+                        var todayDate = today.getDate();
+                        var todayHour = today.getHours();
+                        var todayMinute = today.getMinutes();
+                        var todaySecond = today.getSeconds();
+                        var t1 = Date.UTC(startYear, startMonth, startDate, startHour, startMinute, startSecond);
+                        var t2 = Date.UTC(todayYear, todayMonth, todayDate, todayHour, todayMinute, todaySecond);
+                        var diff = t2 - t1;
+                        var diffYears = Math.floor(diff / years);
+                        var diffDays = Math.floor((diff / days) - diffYears * 365);
+
+                        // 区分是否有年份.
+                        var language = 'en';
+                        if (startYear === String(todayYear)) {
+                            document.getElementById("year").innerHTML = todayYear;
+                            var daysTip = 'This site has been running for ' + diffDays + ' days';
+                            if (language === 'zh-CN') {
+                                daysTip = '本站已运行 ' + diffDays + ' 天';
+                            } else if (language === 'zh-HK') {
+                                daysTip = '本站已運行 ' + diffDays + ' 天';
+                            }
+                            document.getElementById("sitetime").innerHTML = daysTip;
+                        } else {
+                            document.getElementById("year").innerHTML = startYear + " - " + todayYear;
+                            var yearsAndDaysTip = 'This site has been running for ' + diffYears + ' years and '
+                                + diffDays + ' days';
+                            if (language === 'zh-CN') {
+                                yearsAndDaysTip = '本站已运行 ' + diffYears + ' 年 ' + diffDays + ' 天';
+                            } else if (language === 'zh-HK') {
+                                yearsAndDaysTip = '本站已運行 ' + diffYears + ' 年 ' + diffDays + ' 天';
+                            }
+                            document.getElementById("sitetime").innerHTML = yearsAndDaysTip;
+                        }
+                    }
+
+                    calcSiteTime();
+                </script>
+            
+            <br>
+            
+        </div>
+        <div class="col s12 m4 l4 social-link social-statis">
+    <a href="https://github.com/luyaguo" class="tooltipped" target="_blank" data-tooltip="访问我的GitHub" data-position="top" data-delay="50">
+        <i class="fab fa-github"></i>
+    </a>
+
+
+
+    <a href="mailto:luyaguo839@gmail.com" class="tooltipped" target="_blank" data-tooltip="邮件联系我" data-position="top" data-delay="50">
+        <i class="fas fa-envelope-open"></i>
+    </a>
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <a href="/atom.xml" class="tooltipped" target="_blank" data-tooltip="RSS 订阅" data-position="top" data-delay="50">
+        <i class="fas fa-rss"></i>
+    </a>
+
+</div>
+    </div>
+</footer>
+
+<div class="progress-bar"></div>
+
+
+    <!-- 搜索遮罩框 -->
+<div id="searchModal" class="modal">
+    <div class="modal-content">
+        <div class="search-header">
+            <span class="title"><i class="fas fa-search"></i>&nbsp;&nbsp;Search</span>
+            <input type="search" id="searchInput" name="s" placeholder="Please enter a search keyword"
+                   class="search-input">
+        </div>
+        <div id="searchResult"></div>
+    </div>
+</div>
+
+<script type="text/javascript">
+$(function () {
+    var searchFunc = function (path, search_id, content_id) {
+        'use strict';
+        $.ajax({
+            url: path,
+            dataType: "xml",
+            success: function (xmlResponse) {
+                // get the contents from search data
+                var datas = $("entry", xmlResponse).map(function () {
+                    return {
+                        title: $("title", this).text(),
+                        content: $("content", this).text(),
+                        url: $("url", this).text()
+                    };
+                }).get();
+                var $input = document.getElementById(search_id);
+                var $resultContent = document.getElementById(content_id);
+                $input.addEventListener('input', function () {
+                    var str = '<ul class=\"search-result-list\">';
+                    var keywords = this.value.trim().toLowerCase().split(/[\s\-]+/);
+                    $resultContent.innerHTML = "";
+                    if (this.value.trim().length <= 0) {
+                        return;
+                    }
+                    // perform local searching
+                    datas.forEach(function (data) {
+                        var isMatch = true;
+                        var data_title = data.title.trim().toLowerCase();
+                        var data_content = data.content.trim().replace(/<[^>]+>/g, "").toLowerCase();
+                        var data_url = data.url;
+                        data_url = data_url.indexOf('/') === 0 ? data.url : '/' + data_url;
+                        var index_title = -1;
+                        var index_content = -1;
+                        var first_occur = -1;
+                        // only match artiles with not empty titles and contents
+                        if (data_title !== '' && data_content !== '') {
+                            keywords.forEach(function (keyword, i) {
+                                index_title = data_title.indexOf(keyword);
+                                index_content = data_content.indexOf(keyword);
+                                if (index_title < 0 && index_content < 0) {
+                                    isMatch = false;
+                                } else {
+                                    if (index_content < 0) {
+                                        index_content = 0;
+                                    }
+                                    if (i === 0) {
+                                        first_occur = index_content;
+                                    }
+                                }
+                            });
+                        }
+                        // show search results
+                        if (isMatch) {
+                            str += "<li><a href='" + data_url + "' class='search-result-title'>" + data_title + "</a>";
+                            var content = data.content.trim().replace(/<[^>]+>/g, "");
+                            if (first_occur >= 0) {
+                                // cut out 100 characters
+                                var start = first_occur - 20;
+                                var end = first_occur + 80;
+                                if (start < 0) {
+                                    start = 0;
+                                }
+                                if (start === 0) {
+                                    end = 100;
+                                }
+                                if (end > content.length) {
+                                    end = content.length;
+                                }
+                                var match_content = content.substr(start, end);
+                                // highlight all keywords
+                                keywords.forEach(function (keyword) {
+                                    var regS = new RegExp(keyword, "gi");
+                                    match_content = match_content.replace(regS, "<em class=\"search-keyword\">" + keyword + "</em>");
+                                });
+
+                                str += "<p class=\"search-result\">" + match_content + "...</p>"
+                            }
+                            str += "</li>";
+                        }
+                    });
+                    str += "</ul>";
+                    $resultContent.innerHTML = str;
+                });
+            }
+        });
+    };
+
+    searchFunc('/search.xml', 'searchInput', 'searchResult');
+});
+</script>
+
+    <!-- 白天和黑夜主题 -->
+<div class="stars-con">
+    <div id="stars"></div>
+    <div id="stars2"></div>
+    <div id="stars3"></div>  
+</div>
+
+<script>
+    function switchNightMode() {
+        $('<div class="Cuteen_DarkSky"><div class="Cuteen_DarkPlanet"></div></div>').appendTo($('body')),
+        setTimeout(function () {
+            $('body').hasClass('DarkMode') 
+            ? ($('body').removeClass('DarkMode'), localStorage.setItem('isDark', '0'), $('#sum-moon-icon').removeClass("fa-sun").addClass('fa-moon')) 
+            : ($('body').addClass('DarkMode'), localStorage.setItem('isDark', '1'), $('#sum-moon-icon').addClass("fa-sun").removeClass('fa-moon')),
+            
+            setTimeout(function () {
+            $('.Cuteen_DarkSky').fadeOut(1e3, function () {
+                $(this).remove()
+            })
+            }, 2e3)
+        })
+    }
+</script>
+
+    <!-- 回到顶部按钮 -->
+<div id="backTop" class="top-scroll">
+    <a class="btn-floating btn-large waves-effect waves-light" href="#!">
+        <i class="fas fa-arrow-up"></i>
+    </a>
+</div>
+
+
+    <script src="/libs/materialize/materialize.min.js"></script>
+    <script src="/libs/masonry/masonry.pkgd.min.js"></script>
+    <script src="/libs/aos/aos.js"></script>
+    <script src="/libs/scrollprogress/scrollProgress.min.js"></script>
+    <script src="/libs/lightGallery/js/lightgallery-all.min.js"></script>
+    <script src="/js/matery.js"></script>
+
+    
+
+    
+    
+    
+
+    <!-- 雪花特效 -->
+    
+
+    <!-- 鼠标星星特效 -->
+     
+        <script type="text/javascript">
+            // 只在桌面版网页启用特效
+            var windowWidth = $(window).width();
+            if (windowWidth > 768) {
+                document.write('<script type="text/javascript" src="/libs/others/star.js"><\/script>');
+            }
+        </script>
+    
+
+     
+        <script src="https://ssl.captcha.qq.com/TCaptcha.js"></script>
+        <script src="/libs/others/TencentCaptcha.js"></script>
+        <button id="TencentCaptcha" data-appid="xxxxxxxxxx" data-cbfn="callback" type="button" hidden></button>
+    
+
+    <!-- Baidu Analytics -->
+
+    <!-- Baidu Push -->
+
+<script>
+    (function () {
+        var bp = document.createElement('script');
+        var curProtocol = window.location.protocol.split(':')[0];
+        if (curProtocol === 'https') {
+            bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+        } else {
+            bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+        }
+        var s = document.getElementsByTagName("script")[0];
+        s.parentNode.insertBefore(bp, s);
+    })();
+</script>
+
+    
+    <script src="/libs/others/clicklove.js" async="async"></script>
+    
+    
+    <script async src="/libs/others/busuanzi.pure.mini.js"></script>
+    
+
+    
+
+    
+
+    <!--腾讯兔小巢-->
+    
+    
+
+    
+
+    
+
+    
+    <script src="/libs/instantpage/instantpage.js" type="module"></script>
+    
+
+    <!-- 冒泡 -->
+    
+
+    <!--全屏-->
+    <script src="/js/fullscreen.js" type="module"></script>
+
+        <style>
+            [bg-lazy] {
+                background-image: none !important;
+                background-color: #eee !important;
+            }
+        </style>
+        <script>
+            window.imageLazyLoadSetting = {
+                isSPA: false,
+                preloadRatio: 1,
+                processImages: null,
+            };
+        </script><script>window.addEventListener("load",function(){var t=/\.(gif|jpg|jpeg|tiff|png)$/i,r=/^data:image\/[a-z\d\-\.\+]+;base64,/;Array.prototype.slice.call(document.querySelectorAll("img[data-original]")).forEach(function(a){var e=a.parentNode;"A"===e.tagName&&(t.test(e.href)||r.test(e.href))&&(e.href=a.dataset.original)})});</script><script>!function(r){r.imageLazyLoadSetting.processImages=t;var a=r.imageLazyLoadSetting.isSPA,n=r.imageLazyLoadSetting.preloadRatio||1,d=o();function o(){var t=Array.prototype.slice.call(document.querySelectorAll("img[data-original]")),e=Array.prototype.slice.call(document.querySelectorAll("[bg-lazy]"));return t.concat(e)}function t(t){(a||t)&&(d=o());for(var e,i=0;i<d.length;i++)0<=(e=(e=d[i]).getBoundingClientRect()).bottom&&0<=e.left&&e.top<=(r.innerHeight*n||document.documentElement.clientHeight*n)&&function(){var t,e,a,n,o=d[i];e=function(){d=d.filter(function(t){return o!==t}),r.imageLazyLoadSetting.onImageLoaded&&r.imageLazyLoadSetting.onImageLoaded(o)},(t=o).dataset.loaded||(t.hasAttribute("bg-lazy")?(t.removeAttribute("bg-lazy"),e&&e()):(a=new Image,n=t.getAttribute("data-original"),a.onload=function(){t.src=n,t.removeAttribute("data-original"),t.setAttribute("data-loaded",!0),e&&e()},a.onerror=function(){t.removeAttribute("data-original"),t.setAttribute("data-loaded",!1),t.src=n},t.src!==n&&(a.src=n)))}()}function e(){clearTimeout(t.tId),t.tId=setTimeout(t,500)}t(),document.addEventListener("scroll",e),r.addEventListener("resize",e),r.addEventListener("orientationchange",e)}(this);</script></body>
+
+</html>
