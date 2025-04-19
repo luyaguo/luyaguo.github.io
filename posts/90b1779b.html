@@ -1,0 +1,1849 @@
+<!DOCTYPE HTML>
+<html lang="en">
+
+
+<head>
+    <meta charset="utf-8">
+    <meta name="keywords" content="第六章 Docker Swarm, 西伯">
+    <meta name="description" content="第六章 Docker 三剑客之 Docker SwarmDocker Swarm 是 Docker 官方的三剑客项目之一，提供 Docker 容器集群服务，是 Docker 官方对容器云生态进行支持的核心方案。使用它，用户可以将多个 Doc">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <meta name="renderer" content="webkit|ie-stand|ie-comp">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="format-detection" content="telephone=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="referrer" content="no-referrer-when-downgrade">
+    <!-- Global site tag (gtag.js) - Google Analytics -->
+
+
+    <title>第六章 Docker Swarm | 西伯</title>
+    <link rel="icon" type="image/png" href="/favicon.png">
+    
+
+
+    <!-- bg-cover style     -->
+
+
+
+<link rel="stylesheet" type="text/css" href="/libs/awesome/css/all.min.css">
+<link rel="stylesheet" type="text/css" href="/libs/materialize/materialize.min.css">
+<link rel="stylesheet" type="text/css" href="/libs/aos/aos.css">
+<link rel="stylesheet" type="text/css" href="/libs/animate/animate.min.css">
+<link rel="stylesheet" type="text/css" href="/libs/lightGallery/css/lightgallery.min.css">
+<link rel="stylesheet" type="text/css" href="/css/matery.css">
+<link rel="stylesheet" type="text/css" href="/css/my.css">
+<link rel="stylesheet" type="text/css" href="/css/dark.css" media="none" onload="if(media!='all')media='all'">
+
+
+
+
+    <link rel="stylesheet" href="/libs/tocbot/tocbot.css">
+    <link rel="stylesheet" href="/css/post.css">
+
+
+
+
+    
+
+
+
+    <script src="/libs/jquery/jquery-3.6.0.min.js"></script>
+
+<meta name="generator" content="Hexo 7.2.0"></head>
+
+<!-- 预加载动画 -->
+
+    <style type="text/css" lang="css">
+    #loading-container{
+        position: fixed;
+        top: 0;
+        left: 0;
+        min-height: 100vh;
+        width: 100vw;
+        z-index: 9999;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        background: #2c3561;
+        text-align: center;
+        /* loader页面消失采用渐隐的方式*/
+        -webkit-transition: opacity 1s ease;
+        -moz-transition: opacity 1s ease;
+        -o-transition: opacity 1s ease;
+        transition: opacity 1s ease;
+    }
+    .loading-image{
+        width: 120px;
+        height: 50px;
+        transform: translate(-50%);
+    }
+
+    .loading-image div:nth-child(2) {
+        -webkit-animation: pacman-balls 1s linear 0s infinite;
+        animation: pacman-balls 1s linear 0s infinite
+    }
+
+    .loading-image div:nth-child(3) {
+        -webkit-animation: pacman-balls 1s linear .33s infinite;
+        animation: pacman-balls 1s linear .33s infinite
+    }
+
+    .loading-image div:nth-child(4) {
+        -webkit-animation: pacman-balls 1s linear .66s infinite;
+        animation: pacman-balls 1s linear .66s infinite
+    }
+
+    .loading-image div:nth-child(5) {
+        -webkit-animation: pacman-balls 1s linear .99s infinite;
+        animation: pacman-balls 1s linear .99s infinite
+    }
+
+    .loading-image div:first-of-type {
+        width: 0;
+        height: 0;
+        border: 25px solid #49b1f5;
+        border-right-color: transparent;
+        border-radius: 25px;
+        -webkit-animation: rotate_pacman_half_up .5s 0s infinite;
+        animation: rotate_pacman_half_up .5s 0s infinite;
+    }
+    .loading-image div:nth-child(2) {
+        width: 0;
+        height: 0;
+        border: 25px solid #49b1f5;
+        border-right-color: transparent;
+        border-radius: 25px;
+        -webkit-animation: rotate_pacman_half_down .5s 0s infinite;
+        animation: rotate_pacman_half_down .5s 0s infinite;
+        margin-top: -50px;
+    }
+    @-webkit-keyframes rotate_pacman_half_up {0% {transform: rotate(270deg)}50% {transform: rotate(1turn)}to {transform: rotate(270deg)}}
+
+    @keyframes rotate_pacman_half_up {0% {transform: rotate(270deg)}50% {transform: rotate(1turn)}to {transform: rotate(270deg)}}
+
+    @-webkit-keyframes rotate_pacman_half_down {0% {transform: rotate(90deg)}50% {transform: rotate(0deg)}to {transform: rotate(90deg)}}
+
+    @keyframes rotate_pacman_half_down {0% {transform: rotate(90deg)}50% {transform: rotate(0deg)}to {transform: rotate(90deg)}}
+
+    @-webkit-keyframes pacman-balls {75% {opacity: .7}to {transform: translate(-100px, -6.25px)}}
+
+    @keyframes pacman-balls {75% {opacity: .7}to {transform: translate(-100px, -6.25px)}}
+
+
+    .loading-image div:nth-child(3),
+    .loading-image div:nth-child(4),
+    .loading-image div:nth-child(5),
+    .loading-image div:nth-child(6){
+        background-color: #49b1f5;
+        width: 15px;
+        height: 15px;
+        border-radius: 100%;
+        margin: 2px;
+        width: 10px;
+        height: 10px;
+        position: absolute;
+        transform: translateY(-6.25px);
+        top: 25px;
+        left: 100px;
+    }
+    .loading-text{
+        margin-bottom: 20vh;
+        text-align: center;
+        color: #f8c471;
+        font-size: 2rem;
+        box-sizing: border-box;
+        padding: 0 10px;
+        text-shadow: 0 2px 10px rgba(0,0,0,0.2);
+    }
+    @media only screen and (max-width: 500px) {
+        .loading-text{
+            font-size: 1.5rem;
+        }
+    }
+    .fadeout {
+        opacity: 0;
+        filter: alpha(opacity=0);
+    }
+    /* logo出现动画 */
+    @-webkit-keyframes fadeInDown{0%{opacity:0;-webkit-transform:translate3d(0,-100%,0);transform:translate3d(0,-100%,0)}100%{opacity:1;-webkit-transform:none;transform:none}}
+    @keyframes fadeInDown{0%{opacity:0;-webkit-transform:translate3d(0,-100%,0);}}
+</style>
+<script>
+    (function () {
+        const loaded = function(){
+            setTimeout(function(){
+                const loader = document.getElementById("loading-container");
+                loader.className="fadeout" ;//使用渐隐的方法淡出loading page
+                // document.getElementById("body-wrap").style.display="flex";
+                setTimeout(function(){
+                    loader.style.display="none";
+                },2500);
+            },800);//强制显示loading page 0.8s
+        };
+        loaded();
+    })()
+</script>
+
+<body>
+    <!--动态背景-->
+    <div id="bg"><canvas></canvas><canvas></canvas><canvas></canvas></div>
+    <script src="/js/canva_moving_effect.js"></script>
+
+    
+        <div id="loading-container">
+            <p class="loading-text">客官坐会儿，请稍等片刻. . . </p>
+            <div class="loading-image">
+                <div></div>
+                <div></div>
+                <div></div>
+                <div></div>
+                <div></div>
+            </div>
+        </div>
+    
+
+    <header class="navbar-fixed">
+    <nav id="headNav" class="bg-color nav-transparent">
+        <div id="navContainer" class="nav-wrapper">
+            <div class="brand-logo">
+                <a href="/" class="waves-effect waves-light">
+                    <div>&nbsp;
+                        
+                            <img src="/medias/logo2.png" class="logo-img" alt="LOGO">
+                        
+                        <span class="logo-span">西伯</span>
+                    </div>
+                </a>
+            </div>
+            
+
+<a href="#" data-target="mobile-nav" class="sidenav-trigger button-collapse"><i class="fas fa-bars"></i></a>
+<ul class="right nav-menu">
+  
+  <li class="hide-on-med-and-down nav-item">
+    
+    <a href="/" class="waves-effect waves-light">
+      
+      <i class="fas fa-home" style="zoom: 0.6;"></i>
+      
+      <span>Index</span>
+    </a>
+    
+  </li>
+  
+  <li class="hide-on-med-and-down nav-item">
+    
+    <a href="/tags" class="waves-effect waves-light">
+      
+      <i class="fas fa-tags" style="zoom: 0.6;"></i>
+      
+      <span>Tags</span>
+    </a>
+    
+  </li>
+  
+  <li class="hide-on-med-and-down nav-item">
+    
+    <a href="/categories" class="waves-effect waves-light">
+      
+      <i class="fas fa-bookmark" style="zoom: 0.6;"></i>
+      
+      <span>Categories</span>
+    </a>
+    
+  </li>
+  
+  <li class="hide-on-med-and-down nav-item">
+    
+    <a href="/archives" class="waves-effect waves-light">
+      
+      <i class="fas fa-archive" style="zoom: 0.6;"></i>
+      
+      <span>Archives</span>
+    </a>
+    
+  </li>
+  
+  <li class="hide-on-med-and-down nav-item">
+    
+    <a href="/about" class="waves-effect waves-light">
+      
+      <i class="fas fa-user-circle" style="zoom: 0.6;"></i>
+      
+      <span>About</span>
+    </a>
+    
+  </li>
+  
+  <li class="hide-on-med-and-down nav-item">
+    
+    <a href="/contact" class="waves-effect waves-light">
+      
+      <i class="fas fa-comments" style="zoom: 0.6;"></i>
+      
+      <span>Contact</span>
+    </a>
+    
+  </li>
+  
+  <li class="hide-on-med-and-down nav-item">
+    
+    <a href="/friends" class="waves-effect waves-light">
+      
+      <i class="fas fa-address-book" style="zoom: 0.6;"></i>
+      
+      <span>Friends</span>
+    </a>
+    
+  </li>
+  
+  <li>
+    <a href="#searchModal" class="modal-trigger waves-effect waves-light">
+      <i id="searchIcon" class="fas fa-search" title="Search" style="zoom: 0.95;"></i>
+    </a>
+  </li>
+
+  <!-- 全屏 -->
+<!--   <li id="fullscreen_li" class="fullscreen"> -->
+<!--     <a href="javascript:void(0);" class="modal-trigger waves-effect waves-light"> -->
+<!--       <i id="fullscreen" class="fas fa-expand-arrows-alt" title="全屏" style="zoom: 0.85;"></i> -->
+<!--     </a> -->
+<!--   </li> -->
+
+  <!-- 主题背景 -->
+  <li>
+    <a href="javascript:;" class="modal-trigger waves-effect waves-light" onclick="switchNightMode()" title="深色/浅色模式" >
+      <i id="sum-moon-icon" class="fas fa-sun" style="zoom: 0.85;"></i>
+    </a>
+  </li>
+  &nbsp;
+</ul>
+
+
+<div id="mobile-nav" class="side-nav sidenav">
+
+    <div class="mobile-head bg-color">
+        
+        <img src="/medias/logo2.png" class="logo-img circle responsive-img">
+        
+        <div class="logo-name">西伯</div>
+        <div class="logo-desc">
+            
+            Never give up and never give in...
+            
+        </div>
+    </div>
+
+    <ul class="menu-list mobile-menu-list">
+        
+        <li class="m-nav-item">
+	  
+		<a href="/" class="waves-effect waves-light">
+			
+			    <i class="fa-fw fas fa-home"></i>
+			
+			Index
+		</a>
+          
+        </li>
+        
+        <li class="m-nav-item">
+	  
+		<a href="/tags" class="waves-effect waves-light">
+			
+			    <i class="fa-fw fas fa-tags"></i>
+			
+			Tags
+		</a>
+          
+        </li>
+        
+        <li class="m-nav-item">
+	  
+		<a href="/categories" class="waves-effect waves-light">
+			
+			    <i class="fa-fw fas fa-bookmark"></i>
+			
+			Categories
+		</a>
+          
+        </li>
+        
+        <li class="m-nav-item">
+	  
+		<a href="/archives" class="waves-effect waves-light">
+			
+			    <i class="fa-fw fas fa-archive"></i>
+			
+			Archives
+		</a>
+          
+        </li>
+        
+        <li class="m-nav-item">
+	  
+		<a href="/about" class="waves-effect waves-light">
+			
+			    <i class="fa-fw fas fa-user-circle"></i>
+			
+			About
+		</a>
+          
+        </li>
+        
+        <li class="m-nav-item">
+	  
+		<a href="/contact" class="waves-effect waves-light">
+			
+			    <i class="fa-fw fas fa-comments"></i>
+			
+			Contact
+		</a>
+          
+        </li>
+        
+        <li class="m-nav-item">
+	  
+		<a href="/friends" class="waves-effect waves-light">
+			
+			    <i class="fa-fw fas fa-address-book"></i>
+			
+			Friends
+		</a>
+          
+        </li>
+        
+        
+    </ul>
+</div>
+
+
+        </div>
+
+        
+    </nav>
+
+</header>
+
+    
+
+
+
+<div class="bg-cover pd-header post-cover" style="background-image: url('/medias/featureimages/9.jpg')">
+    <div class="container" style="right: 0px;left: 0px;">
+        <div class="row">
+            <div class="col s12 m12 l12">
+                <div class="brand">
+                    <h1 class="description center-align post-title">第六章 Docker Swarm</h1>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+<main class="post-container content">
+
+    
+    <div class="row">
+    <div id="main-content" class="col s12 m12 l9">
+        <!-- 文章内容详情 -->
+<div id="artDetail">
+    <div class="card">
+        <div class="card-content article-info">
+            <div class="row tag-cate">
+                <div class="col s7">
+                    
+                    <div class="article-tag">
+                        
+                            <a href="/tags/Docker-%E8%BF%9B%E9%98%B6/">
+                                <span class="chip bg-color">Docker 进阶</span>
+                            </a>
+                        
+                    </div>
+                    
+                </div>
+                <div class="col s5 right-align">
+                    
+                    <div class="post-cate">
+                        <i class="fas fa-bookmark fa-fw icon-category"></i>
+                        
+                            <a href="/categories/Docker-%E8%BF%9B%E9%98%B6/" class="post-category">
+                                Docker 进阶
+                            </a>
+                        
+                    </div>
+                    
+                </div>
+            </div>
+
+            <div class="post-info">
+                
+                <div class="post-date info-break-policy">
+                    <i class="far fa-calendar-minus fa-fw"></i>Publish Date:&nbsp;&nbsp;
+                    2025-04-19
+                </div>
+                
+
+                
+
+                
+                <div class="info-break-policy">
+                    <i class="far fa-file-word fa-fw"></i>Word Count:&nbsp;&nbsp;
+                    5.2k
+                </div>
+                
+
+                
+                <div class="info-break-policy">
+                    <i class="far fa-clock fa-fw"></i>Read Times:&nbsp;&nbsp;
+                    19 Min
+                </div>
+                
+
+                
+                    <div id="busuanzi_container_page_pv" class="info-break-policy">
+                        <i class="far fa-eye fa-fw"></i>Read Count:&nbsp;&nbsp;
+                        <span id="busuanzi_value_page_pv"></span>
+                    </div>
+				
+            </div>
+        </div>
+        <hr class="clearfix">
+
+        
+        <!-- 是否加载使用自带的 prismjs. -->
+        <link rel="stylesheet" href="/libs/prism/prism.min.css">
+        
+
+        
+        <!-- 代码块折行 -->
+        <style type="text/css">
+            code[class*="language-"], pre[class*="language-"] { white-space: pre-wrap !important; }
+        </style>
+        
+
+        <div class="card-content article-card-content">
+            <div id="articleContent">
+                <h1 id="第六章-Docker-三剑客之-Docker-Swarm"><a href="#第六章-Docker-三剑客之-Docker-Swarm" class="headerlink" title="第六章 Docker 三剑客之 Docker Swarm"></a>第六章 Docker 三剑客之 Docker Swarm</h1><p>Docker Swarm 是 Docker 官方的三剑客项目之一，提供 Docker 容器集群服务，是 Docker 官方对容器云生态进行支持的核心方案。使用它，用户可以将多个 Docker 主机封装为单个大型的虚拟 Docker 主机，快速打造一套容器云平台。</p>
+<h2 id="1、简介"><a href="#1、简介" class="headerlink" title="1、简介"></a>1、简介</h2><p>Docker Swarm 是 Docker 公司推出的官方容器集群平台，基于 Go 语言实现，代码开源在<a target="_blank" rel="noopener" href="https://github.com/docker/swarm">https://github.com/docker/swarm</a> 。</p>
+<p>Swarm 的前身是 Beam 项目和 libswarm 项目，首个正式版本（Swarm V1）在2014年12月初发布。为了提高可扩展性，2016年2月对架构进行重新设计，推出了V2版本，支持超过1千个节点。最新的 Docker Engine 已经集成了 Swarm Kit，加强了对 Swarm 的协作支持。</p>
+<p>作为容器集群管理器，Swarm 最大的优势之一就是 100% 支持标准的 Docker API。各种基于标准 API 的工具，如 Compose、docker-py，各种管理软件，甚至 Docker 本身等都可以很容易地与 Swarm 进行集成。这大大方便了用户将原先基于单节点的系统移植到 Swarm 上。同时 Swarm 内置了对 Docker 网络插件的支持，用户可以很容易地部署跨主机的容器集群服务。</p>
+<p><img src="/medias/loading.gif" data-original="https://raw.githubusercontent.com/luyaguo/pictures-guo/main/docker/202504191234867.png" alt="image-20230604173953273"></p>
+<p>Swarm V1 的结构图如图所示。可以看出，Swarm 是典型的 <code>master-slave</code> 结构，通过发现服务来选举 <code>manager</code>。manager 是中心管理节点，各个 node 上运行 agent 接受 manager 的统一管理。</p>
+<p><img src="/medias/loading.gif" data-original="https://raw.githubusercontent.com/luyaguo/pictures-guo/main/docker/202504191233511.png" alt="image-20230604211928749"></p>
+<p>在 V2 中，集群会自动通过 Raft 协议分布式选举出 <strong>manager</strong> 节点，无需额外的发现服务支持，避免了单点瓶颈。同时，V2 中内置了基于 DNS 的负载均衡和对外部负载均衡机制的集成支持。</p>
+<p>目前，Swarm V1 支持的 Docker 版本为 1.6.0+，V2 支持的 Docker 版本为 1.12.0+。本章将以Swarm V1 为主进行介绍，并结合 V2 的部分最新特性进行讲解。</p>
+<h2 id="2、基本概念"><a href="#2、基本概念" class="headerlink" title="2、基本概念"></a>2、基本概念</h2><p>Swarm Docker 基础上扩展了支持多节点的能力，同时兼容了大部分的 Docker 操作。</p>
+<p>Swarm 中以集群为单位进行管理，支持服务层面的操作。</p>
+<h3 id="Swarm-集群"><a href="#Swarm-集群" class="headerlink" title="Swarm 集群"></a>Swarm 集群</h3><p><strong>Swarm 集群（ Cluster ）为一组被统一管理起来的 Docker 主机。集群是 Swarm 所管理的对象</strong>。这些主机通过 Docker 引擎的 Swarm 模式相互沟通，其中部分主机可能作为管理节点(manager ）响应外部的管理请求，其他主机作为工作节点（ worker ）来实际运行 Docker 容器。当然，同一个主机也可以即作为管理节点，同时作为工作节点。</p>
+<h3 id="节点"><a href="#节点" class="headerlink" title="节点"></a>节点</h3><p>节点（Node ）是 Swarm 集群的最小资源单位。每个节点实际上都是一台 Docker 主机。</p>
+<p>Swarm 集群中节点分为两种：</p>
+<ol>
+<li><p>管理节点（manager node ）：负责响应外部对集群的操作请求，并维持集群中资源，分发任务给工作节点。同时，多个管理节点之间通过 Raft 协议构成共识 一般推荐每</p>
+<p>个集群设置 5 个或 7 个管理节点；</p>
+</li>
+<li><p>工作节点（ worker node 负责执行管理节点安排的具体任务 默认情况下，管理节点自身也同时是工作节点。每个工作节点上运行代理（ agent ）来汇报任务完成情况。</p>
+</li>
+</ol>
+<p>用户可以通过 <code>docker node promote</code> 命令来提升一个工作节点为管理节点；或者通过<code>docker node demote</code> 命令来将一个管理节点降级为工作节点。</p>
+<h3 id="服务"><a href="#服务" class="headerlink" title="服务"></a>服务</h3><p>服务（ Service ）是 Docker 支持复杂多容器协作场景的利器。</p>
+<p>一个服务可以由若干个任务组成，每个任务为某个具体的应用 服务还包括对应的存储、网络、端口映射、副本个数、访问配置、升级配置等附加参数。</p>
+<p>一般来说，服务需要面向特定的场景，例如 个典型的 Web 服务可能包括前端应用后端应用，以及数据库等。这些应用都属于该服务的管理范畴。</p>
+<p>Swarm 集群中服务类型也分为两种（可以通过 -mode 指定）</p>
+<ol>
+<li><p>复制服务（ replicated services ）模式：默认模式，每个任务在集群中会存在若干副本，这些副本会被管理节点按照调度策略分发到集群中的工作节点上。模式下可以使用 -replicas 参数设置副本数量。</p>
+</li>
+<li><p>全局服务（ global services ）模式：调度器将在每个可用节点都执行一个相同的任务。</p>
+<p>该模式适合运行节点的检查，如监控应用等。</p>
+</li>
+</ol>
+<h3 id="任务"><a href="#任务" class="headerlink" title="任务"></a>任务</h3><p>任务是 Swarm 集群中最小的调度单位，即一个指定的应用容器。例如仅仅运行前端业务的前端容器。任务从生命周期上将可能处于创建（ NEW） 等待（ PENDING）分配（ ASSIGNED） 接受（ ACCEPTED） 准备（ PREPARING ）、开始（ STARTING） 运行(RunnING） 完成（COMPLETE ）、失败（FAILED） 关闭（ SHUTDOWN） 拒绝（REJECTED）、孤立（ORPHANED ）等不同状态。</p>
+<p>Swarm 集群中的管理节点会按照调度要求将任务分配到工作节点上 例如指定副本为 2 时，可能会被分配到两个不同的工作节点上。一旦当某个任务被分配到 个工作节点，将无法被转移到另外的 作节点，即 Swarm 中的任务不支持迁移。</p>
+<h3 id="服务的外部访问"><a href="#服务的外部访问" class="headerlink" title="服务的外部访问"></a>服务的外部访问</h3><p>Swarm 集群中的服务要被集群外部访问，必须要能允许任务的响应端口映射出来。Swarm 中支持人口负载均衡（ ingress load balancing ）的映射模式。该模式下，每个服务都会被分配一个公开端口（ PublishedPort ），该端口在集群中任意节点上都可以访问到，并被保留给该服务。</p>
+<p>当有请求发送到任意节点的公开端口时，该节点若并没有实际执行服务相关的容器，则会通过路由机制将请求转发给实际执行了服务容器的工作节点。</p>
+<h3 id="工作模式"><a href="#工作模式" class="headerlink" title="工作模式"></a>工作模式</h3><p><a target="_blank" rel="noopener" href="https://docs.docker.com/engine/swarm/how-swarm-mode-works/nodes/">https://docs.docker.com/engine/swarm/how-swarm-mode-works/nodes/</a></p>
+<p><img src="/medias/loading.gif" data-original="https://raw.githubusercontent.com/luyaguo/pictures-guo/main/docker/202504191232160.png" alt="image-20210914075638542"></p>
+<h4 id="概念"><a href="#概念" class="headerlink" title="概念"></a>概念</h4><p>There are two types of nodes: <a target="_blank" rel="noopener" href="https://docs.docker.com/engine/swarm/how-swarm-mode-works/nodes/#manager-nodes"><strong>managers</strong></a> and <a target="_blank" rel="noopener" href="https://docs.docker.com/engine/swarm/how-swarm-mode-works/nodes/#worker-nodes"><strong>workers</strong></a>.</p>
+<p><img src="/medias/loading.gif" data-original="https://raw.githubusercontent.com/luyaguo/pictures-guo/main/docker/202504191232276.png" alt="image-20210914075938731"></p>
+<h4 id="管理节点"><a href="#管理节点" class="headerlink" title="管理节点"></a>管理节点</h4><p>管理节点处理集群管理任务：</p>
+<ul>
+<li>维护集群状态</li>
+<li>调度服务</li>
+<li>为群模式<a target="_blank" rel="noopener" href="https://docs.docker.com/engine/api/">HTTP API 端点</a>提供服务</li>
+</ul>
+<p>使用<a target="_blank" rel="noopener" href="https://raft.github.io/raft.pdf">Raft</a>实现，管理器维护整个 swarm 及其上运行的所有服务的一致内部状态。出于测试目的，可以使用单个管理器运行 swarm。如果单管理器群中的管理器出现故障，您的服务会继续运行，但您需要创建一个新集群来恢复。</p>
+<p>为了利用 swarm 模式的容错特性，Docker 建议您根据组织的高可用性要求实现奇数个节点。当您有多个管理器时，您可以在不停机的情况下从管理器节点的故障中恢复。</p>
+<ul>
+<li>三个管理器的群体最多可以容忍一个管理器的损失。</li>
+<li>一个五管理器群可以容忍最大同时丢失两个管理器节点。</li>
+<li>一个<code>N</code>管理器集群最多可以容忍管理器的丢失 <code>(N-1)/2</code>。</li>
+<li>Docker 建议一个群最多有七个管理器节点。</li>
+</ul>
+<h4 id="工作节点"><a href="#工作节点" class="headerlink" title="工作节点"></a>工作节点</h4><p>工作节点也是 Docker 引擎的实例，其唯一目的是执行容器。Worker 节点不参与 Raft 分布式状态，不做出调度决策，也不为 swarm 模式 HTTP API 提供服务。</p>
+<p>您可以创建一个由一个管理器节点组成的群，但是如果没有至少一个管理器节点，您就不能拥有一个工作节点。默认情况下，所有经理也是工人。在单个管理器节点集群中，您可以运行类似命令<code>docker service create</code>，调度程序将所有任务放在本地引擎上。</p>
+<p>为了防止调度程序将任务放置在多节点群中的管理器节点上，请将管理器节点的可用性设置为<code>Drain</code>。调度器在<code>Drain</code>mode 中优雅地停止节点上的任务并调度<code>Active</code>节点上的任务 。调度程序不会将新任务分配给具有<code>Drain</code> 可用性的节点。</p>
+<h2 id="3、安装-Swarm"><a href="#3、安装-Swarm" class="headerlink" title="3、安装 Swarm"></a>3、安装 Swarm</h2><p>安装 Swarm 有几种方式，可以基于 Docker Machine 进行安装，也可以手动配置。为了能更容易理解 Swarm 的组件和更灵活地进行管理，推荐使用手动配置方式。</p>
+<h3 id="下载镜像"><a href="#下载镜像" class="headerlink" title="下载镜像"></a>下载镜像</h3><p>Docker 官方已经提供了 Swarm 镜像，需要在所有被 Swarm 管理的 Docker 主机上下载该镜像：</p>
+<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash">$ <span class="token function">docker</span> pull swarm<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+
+<p>可以使用下面的命令来查看 Swarm 版本，验证是否成功下载 Swarm 镜像：</p>
+<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash">$ <span class="token function">docker</span> run <span class="token parameter variable">--rm</span> swarm <span class="token parameter variable">-v</span>
+swarm version <span class="token number">1.2</span>.2 <span class="token punctuation">(</span>34e3da3<span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre>
+
+<h3 id="配置节点"><a href="#配置节点" class="headerlink" title="配置节点"></a>配置节点</h3><p>Docker 主机在加入 Swarm 集群前，需要进行一些简单配置，添加 Docker daemon 的网络监听。例如，在启动 Docker daemon 的时候通过 -H 参数：</p>
+<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash">$ <span class="token function">sudo</span> <span class="token function">docker</span> daemon <span class="token parameter variable">-H</span> tcp://0.0.0.0:2375 <span class="token parameter variable">-H</span> unix:///var/run/docker.sock<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+
+<blockquote>
+<p>Docker 1.8.0 前的版本不支持 daemon 命令，可以用 -d 代替。</p>
+</blockquote>
+<p>如果是通过服务方式启动，则需要修改服务的配置文件。以 Ubuntu 14.04 为例，配置文件为 &#x2F;etc&#x2F;default&#x2F;docker（其他版本的 Linux 上略有不同）。在文件的最后添加：</p>
+<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash"><span class="token assign-left variable">DOCKER_OPTS</span><span class="token operator">=</span><span class="token string">"<span class="token variable">$DOCKER_OPTS</span> -H tcp://0.0.0.0:2375 -H unix:///var/run/docker.sock"</span><span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+
+<h3 id="启动集群"><a href="#启动集群" class="headerlink" title="启动集群"></a>启动集群</h3><p>Docker 集群管理需要使用服务发现（Service Discover）功能，Swarm 支持以下几种方式：Docker Hub、本地文件、Etcd、Consul、Zookeeper 和手动指定节点 IP 地址信息等。</p>
+<p>除了手动指定外，这些方法原理上都是通过维护一套数据库机制来管理集群中注册节点的 Docker Daemon 的访问信息。本地配置集群推荐使用 Consul 作为服务发现后端。利用社区提供的 Docker 镜像，整个过程只需要三步即可完成。</p>
+<h4 id="（1）启动-Consul-服务后端"><a href="#（1）启动-Consul-服务后端" class="headerlink" title="（1）启动 Consul 服务后端"></a>（1）启动 Consul 服务后端</h4><p>启动 Consul 服务容器，映射到主机的 8500 端口：</p>
+<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash">$ <span class="token function">docker</span> run <span class="token parameter variable">-d</span> <span class="token parameter variable">-p</span> <span class="token number">8500</span>:8500 <span class="token parameter variable">--name</span><span class="token operator">=</span>consul progrium/consul <span class="token parameter variable">-server</span> <span class="token parameter variable">-bootstrap</span><span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+
+<h4 id="（2）启动管理节点"><a href="#（2）启动管理节点" class="headerlink" title="（2）启动管理节点"></a>（2）启动管理节点</h4><p>首先启动一个主管理节点，映射到主机的 4000 端口，并获取所在主机地址为<manager0_ip>。其中 4000 端口是 Swarm 管理器的默认监听端口，用户也可以指定映射为其他端口：</p>
+<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash">$ <span class="token function">docker</span> run <span class="token parameter variable">-d</span> <span class="token parameter variable">-p</span> <span class="token number">4000</span>:4000 swarm manage <span class="token parameter variable">-H</span> :4000 <span class="token parameter variable">--replication</span> <span class="token parameter variable">--advertise</span> <span class="token operator">&lt;</span>manager0_ip<span class="token operator">></span>:4000 consul://<span class="token operator">&lt;</span>consul_ip<span class="token operator">></span>:8500<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+
+<p>为了提高可用性，也可以启动从管理节点。假定获取所在主机地址为 <manager1_ip>：</p>
+<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash">$ <span class="token function">docker</span> run <span class="token parameter variable">-d</span> swarm manage <span class="token parameter variable">-H</span> :4000 <span class="token parameter variable">--replication</span> <span class="token parameter variable">--advertise</span> <span class="token operator">&lt;</span>manager1_ip<span class="token operator">></span>:4000 consul://<span class="token operator">&lt;</span>consul_ip<span class="token operator">></span>:8500<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+
+<h4 id="（3）启动工作节点"><a href="#（3）启动工作节点" class="headerlink" title="（3）启动工作节点"></a>（3）启动工作节点</h4><p>需要在每个工作节点上启动 agent 服务。获取节点的主机地址为 <node_ip>，并指定前面获取到的 consul 服务地址：</p>
+<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash">$ <span class="token function">docker</span> run <span class="token parameter variable">-d</span> swarm <span class="token function">join</span> <span class="token parameter variable">--advertise</span><span class="token operator">=</span><span class="token operator">&lt;</span>node_ip<span class="token operator">></span>:2375 consul://<span class="token operator">&lt;</span>consul_ip<span class="token operator">></span>:8500<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+
+<p>节点启动后，用户可以指定 Docker 服务地址为 <manager0_ip>:4000&gt; 来测试各种 Docker 命令，可以看到整个 Swarm 集群就像一个虚拟的 Docker 主机一样正常工作。</p>
+<p>由于 Swarm 实际上是通过 agent 调用了本地的 Docker daemon 来运行容器，当 Swarm 集群服务出现故障时，无法接受新的请求，但已经运行起来的容器将不会受到影响。</p>
+<h2 id="4、使用-Swarm"><a href="#4、使用-Swarm" class="headerlink" title="4、使用 Swarm"></a>4、使用 Swarm</h2><p>前面演示了基于 Consul 服务发现后端来配置一个本地 Swarm 集群。</p>
+<p>另外一个更方便的方式是直接使用 Docker Hub 提供的免费服务发现后端。下面使用这种方式来演示 Swarm 的主要操作，包括：</p>
+<ul>
+<li>create：创建一个集群；</li>
+<li>list：列出集群中的节点；</li>
+<li>manage：管理一个集群；</li>
+<li>join：让节点加入到某个集群。</li>
+</ul>
+<p>注意，使用 Docker Hub 的服务发现后端，需要各个节点能通过公网访问到 Docker Hub 的服务接口。</p>
+<h3 id="创建集群-id"><a href="#创建集群-id" class="headerlink" title="创建集群 id"></a>创建集群 id</h3><p>在任意一台安装了 Swarm 的机器上执行 <code>swarm create</code> 命令来在 Docker Hub 服务上进行注册。Swarm 会通过服务发现后端（此处为 Docker Hub 提供）来获取一个唯一的由数字和字母组成的 token，用来标识要管理的集群：</p>
+<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash">$ <span class="token function">docker</span> run <span class="token parameter variable">--rm</span> swarm create
+946d65606f7c2f49766e4dddac5b4365<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre>
+
+<blockquote>
+<p>注意返回的字符串，这是集群的唯一 id，加入集群的各个节点将需要这个信息。</p>
+</blockquote>
+<h3 id="配置集群节点"><a href="#配置集群节点" class="headerlink" title="配置集群节点"></a>配置集群节点</h3><p>在所有要加入集群的普通节点上执行 <code>swarm join</code> 命令，表示把这台机器加入指定集群当中。例如，某台机器的IP地址为192.168.0.2，将其加入我们刚创建的 946d65606-f7c2f49766e4dddac5b4365 集群，则可以使用如下命令：</p>
+<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash">$ <span class="token function">docker</span> run <span class="token parameter variable">--rm</span> swarm <span class="token function">join</span> <span class="token parameter variable">--addr</span><span class="token operator">=</span><span class="token number">192.168</span>.0.2:2375 token://946d65606f7c2f49766e4dddac5b4365
+
+<span class="token assign-left variable">time</span><span class="token operator">=</span><span class="token string">"2015-12-09T08:59:43Z"</span> <span class="token assign-left variable">level</span><span class="token operator">=</span>info <span class="token assign-left variable">msg</span><span class="token operator">=</span><span class="token string">"Registering on the discovery service every 20s..."</span> <span class="token assign-left variable">addr</span><span class="token operator">=</span><span class="token string">"192.168.0.2:2375"</span> <span class="token assign-left variable">discovery</span><span class="token operator">=</span><span class="token string">"token://946d65606f7c2f49766e4dddac5b4365"</span>
+<span class="token punctuation">..</span>.<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span></span></code></pre>
+
+<p>其中，–addr 指定的 IP 地址信息将被发送给服务发现后端，用以区分集群不同的节点。manager 服务必须要通过这个地址可以访问到该节点。<br>通过控制台可以看到，上述命令执行后，默认每隔 20 秒（可以通过 –heartbeat 选项指定）会输出一条心跳信息。对于发现服务后端来说，默认如果超过60秒（可以通过–ttl选项指定）没有收到心跳信息，则将节点从列表中删除。</p>
+<p>执行 swarm join 命令实际上是通过 agent 把自己的信息注册到发现服务上，因此，此时对于后端的发现服务来说，已经可以看到有若干节点注册上来了。</p>
+<h3 id="配置管理节点"><a href="#配置管理节点" class="headerlink" title="配置管理节点"></a>配置管理节点</h3><p>配置管理节点需要使用 <code>swarm manage</code> 命令，该命令将启动 manager 服务，默认监听到 <code>2375</code> 端口，所有对集群的管理都可以通过该服务接口进行。</p>
+<p><strong>manager 服务默认监听的端口跟 Docker 服务监听端口是一样的</strong>，这是为了兼容其他基于 Docker 的服务，可以无缝地切换到 Swarm 平台上来。</p>
+<p>仍然在节点 192.168.0.2 进行操作。由于我们是采用 Docker 容器形式启动 manager 服务，本地的 2375 端口已经被 Docker Daemon 占用，我们将 manager 服务监听端口映射到本地一个空闲的 12375 端口：</p>
+<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash">$ <span class="token function">docker</span> run <span class="token parameter variable">-d</span> <span class="token parameter variable">-p</span> <span class="token number">12375</span>:2375 swarm manage token://946d65606f7c2f49766e4dddac5b4365
+1e1ca8c4117b6b7271efc693f9685b4e907d8dc95324350392b21e94b3cffd18<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre>
+
+<p>可以通过 <code>docker ps</code> 命令来查看启动的 swarm manager 服务容器：</p>
+<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash">$ <span class="token function">docker</span> <span class="token function">ps</span>
+CONTAINER ID   IMAGE    COMMAND   CREATED   STATUS   PORTS   NAMES
+1e1ca8c4117b   swarm    <span class="token string">"/swarm manage token:"</span>   <span class="token number">11</span> seconds ago   Up <span class="token number">10</span> seconds <span class="token number">0.0</span>.0.0:12375-<span class="token operator">></span><span class="token number">2375</span>/tcp   jovial_rosalind<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span></span></code></pre>
+
+<p>命令如果执行成功会返回刚启动的 Swarm 容器的 ID。此时一个简单的 Swarm 集群就已经搭建起来了，包括一个普通节点和一个管理节点。</p>
+<h3 id="查看集群节点列表"><a href="#查看集群节点列表" class="headerlink" title="查看集群节点列表"></a>查看集群节点列表</h3><p>集群启动成功以后，用户可以在任何一台节点上使用 <code>swarm list</code> 命令查看集群中的节点列表。例如：</p>
+<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash">$ <span class="token function">docker</span> run <span class="token parameter variable">--rm</span> swarm list token://946d65606f7c2f49766e4dddac5b4365
+<span class="token number">192.168</span>.0.2:2375<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre>
+
+<p>显示正是之前用 swarm join 命令加入集群的节点的地址。我们在另外一个节点 192.168.0.3 上同样使用 swarm join 命令新加入一个节点：</p>
+<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash"><span class="token variable">$docker</span> run <span class="token parameter variable">--rm</span> swarm <span class="token function">join</span> <span class="token parameter variable">--addr</span><span class="token operator">=</span><span class="token number">192.168</span>.0.3:2375 token://946d65606f7c2f49766e4dddac5b4365
+<span class="token assign-left variable">time</span><span class="token operator">=</span><span class="token string">"2015-12-10T02:05:34Z"</span> <span class="token assign-left variable">level</span><span class="token operator">=</span>info <span class="token assign-left variable">msg</span><span class="token operator">=</span><span class="token string">"Registering on the discovery 
+    service every 20s..."</span> <span class="token assign-left variable">addr</span><span class="token operator">=</span><span class="token string">"192.168.0.3:2375"</span> <span class="token assign-left variable">discovery</span><span class="token operator">=</span><span class="token string">"token:
+    //946d65606f7c2f49766e4dddac5b4365"</span>
+<span class="token punctuation">..</span>.<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<p>再次使用 swarm list 命令查看集群中的节点列表信息，可以看到新加入的节点：</p>
+<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash">$ <span class="token function">docker</span> run <span class="token parameter variable">--rm</span> swarm list token://946d65606f7c2f49766e4dddac5b4365
+<span class="token number">192.168</span>.0.3:2375
+<span class="token number">192.168</span>.0.2:2375<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span></span></code></pre>
+
+<h3 id="使用集群服务"><a href="#使用集群服务" class="headerlink" title="使用集群服务"></a>使用集群服务</h3><p>所有 Docker 客户端可以继续使用，只要指定使用 Swarm manager 服务的监听地址即可。</p>
+<p>例如，manager 服务监听的地址为 192.168.0.2:12375，则可以通过指定 -H 192.168.0.2：12375 选项来继续使用 Docker 客户端，执行任意 Docker 命令，例如 ps、info、run 等。</p>
+<p>在任意节点上使用 docker run 来启动若干容器，例如：</p>
+<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash"><span class="token variable">$docker</span> <span class="token parameter variable">-H</span> <span class="token number">192.168</span>.0.2:12375:12375 run <span class="token parameter variable">-d</span> ubuntu <span class="token function">ping</span> <span class="token number">127.0</span>.0.1
+4c9bccbf86fb6e2243da58c1b15e9378fac362783a663426bbe7058eea84de46<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre>
+
+<p>使用 ps 命令查看集群中正在运行的容器：</p>
+<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash">$ <span class="token function">docker</span> <span class="token parameter variable">-H</span> <span class="token number">192.168</span>.0.2:12375 <span class="token function">ps</span>
+CONTAINER ID    IMAGE    COMMAND       CREATED      STATUS      PORTS   NAMES
+4c9bccbf86fb   buntu   <span class="token string">"ping 127.0.0.1"</span>  About a minute ago   Up About a minute clever_wright
+730061a3801a        registry:latest     <span class="token string">"docker-registry"</span>        <span class="token number">2</span> minutes ago Up <span class="token number">2</span> minutes        <span class="token number">192.168</span>.0.2:5000-<span class="token operator">></span><span class="token number">5000</span>/tcp   Host-1/registry_registry_1
+72d99f24a06f        redis:3.0           <span class="token string">"/entrypoint.sh redis"</span>   <span class="token number">2</span> minutes ago Up <span class="token number">2</span> minutes        <span class="token number">6379</span>/tcp                     
+Host-1/registry_redis_1, 
+Host-1/registry_registry_1/redis,
+Host-1/registry_registry_1/redis_1,
+Host-1/registry_registry_1/registry_redis_1<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+
+
+<h2 id="5、Raft协议"><a href="#5、Raft协议" class="headerlink" title="5、Raft协议"></a>5、Raft协议</h2><h3 id="Raft-概念"><a href="#Raft-概念" class="headerlink" title="Raft 概念"></a>Raft 概念</h3><p>​	当Docker引擎在集群模式下运行时，manager节点实现Raft 共识算法来管理全局集群状态。Docker swarm模式使用共识算法的原因是为了确保集群中负责管理和调度任务的所有manager节点都存储相同的一致性状态。<br>​	跨集群具有相同的一致状态意味着在出现故障时，任何管理器节点都可以接收任务并将服务恢复到稳定状态。例如，如果集群中负责调度任务的Leader Manager意外死亡，那么任何其他Manager都可以继续调度任务并重新平衡任务，以匹配所需的状态。使用共识算法在分布式系统中复制日志的系统确实需要特别注意。它们要求大多数节点对值达成一致，从而确保集群状态在出现故障时保持一致。</p>
+<p>​	Raft可以容忍 (N-1)&#x2F;2 次失败，并且需要多数或 (N&#x2F;2)+1 个成员仲裁来就建议给集群的值达成一致。这意味着在一个由5个管理器组成的运行Raft的集群中，如果3个节点不可用，系统将无法处理更多请求来调度其他任务。现有任务继续运行，但如果管理器集不健康，调度器无法重新平衡任务以处理失败。</p>
+<h3 id="特性"><a href="#特性" class="headerlink" title="特性"></a>特性</h3><p>共识算法在群体模式下的实现意味着它具有分布式系统固有的特性:</p>
+<ul>
+<li>在容错系统中的值的一致。(参考FLP不可能定理（<a target="_blank" rel="noopener" href="http://the-paper-trail.org/blog/a-brief-tour-of-flp-impossibility/">FLP impossibility theorem</a>）和Raft Consensus算法论文（<a target="_blank" rel="noopener" href="https://www.usenix.org/system/files/conference/atc14/atc14-paper-ongaro.pdf">Raft Consensus Algorithm paper</a>）)</li>
+<li>通过领导人选举程序相互排斥</li>
+<li>集群成员管理</li>
+<li>全局一致的对象排序和CAS(比较和交换)原语</li>
+</ul>
+<h3 id="双主双从测试"><a href="#双主双从测试" class="headerlink" title="双主双从测试"></a>双主双从测试</h3><ul>
+<li><p>第一步：停止docker-1</p>
+<p><img src="/medias/loading.gif" data-original="https://raw.githubusercontent.com/luyaguo/pictures-guo/main/docker/202504191232748.png" alt="image-20210914233116427"></p>
+</li>
+<li><p>第二步：测试docker-4</p>
+<p><img src="/medias/loading.gif" data-original="https://raw.githubusercontent.com/luyaguo/pictures-guo/main/docker/202504191231619.png" alt="image-20210914233307439"></p>
+<p>报错：将docker1机器停止，宕机！另外一个主节点也不能使用了！</p>
+<p><img src="/medias/loading.gif" data-original="https://raw.githubusercontent.com/luyaguo/pictures-guo/main/docker/202504191231266.png" alt="image-20210914233452305"></p>
+</li>
+<li><p>第三步：重新启动docker-1</p>
+<p><img src="/medias/loading.gif" data-original="https://raw.githubusercontent.com/luyaguo/pictures-guo/main/docker/202504191231389.png" alt="image-20210914233931240"></p>
+<p><img src="/medias/loading.gif" data-original="https://raw.githubusercontent.com/luyaguo/pictures-guo/main/docker/202504191231311.png" alt="image-20210914233730662"></p>
+<p>Leader变为docker-4，docker-1变为 Reachable</p>
+</li>
+<li><p>第四步：docker-3 离开</p>
+<p><img src="/medias/loading.gif" data-original="https://raw.githubusercontent.com/luyaguo/pictures-guo/main/docker/202504191231133.png" alt="image-20210914234151397"></p>
+<p>结果：docker-3 变为 Down</p>
+<p><img src="/medias/loading.gif" data-original="https://raw.githubusercontent.com/luyaguo/pictures-guo/main/docker/202504191231159.png" alt="image-20210914234305395"></p>
+</li>
+</ul>
+<h3 id="三主"><a href="#三主" class="headerlink" title="三主"></a>三主</h3><ul>
+<li><p>第一步：在管理节点生成令牌</p>
+<p><img src="/medias/loading.gif" data-original="https://raw.githubusercontent.com/luyaguo/pictures-guo/main/docker/202504191230371.png" alt="image-20210914234524155"></p>
+</li>
+<li><p>第二步：将 docker-3 添加为管理节点</p>
+<p><img src="/medias/loading.gif" data-original="https://raw.githubusercontent.com/luyaguo/pictures-guo/main/docker/202504191230703.png" alt="image-20210914234811407"></p>
+</li>
+<li><p>第三步：docker-2 中无法使用docker  node  ls</p>
+<p><img src="/medias/loading.gif" data-original="https://raw.githubusercontent.com/luyaguo/pictures-guo/main/docker/202504191230275.png" alt="image-20210914234924913"></p>
+<p><strong>work就是工作的，管理节点用来操作</strong></p>
+</li>
+<li><p>第四步：停止 docker-1 ，发现另外两个管理节点任然可以使用</p>
+<p><img src="/medias/loading.gif" data-original="https://raw.githubusercontent.com/luyaguo/pictures-guo/main/docker/202504191230747.png" alt="image-20210914235413413"></p>
+</li>
+<li><p>第五步：在停止 docker-3 ，发现最后一个节点无法使用</p>
+<p><img src="/medias/loading.gif" data-original="https://raw.githubusercontent.com/luyaguo/pictures-guo/main/docker/202504191230901.png" alt="image-20210914235614941"></p>
+</li>
+</ul>
+<h2 id="6、应用"><a href="#6、应用" class="headerlink" title="6、应用"></a>6、应用</h2><h3 id="快捷安装-docker"><a href="#快捷安装-docker" class="headerlink" title="快捷安装 docker"></a>快捷安装 docker</h3><ul>
+<li>右键—发送键输入到所有会话</li>
+</ul>
+<p><img src="/medias/loading.gif" data-original="https://raw.githubusercontent.com/luyaguo/pictures-guo/main/docker/202504191230909.png" alt="image-20210914210632817"></p>
+<ul>
+<li><p>yum -y install gcc</p>
+<p><img src="/medias/loading.gif" data-original="https://raw.githubusercontent.com/luyaguo/pictures-guo/main/docker/202504191230010.png" alt="image-20210914210900859"></p>
+</li>
+<li><p>卸载旧版本</p>
+<p><img src="/medias/loading.gif" data-original="https://raw.githubusercontent.com/luyaguo/pictures-guo/main/docker/202504191229636.png" alt="image-20210914211144906"></p>
+</li>
+<li><p>安装软件包</p>
+<p><img src="/medias/loading.gif" data-original="https://raw.githubusercontent.com/luyaguo/pictures-guo/main/docker/202504191230092.png" alt="image-20210914211347891"></p>
+</li>
+<li><p>安装镜像</p>
+<p><img src="/medias/loading.gif" data-original="https://raw.githubusercontent.com/luyaguo/pictures-guo/main/docker/202504191229006.png" alt="image-20210914211633085"></p>
+</li>
+<li><p>安装docker</p>
+<p><img src="/medias/loading.gif" data-original="https://raw.githubusercontent.com/luyaguo/pictures-guo/main/docker/202504191229002.png" alt="image-20210914211755958"></p>
+</li>
+</ul>
+<h3 id="搭建-Swarm-集群"><a href="#搭建-Swarm-集群" class="headerlink" title="搭建 Swarm 集群"></a>搭建 Swarm 集群</h3><ul>
+<li><p>第一步：启动 docker</p>
+<p><img src="/medias/loading.gif" data-original="https://raw.githubusercontent.com/luyaguo/pictures-guo/main/docker/202504191229267.png" alt="image-20210914081551312"></p>
+<p><img src="/medias/loading.gif" data-original="https://raw.githubusercontent.com/luyaguo/pictures-guo/main/docker/202504191229611.png" alt="image-20210914081619353"></p>
+</li>
+<li><p>第二步：查看 docker swarm 常用命令</p>
+<p><img src="/medias/loading.gif" data-original="https://raw.githubusercontent.com/luyaguo/pictures-guo/main/docker/202504191229739.png" alt="image-20210914081739007"></p>
+</li>
+<li><p>第三步：初始化命令：docker swarm init –help</p>
+<p><img src="/medias/loading.gif" data-original="https://raw.githubusercontent.com/luyaguo/pictures-guo/main/docker/202504191229027.png" alt="image-20210914213642568"></p>
+</li>
+<li><p>第四步：查看 IP 地址</p>
+<p><img src="/medias/loading.gif" data-original="https://raw.githubusercontent.com/luyaguo/pictures-guo/main/docker/202504191229283.png" alt="image-20210914214025148"></p>
+</li>
+<li><p>第五步：初始化主节点 docker  swarm  init  –advertise-addr  IP地址</p>
+<p><img src="/medias/loading.gif" data-original="https://raw.githubusercontent.com/luyaguo/pictures-guo/main/docker/202504191229916.png" alt="image-20210914214158536"></p>
+<ul>
+<li><p>添加工作节点</p>
+<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash"><span class="token comment"># To add a worker to this swarm,run the following command:</span>
+$ <span class="token function">docker</span> swarm <span class="token function">join</span> <span class="token punctuation">\</span>
+  <span class="token parameter variable">--token</span> SWMTKN-1-49nj1cmql0jkz5s954yi3oex3nedyz0fb0xx14ie39trti4wxv-8vxv8rssmk743ojnwacrr2e7c <span class="token punctuation">\</span>
+  <span class="token number">172.24</span>.82.149:2377<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span></span></code></pre>
+</li>
+<li><p>添加管理节点</p>
+<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash"><span class="token comment"># To add a manager to this swarm,run 'docker swarm join-token manager' and follow the instructions</span><span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre></li>
+</ul>
+</li>
+<li><p>第六步：添加工作节点</p>
+<p><img src="/medias/loading.gif" data-original="https://raw.githubusercontent.com/luyaguo/pictures-guo/main/docker/202504191229619.png" alt="image-20210914215604248"></p>
+<p><img src="/medias/loading.gif" data-original="https://raw.githubusercontent.com/luyaguo/pictures-guo/main/docker/202504191229939.png" alt="image-20210914215838950"></p>
+<blockquote>
+<p>注： 3Z：Leader 主节点，0Z：空 工作节点</p>
+</blockquote>
+</li>
+<li><p>第七步：生成 swarm 工作节点&#x2F; 管理节点</p>
+<p><img src="/medias/loading.gif" data-original="https://raw.githubusercontent.com/luyaguo/pictures-guo/main/docker/202504191229757.png" alt="image-20210914220218668"></p>
+<p><img src="/medias/loading.gif" data-original="https://raw.githubusercontent.com/luyaguo/pictures-guo/main/docker/202504191228370.png" alt="image-20210914220443913"></p>
+</li>
+<li><p>第八步：添加管理节点</p>
+<p><img src="/medias/loading.gif" data-original="https://raw.githubusercontent.com/luyaguo/pictures-guo/main/docker/202504191228540.png" alt="image-20210914220548692"></p>
+<p><img src="/medias/loading.gif" data-original="https://raw.githubusercontent.com/luyaguo/pictures-guo/main/docker/202504191228555.png" alt="image-20210914220650586"></p>
+<p>Reachable：可触达的（管理节点）</p>
+</li>
+</ul>
+<h3 id="Swarm-集群弹性创建服务"><a href="#Swarm-集群弹性创建服务" class="headerlink" title="Swarm 集群弹性创建服务"></a>Swarm 集群弹性创建服务</h3><p>实例</p>
+<ul>
+<li><p>第一步：</p>
+<p><img src="/medias/loading.gif" data-original="https://raw.githubusercontent.com/luyaguo/pictures-guo/main/docker/202504191228498.png" alt="image-20210915080203117"></p>
+</li>
+<li><p>第二步：docker-1 创建一个服务</p>
+<p><img src="/medias/loading.gif" data-original="https://raw.githubusercontent.com/luyaguo/pictures-guo/main/docker/202504191228722.png" alt="image-20210915080401097"></p>
+<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash">$ <span class="token function">docker</span> run 				容器启动！不具有扩缩容器
+$ <span class="token function">docker</span> <span class="token function">service</span> 		服务启动！具有扩缩容器，滚动更新！<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre>
+</li>
+<li><p>第三步：查看启动的服务 <strong>docker  service  ps  my-nginx</strong></p>
+<p><img src="/medias/loading.gif" data-original="https://raw.githubusercontent.com/luyaguo/pictures-guo/main/docker/202504191228436.png" alt="image-20210915080648506"></p>
+<p><img src="/medias/loading.gif" data-original="https://raw.githubusercontent.com/luyaguo/pictures-guo/main/docker/202504191228886.png" alt="image-20210915080917654"></p>
+<p>注：发现该服务有一个副本 REPLICAS</p>
+<p><img src="/medias/loading.gif" data-original="https://raw.githubusercontent.com/luyaguo/pictures-guo/main/docker/202504191226830.png" alt="image-20210915081011029"></p>
+</li>
+<li><p>第四步：docker-3 上发现也有nginx服务，这个就是上面的副本</p>
+<p><img src="/medias/loading.gif" data-original="https://raw.githubusercontent.com/luyaguo/pictures-guo/main/docker/202504191226263.png" alt="image-20210915081224678"></p>
+</li>
+<li><p>第五步：<strong>动态扩缩容</strong>-方法一，更新副本数量</p>
+<p><img src="/medias/loading.gif" data-original="https://raw.githubusercontent.com/luyaguo/pictures-guo/main/docker/202504191228442.png" alt="image-20210915081459418"></p>
+<p>发现另外三个docker上都有副本</p>
+<p><img src="/medias/loading.gif" data-original="https://raw.githubusercontent.com/luyaguo/pictures-guo/main/docker/202504191226058.png" alt="image-20210915081658059"></p>
+</li>
+<li><p>第六步：使用浏览器访问这四个 nginx 服务，发现都能访问成功</p>
+<p><img src="/medias/loading.gif" data-original="https://raw.githubusercontent.com/luyaguo/pictures-guo/main/docker/202504191226125.png" alt="image-20210915081807491"></p>
+</li>
+<li><p>第七步：动态扩缩容-方法二</p>
+<p><img src="/medias/loading.gif" data-original="https://raw.githubusercontent.com/luyaguo/pictures-guo/main/docker/202504191227112.png" alt="image-20210915082144603"></p>
+<p><img src="/medias/loading.gif" data-original="https://raw.githubusercontent.com/luyaguo/pictures-guo/main/docker/202504191227365.png" alt="image-20210915082246261"></p>
+</li>
+<li><p>第八步：移除服务</p>
+<p><img src="/medias/loading.gif" data-original="https://raw.githubusercontent.com/luyaguo/pictures-guo/main/docker/202504191226528.png" alt="image-20210915082414356"></p>
+</li>
+</ul>
+<h3 id="购买阿里云服务器"><a href="#购买阿里云服务器" class="headerlink" title="购买阿里云服务器"></a>购买阿里云服务器</h3><ul>
+<li><p>登录——-控制台</p>
+<p><img src="/medias/loading.gif" data-original="https://raw.githubusercontent.com/luyaguo/pictures-guo/main/docker/202504191226903.png" alt="image-20210913083912277"></p>
+</li>
+<li><p>创建实例</p>
+<p><img src="/medias/loading.gif" data-original="https://raw.githubusercontent.com/luyaguo/pictures-guo/main/docker/202504191226975.png" alt="image-20210913083943857"></p>
+</li>
+</ul>
+<p><img src="/medias/loading.gif" data-original="https://raw.githubusercontent.com/luyaguo/pictures-guo/main/docker/202504191233483.png" alt="image-20210914075017871"></p>
+<p><img src="/medias/loading.gif" data-original="https://raw.githubusercontent.com/luyaguo/pictures-guo/main/docker/202504191226376.png" alt="image-20210914075033401"></p>
+
+                
+            </div>
+            <hr/>
+
+            
+
+
+
+            <div class="tag_share" style="display: block;">
+                <div class="post-meta__tag-list" style="display: inline-block;">
+                    
+                        <div class="article-tag">
+                            
+                                <a href="/tags/Docker-%E8%BF%9B%E9%98%B6/">
+                                    <span class="chip bg-color">Docker 进阶</span>
+                                </a>
+                            
+                        </div>
+                    
+                </div>
+                <div class="post_share" style="zoom: 80%; width: fit-content; display: inline-block; float: right; margin: -0.15rem 0;">
+                    <link rel="stylesheet" type="text/css" href="/libs/share/css/share.min.css">
+<div id="article-share">
+
+    
+    <div class="social-share" data-sites="twitter,facebook,google,qq,qzone,wechat,weibo,douban,linkedin" data-wechat-qrcode-helper="<p>微信扫一扫即可分享！</p>"></div>
+    <script src="/libs/share/js/social-share.min.js"></script>
+    
+
+    
+
+</div>
+
+                </div>
+            </div>
+            
+        </div>
+    </div>
+
+    
+
+    
+
+    
+
+    
+
+    
+        <style>
+    .valine-card {
+        margin: 1.5rem auto;
+    }
+
+    .valine-card .card-content {
+        padding: 20px 20px 5px 20px;
+    }
+
+    #vcomments textarea {
+        box-sizing: border-box;
+        background: url("/medias/bg.webp") 100% 100% no-repeat;
+    }
+
+    #vcomments p {
+        margin: 2px 2px 10px;
+        font-size: 1.05rem;
+        line-height: 1.78rem;
+    }
+
+    #vcomments blockquote p {
+        text-indent: 0.2rem;
+    }
+
+    #vcomments a {
+        padding: 0 2px;
+        color: #4cbf30;
+        font-weight: 500;
+        text-decoration: none;
+    }
+
+    #vcomments img {
+        max-width: 100%;
+        height: auto;
+        cursor: pointer;
+    }
+
+    #vcomments ol li {
+        list-style-type: decimal;
+    }
+
+    #vcomments ol,
+    ul {
+        display: block;
+        padding-left: 2em;
+        word-spacing: 0.05rem;
+    }
+
+    #vcomments ul li,
+    ol li {
+        display: list-item;
+        line-height: 1.8rem;
+        font-size: 1rem;
+    }
+
+    #vcomments ul li {
+        list-style-type: disc;
+    }
+
+    #vcomments ul ul li {
+        list-style-type: circle;
+    }
+
+    #vcomments table, th, td {
+        padding: 12px 13px;
+        border: 1px solid #dfe2e5;
+    }
+
+    #vcomments table, th, td {
+        border: 0;
+    }
+
+    table tr:nth-child(2n), thead {
+        background-color: #fafafa;
+    }
+
+    #vcomments table th {
+        background-color: #f2f2f2;
+        min-width: 80px;
+    }
+
+    #vcomments table td {
+        min-width: 80px;
+    }
+
+    #vcomments h1 {
+        font-size: 1.85rem;
+        font-weight: bold;
+        line-height: 2.2rem;
+    }
+
+    #vcomments h2 {
+        font-size: 1.65rem;
+        font-weight: bold;
+        line-height: 1.9rem;
+    }
+
+    #vcomments h3 {
+        font-size: 1.45rem;
+        font-weight: bold;
+        line-height: 1.7rem;
+    }
+
+    #vcomments h4 {
+        font-size: 1.25rem;
+        font-weight: bold;
+        line-height: 1.5rem;
+    }
+
+    #vcomments h5 {
+        font-size: 1.1rem;
+        font-weight: bold;
+        line-height: 1.4rem;
+    }
+
+    #vcomments h6 {
+        font-size: 1rem;
+        line-height: 1.3rem;
+    }
+
+    #vcomments p {
+        font-size: 1rem;
+        line-height: 1.5rem;
+    }
+
+    #vcomments hr {
+        margin: 12px 0;
+        border: 0;
+        border-top: 1px solid #ccc;
+    }
+
+    #vcomments blockquote {
+        margin: 15px 0;
+        border-left: 5px solid #42b983;
+        padding: 1rem 0.8rem 0.3rem 0.8rem;
+        color: #666;
+        background-color: rgba(66, 185, 131, .1);
+    }
+
+    #vcomments pre {
+        font-family: monospace, monospace;
+        padding: 1.2em;
+        margin: .5em 0;
+        background: #272822;
+        overflow: auto;
+        border-radius: 0.3em;
+        tab-size: 4;
+    }
+
+    #vcomments code {
+        font-family: monospace, monospace;
+        padding: 1px 3px;
+        font-size: 0.92rem;
+        color: #e96900;
+        background-color: #f8f8f8;
+        border-radius: 2px;
+    }
+
+    #vcomments pre code {
+        font-family: monospace, monospace;
+        padding: 0;
+        color: #e8eaf6;
+        background-color: #272822;
+    }
+
+    #vcomments pre[class*="language-"] {
+        padding: 1.2em;
+        margin: .5em 0;
+    }
+
+    #vcomments code[class*="language-"],
+    pre[class*="language-"] {
+        color: #e8eaf6;
+    }
+
+    #vcomments [type="checkbox"]:not(:checked), [type="checkbox"]:checked {
+        position: inherit;
+        margin-left: -1.3rem;
+        margin-right: 0.4rem;
+        margin-top: -1px;
+        vertical-align: middle;
+        left: unset;
+        visibility: visible;
+    }
+
+    #vcomments b,
+    strong {
+        font-weight: bold;
+    }
+
+    #vcomments dfn {
+        font-style: italic;
+    }
+
+    #vcomments small {
+        font-size: 85%;
+    }
+
+    #vcomments cite {
+        font-style: normal;
+    }
+
+    #vcomments mark {
+        background-color: #fcf8e3;
+        padding: .2em;
+    }
+
+    #vcomments table, th, td {
+        padding: 12px 13px;
+        border: 1px solid #dfe2e5;
+    }
+
+    table tr:nth-child(2n), thead {
+        background-color: #fafafa;
+    }
+
+    #vcomments table th {
+        background-color: #f2f2f2;
+        min-width: 80px;
+    }
+
+    #vcomments table td {
+        min-width: 80px;
+    }
+
+    #vcomments [type="checkbox"]:not(:checked), [type="checkbox"]:checked {
+        position: inherit;
+        margin-left: -1.3rem;
+        margin-right: 0.4rem;
+        margin-top: -1px;
+        vertical-align: middle;
+        left: unset;
+        visibility: visible;
+    }
+</style>
+
+<div class="card valine-card" data-aos="fade-up">
+    <div class="comment_headling" style="font-size: 20px; font-weight: 700; position: relative; padding-left: 20px; top: 15px; padding-bottom: 5px;">
+        <i class="fas fa-comments fa-fw" aria-hidden="true"></i>
+        <span>评论</span>
+    </div>
+    <div id="vcomments" class="card-content" style="display: grid">
+    </div>
+</div>
+
+<script src="/libs/valine/av-min.js"></script>
+<script src="/libs/valine/Valine.min.js"></script>
+<script>
+    new Valine({
+        el: '#vcomments',
+        appId: 'XGAJufgp6Z2bX17baB3E7enQ-gzGzoHsz',
+        appKey: 'j9yun8pjBYMNT3Gg8ehomdsf',
+        serverURLs: 'https://xgajufgp.lc-cn-n1-shared.com',
+        notify: 'false' === 'true',
+        verify: 'false' === 'true',
+        visitor: 'true' === 'true',
+        avatar: 'wavatar',
+        pageSize: '10',
+        lang: 'en',
+        placeholder: '支持markdown格式以及丰富的小表情，快来留下些记忆吧~'
+    });
+</script>
+
+<!--酷Q推送-->
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+<article id="prenext-posts" class="prev-next articles">
+    <div class="row article-row">
+        
+        <div class="article col s12 m6" data-aos="fade-up">
+            <div class="article-badge left-badge text-color">
+                <i class="fas fa-chevron-left"></i>&nbsp;Previous</div>
+            <div class="card">
+                <a href="/posts/c8d0539d.html">
+                    <div class="card-image">
+                        
+                        
+                        <img src="/medias/featureimages/0.jpg" class="responsive-img" alt="总结">
+                        
+                        <span class="card-title">总结</span>
+                    </div>
+                </a>
+                <div class="card-content article-content">
+                    <div class="summary block-with-text">
+                        
+                            
+                        
+                    </div>
+                    <div class="publish-info">
+                        <span class="publish-date">
+                            <i class="far fa-clock fa-fw icon-date"></i>2025-04-19
+                        </span>
+                        <span class="publish-author">
+                            
+                            <i class="fas fa-bookmark fa-fw icon-category"></i>
+                            
+                            <a href="/categories/Docker-%E8%BF%9B%E9%98%B6/" class="post-category">
+                                    Docker 进阶
+                                </a>
+                            
+                            
+                        </span>
+                    </div>
+                </div>
+                
+                <div class="card-action article-tags">
+                    
+                    <a href="/tags/Docker-%E8%BF%9B%E9%98%B6/">
+                        <span class="chip bg-color">Docker 进阶</span>
+                    </a>
+                    
+                </div>
+                
+            </div>
+        </div>
+        
+        
+        <div class="article col s12 m6" data-aos="fade-up">
+            <div class="article-badge right-badge text-color">
+                Next&nbsp;<i class="fas fa-chevron-right"></i>
+            </div>
+            <div class="card">
+                <a href="/posts/321bbf6c.html">
+                    <div class="card-image">
+                        
+                        
+                        <img src="/medias/featureimages/10.jpg" class="responsive-img" alt="第五章 Docker Compose">
+                        
+                        <span class="card-title">第五章 Docker Compose</span>
+                    </div>
+                </a>
+                <div class="card-content article-content">
+                    <div class="summary block-with-text">
+                        
+                            
+                        
+                    </div>
+                    <div class="publish-info">
+                            <span class="publish-date">
+                                <i class="far fa-clock fa-fw icon-date"></i>2025-04-19
+                            </span>
+                        <span class="publish-author">
+                            
+                            <i class="fas fa-bookmark fa-fw icon-category"></i>
+                            
+                            <a href="/categories/Docker-%E8%BF%9B%E9%98%B6/" class="post-category">
+                                    Docker 进阶
+                                </a>
+                            
+                            
+                        </span>
+                    </div>
+                </div>
+                
+                <div class="card-action article-tags">
+                    
+                    <a href="/tags/Docker-%E8%BF%9B%E9%98%B6/">
+                        <span class="chip bg-color">Docker 进阶</span>
+                    </a>
+                    
+                </div>
+                
+            </div>
+        </div>
+        
+    </div>
+</article>
+
+</div>
+
+
+<script>
+    $('#articleContent').on('copy', function (e) {
+        // IE8 or earlier browser is 'undefined'
+        if (typeof window.getSelection === 'undefined') return;
+
+        var selection = window.getSelection();
+        // if the selection is short let's not annoy our users.
+        if (('' + selection).length < Number.parseInt('120')) {
+            return;
+        }
+
+        // create a div outside of the visible area and fill it with the selected text.
+        var bodyElement = document.getElementsByTagName('body')[0];
+        var newdiv = document.createElement('div');
+        newdiv.style.position = 'absolute';
+        newdiv.style.left = '-99999px';
+        bodyElement.appendChild(newdiv);
+        newdiv.appendChild(selection.getRangeAt(0).cloneContents());
+
+        // we need a <pre> tag workaround.
+        // otherwise the text inside "pre" loses all the line breaks!
+        if (selection.getRangeAt(0).commonAncestorContainer.nodeName === 'PRE' || selection.getRangeAt(0).commonAncestorContainer.nodeName === 'CODE') {
+            newdiv.innerHTML = "<pre>" + newdiv.innerHTML + "</pre>";
+        }
+
+        var url = document.location.href;
+        newdiv.innerHTML += '<br />'
+            + 'From: 西伯<br />'
+            + 'Author: 西伯<br />'
+            + 'Link: <a href="' + url + '">' + url + '</a><br />'
+            + '本文章著作权归作者所有，任何形式的转载都请注明出处。';
+
+        selection.selectAllChildren(newdiv);
+        window.setTimeout(function () {bodyElement.removeChild(newdiv);}, 200);
+    });
+</script>
+
+
+<!-- 代码块功能依赖 -->
+<script type="text/javascript" src="/libs/codeBlock/codeBlockFuction.js"></script>
+
+
+  <!-- 是否加载使用自带的 prismjs. -->
+  <script type="text/javascript" src="/libs/prism/prism.min.js"></script>
+
+
+<!-- 代码语言 -->
+
+<script type="text/javascript" src="/libs/codeBlock/codeLang.js"></script>
+
+
+<!-- 代码块复制 -->
+
+<script type="text/javascript" src="/libs/codeBlock/codeCopy.js"></script>
+
+
+<!-- 代码块收缩 -->
+
+<script type="text/javascript" src="/libs/codeBlock/codeShrink.js"></script>
+
+
+
+    </div>
+    <div id="toc-aside" class="expanded col l3 hide-on-med-and-down">
+        <div class="toc-widget card" style="background-color: white;">
+            <div class="toc-title"><i class="far fa-list-alt"></i>&nbsp;&nbsp;TOC</div>
+            <div id="toc-content"></div>
+        </div>
+    </div>
+</div>
+
+<!-- TOC 悬浮按钮. -->
+
+<div id="floating-toc-btn" class="hide-on-med-and-down">
+    <a class="btn-floating btn-large bg-color">
+        <i class="fas fa-list-ul"></i>
+    </a>
+</div>
+
+
+<script src="/libs/tocbot/tocbot.min.js"></script>
+<script>
+    $(function () {
+        tocbot.init({
+            tocSelector: '#toc-content',
+            contentSelector: '#articleContent',
+            headingsOffset: -($(window).height() * 0.4 - 45),
+            collapseDepth: Number('0'),
+            headingSelector: 'h2, h3, h4'
+        });
+
+        // Set scroll toc fixed.
+        let tocHeight = parseInt($(window).height() * 0.4 - 64);
+        let $tocWidget = $('.toc-widget');
+        $(window).scroll(function () {
+            let scroll = $(window).scrollTop();
+            /* add post toc fixed. */
+            if (scroll > tocHeight) {
+                $tocWidget.addClass('toc-fixed');
+            } else {
+                $tocWidget.removeClass('toc-fixed');
+            }
+        });
+
+        
+        /* 修复文章卡片 div 的宽度. */
+        let fixPostCardWidth = function (srcId, targetId) {
+            let srcDiv = $('#' + srcId);
+            if (srcDiv.length === 0) {
+                return;
+            }
+
+            let w = srcDiv.width();
+            if (w >= 450) {
+                w = w + 21;
+            } else if (w >= 350 && w < 450) {
+                w = w + 18;
+            } else if (w >= 300 && w < 350) {
+                w = w + 16;
+            } else {
+                w = w + 14;
+            }
+            $('#' + targetId).width(w);
+        };
+
+        // 切换TOC目录展开收缩的相关操作.
+        const expandedClass = 'expanded';
+        let $tocAside = $('#toc-aside');
+        let $mainContent = $('#main-content');
+        $('#floating-toc-btn .btn-floating').click(function () {
+            if ($tocAside.hasClass(expandedClass)) {
+                $tocAside.removeClass(expandedClass).hide();
+                $mainContent.removeClass('l9');
+            } else {
+                $tocAside.addClass(expandedClass).show();
+                $mainContent.addClass('l9');
+            }
+            fixPostCardWidth('artDetail', 'prenext-posts');
+        });
+        
+    });
+</script>
+
+    
+
+</main>
+
+
+
+
+    <footer class="page-footer bg-color">
+    
+        <link rel="stylesheet" href="/libs/aplayer/APlayer.min.css">
+<style>
+    .aplayer .aplayer-lrc p {
+        
+        display: none;
+        
+        font-size: 12px;
+        font-weight: 700;
+        line-height: 16px !important;
+    }
+
+    .aplayer .aplayer-lrc p.aplayer-lrc-current {
+        
+        display: none;
+        
+        font-size: 15px;
+        color: #42b983;
+    }
+
+    
+    .aplayer.aplayer-fixed.aplayer-narrow .aplayer-body {
+        left: -66px !important;
+    }
+
+    .aplayer.aplayer-fixed.aplayer-narrow .aplayer-body:hover {
+        left: 0px !important;
+    }
+
+    
+</style>
+<div class="">
+    
+    <div class="row">
+        <meting-js class="col l8 offset-l2 m10 offset-m1 s12"
+                   server="netease"
+                   type="playlist"
+                   id="8428618004"
+                   fixed='true'
+                   autoplay='false'
+                   theme='#42b983'
+                   loop='all'
+                   order='random'
+                   preload='auto'
+                   volume='0.7'
+                   list-folded='true'
+        >
+        </meting-js>
+    </div>
+</div>
+
+<script src="/libs/aplayer/APlayer.min.js"></script>
+<script src="/libs/aplayer/Meting.min.js"></script>
+
+    
+
+    <div class="container row center-align"
+         style="margin-bottom: 15px !important;">
+        <div class="col s12 m8 l8 copy-right">
+            Copyright&nbsp;&copy;
+            
+                <span id="year">2024-2025</span>
+            
+            <a href="/about" target="_blank">西伯</a>
+            
+            <br>
+            
+                &nbsp;<i class="fas fa-chart-area"></i>&nbsp;Total Words:&nbsp;<span
+                        class="white-color">888.3k</span>
+            
+            
+            
+                
+            
+            
+                <span id="busuanzi_container_site_pv">
+                &nbsp;|&nbsp;<i class="far fa-eye"></i>&nbsp;Total visits:&nbsp;
+                    <span id="busuanzi_value_site_pv" class="white-color"></span>
+            </span>
+            
+            
+                <span id="busuanzi_container_site_uv">
+                &nbsp;|&nbsp;<i class="fas fa-users"></i>&nbsp;Total visitors:&nbsp;
+                    <span id="busuanzi_value_site_uv" class="white-color"></span>
+            </span>
+            
+            <br>
+
+            <a style="margin-inline:5px" target="_blank" href="https://hexo.io"><img src="https://img.shields.io/badge/Frame-Hexo-blue?style=flat&logo=hexo" title="基于Hexo框架"></a>
+            <a style="margin-inline:5px" target="_blank" href="https://github.com/blinkfox/hexo-theme-matery"><img src="https://img.shields.io/badge/Theme-Matery-7138b6?style=flat&logo=MEGA" title="Themes Matery"></a>
+            <a style="margin-inline:5px" target="_blank" href="https://cloudflare.com"><img src="https://img.shields.io/badge/Hosted-Cloudflare-brightgreen?style=flat&logo=Cloudflare" title="基于Cloudflare Pages托管部署"></a>
+            <a style="margin-inline:5px" target="_blank" href="https://github.com"><img src="https://img.shields.io/badge/Source-Github-67e1fb?style=flat&logo=GitHub" title="静态文件托管于GitHub"></a>
+            <br>
+
+            <!-- 运行天数提醒. -->
+            
+                <span id="sitetime"> Loading ...</span>
+                <script>
+                    var calcSiteTime = function () {
+                        var seconds = 1000;
+                        var minutes = seconds * 60;
+                        var hours = minutes * 60;
+                        var days = hours * 24;
+                        var years = days * 365;
+                        var today = new Date();
+                        var startYear = "2024";
+                        var startMonth = "5";
+                        var startDate = "20";
+                        var startHour = "0";
+                        var startMinute = "0";
+                        var startSecond = "0";
+                        var todayYear = today.getFullYear();
+                        var todayMonth = today.getMonth() + 1;
+                        var todayDate = today.getDate();
+                        var todayHour = today.getHours();
+                        var todayMinute = today.getMinutes();
+                        var todaySecond = today.getSeconds();
+                        var t1 = Date.UTC(startYear, startMonth, startDate, startHour, startMinute, startSecond);
+                        var t2 = Date.UTC(todayYear, todayMonth, todayDate, todayHour, todayMinute, todaySecond);
+                        var diff = t2 - t1;
+                        var diffYears = Math.floor(diff / years);
+                        var diffDays = Math.floor((diff / days) - diffYears * 365);
+
+                        // 区分是否有年份.
+                        var language = 'en';
+                        if (startYear === String(todayYear)) {
+                            document.getElementById("year").innerHTML = todayYear;
+                            var daysTip = 'This site has been running for ' + diffDays + ' days';
+                            if (language === 'zh-CN') {
+                                daysTip = '本站已运行 ' + diffDays + ' 天';
+                            } else if (language === 'zh-HK') {
+                                daysTip = '本站已運行 ' + diffDays + ' 天';
+                            }
+                            document.getElementById("sitetime").innerHTML = daysTip;
+                        } else {
+                            document.getElementById("year").innerHTML = startYear + " - " + todayYear;
+                            var yearsAndDaysTip = 'This site has been running for ' + diffYears + ' years and '
+                                + diffDays + ' days';
+                            if (language === 'zh-CN') {
+                                yearsAndDaysTip = '本站已运行 ' + diffYears + ' 年 ' + diffDays + ' 天';
+                            } else if (language === 'zh-HK') {
+                                yearsAndDaysTip = '本站已運行 ' + diffYears + ' 年 ' + diffDays + ' 天';
+                            }
+                            document.getElementById("sitetime").innerHTML = yearsAndDaysTip;
+                        }
+                    }
+
+                    calcSiteTime();
+                </script>
+            
+            <br>
+            
+        </div>
+        <div class="col s12 m4 l4 social-link social-statis">
+    <a href="https://github.com/luyaguo" class="tooltipped" target="_blank" data-tooltip="访问我的GitHub" data-position="top" data-delay="50">
+        <i class="fab fa-github"></i>
+    </a>
+
+
+
+    <a href="mailto:luyaguo839@gmail.com" class="tooltipped" target="_blank" data-tooltip="邮件联系我" data-position="top" data-delay="50">
+        <i class="fas fa-envelope-open"></i>
+    </a>
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <a href="/atom.xml" class="tooltipped" target="_blank" data-tooltip="RSS 订阅" data-position="top" data-delay="50">
+        <i class="fas fa-rss"></i>
+    </a>
+
+</div>
+    </div>
+</footer>
+
+<div class="progress-bar"></div>
+
+
+    <!-- 搜索遮罩框 -->
+<div id="searchModal" class="modal">
+    <div class="modal-content">
+        <div class="search-header">
+            <span class="title"><i class="fas fa-search"></i>&nbsp;&nbsp;Search</span>
+            <input type="search" id="searchInput" name="s" placeholder="Please enter a search keyword"
+                   class="search-input">
+        </div>
+        <div id="searchResult"></div>
+    </div>
+</div>
+
+<script type="text/javascript">
+$(function () {
+    var searchFunc = function (path, search_id, content_id) {
+        'use strict';
+        $.ajax({
+            url: path,
+            dataType: "xml",
+            success: function (xmlResponse) {
+                // get the contents from search data
+                var datas = $("entry", xmlResponse).map(function () {
+                    return {
+                        title: $("title", this).text(),
+                        content: $("content", this).text(),
+                        url: $("url", this).text()
+                    };
+                }).get();
+                var $input = document.getElementById(search_id);
+                var $resultContent = document.getElementById(content_id);
+                $input.addEventListener('input', function () {
+                    var str = '<ul class=\"search-result-list\">';
+                    var keywords = this.value.trim().toLowerCase().split(/[\s\-]+/);
+                    $resultContent.innerHTML = "";
+                    if (this.value.trim().length <= 0) {
+                        return;
+                    }
+                    // perform local searching
+                    datas.forEach(function (data) {
+                        var isMatch = true;
+                        var data_title = data.title.trim().toLowerCase();
+                        var data_content = data.content.trim().replace(/<[^>]+>/g, "").toLowerCase();
+                        var data_url = data.url;
+                        data_url = data_url.indexOf('/') === 0 ? data.url : '/' + data_url;
+                        var index_title = -1;
+                        var index_content = -1;
+                        var first_occur = -1;
+                        // only match artiles with not empty titles and contents
+                        if (data_title !== '' && data_content !== '') {
+                            keywords.forEach(function (keyword, i) {
+                                index_title = data_title.indexOf(keyword);
+                                index_content = data_content.indexOf(keyword);
+                                if (index_title < 0 && index_content < 0) {
+                                    isMatch = false;
+                                } else {
+                                    if (index_content < 0) {
+                                        index_content = 0;
+                                    }
+                                    if (i === 0) {
+                                        first_occur = index_content;
+                                    }
+                                }
+                            });
+                        }
+                        // show search results
+                        if (isMatch) {
+                            str += "<li><a href='" + data_url + "' class='search-result-title'>" + data_title + "</a>";
+                            var content = data.content.trim().replace(/<[^>]+>/g, "");
+                            if (first_occur >= 0) {
+                                // cut out 100 characters
+                                var start = first_occur - 20;
+                                var end = first_occur + 80;
+                                if (start < 0) {
+                                    start = 0;
+                                }
+                                if (start === 0) {
+                                    end = 100;
+                                }
+                                if (end > content.length) {
+                                    end = content.length;
+                                }
+                                var match_content = content.substr(start, end);
+                                // highlight all keywords
+                                keywords.forEach(function (keyword) {
+                                    var regS = new RegExp(keyword, "gi");
+                                    match_content = match_content.replace(regS, "<em class=\"search-keyword\">" + keyword + "</em>");
+                                });
+
+                                str += "<p class=\"search-result\">" + match_content + "...</p>"
+                            }
+                            str += "</li>";
+                        }
+                    });
+                    str += "</ul>";
+                    $resultContent.innerHTML = str;
+                });
+            }
+        });
+    };
+
+    searchFunc('/search.xml', 'searchInput', 'searchResult');
+});
+</script>
+
+    <!-- 白天和黑夜主题 -->
+<div class="stars-con">
+    <div id="stars"></div>
+    <div id="stars2"></div>
+    <div id="stars3"></div>  
+</div>
+
+<script>
+    function switchNightMode() {
+        $('<div class="Cuteen_DarkSky"><div class="Cuteen_DarkPlanet"></div></div>').appendTo($('body')),
+        setTimeout(function () {
+            $('body').hasClass('DarkMode') 
+            ? ($('body').removeClass('DarkMode'), localStorage.setItem('isDark', '0'), $('#sum-moon-icon').removeClass("fa-sun").addClass('fa-moon')) 
+            : ($('body').addClass('DarkMode'), localStorage.setItem('isDark', '1'), $('#sum-moon-icon').addClass("fa-sun").removeClass('fa-moon')),
+            
+            setTimeout(function () {
+            $('.Cuteen_DarkSky').fadeOut(1e3, function () {
+                $(this).remove()
+            })
+            }, 2e3)
+        })
+    }
+</script>
+
+    <!-- 回到顶部按钮 -->
+<div id="backTop" class="top-scroll">
+    <a class="btn-floating btn-large waves-effect waves-light" href="#!">
+        <i class="fas fa-arrow-up"></i>
+    </a>
+</div>
+
+
+    <script src="/libs/materialize/materialize.min.js"></script>
+    <script src="/libs/masonry/masonry.pkgd.min.js"></script>
+    <script src="/libs/aos/aos.js"></script>
+    <script src="/libs/scrollprogress/scrollProgress.min.js"></script>
+    <script src="/libs/lightGallery/js/lightgallery-all.min.js"></script>
+    <script src="/js/matery.js"></script>
+
+    
+
+    
+    
+    
+
+    <!-- 雪花特效 -->
+    
+
+    <!-- 鼠标星星特效 -->
+     
+        <script type="text/javascript">
+            // 只在桌面版网页启用特效
+            var windowWidth = $(window).width();
+            if (windowWidth > 768) {
+                document.write('<script type="text/javascript" src="/libs/others/star.js"><\/script>');
+            }
+        </script>
+    
+
+     
+        <script src="https://ssl.captcha.qq.com/TCaptcha.js"></script>
+        <script src="/libs/others/TencentCaptcha.js"></script>
+        <button id="TencentCaptcha" data-appid="xxxxxxxxxx" data-cbfn="callback" type="button" hidden></button>
+    
+
+    <!-- Baidu Analytics -->
+
+    <!-- Baidu Push -->
+
+<script>
+    (function () {
+        var bp = document.createElement('script');
+        var curProtocol = window.location.protocol.split(':')[0];
+        if (curProtocol === 'https') {
+            bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+        } else {
+            bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+        }
+        var s = document.getElementsByTagName("script")[0];
+        s.parentNode.insertBefore(bp, s);
+    })();
+</script>
+
+    
+    <script src="/libs/others/clicklove.js" async="async"></script>
+    
+    
+    <script async src="/libs/others/busuanzi.pure.mini.js"></script>
+    
+
+    
+
+    
+
+    <!--腾讯兔小巢-->
+    
+    
+
+    
+
+    
+
+    
+    <script src="/libs/instantpage/instantpage.js" type="module"></script>
+    
+
+    <!-- 冒泡 -->
+    
+
+    <!--全屏-->
+    <script src="/js/fullscreen.js" type="module"></script>
+
+        <style>
+            [bg-lazy] {
+                background-image: none !important;
+                background-color: #eee !important;
+            }
+        </style>
+        <script>
+            window.imageLazyLoadSetting = {
+                isSPA: false,
+                preloadRatio: 1,
+                processImages: null,
+            };
+        </script><script>window.addEventListener("load",function(){var t=/\.(gif|jpg|jpeg|tiff|png)$/i,r=/^data:image\/[a-z\d\-\.\+]+;base64,/;Array.prototype.slice.call(document.querySelectorAll("img[data-original]")).forEach(function(a){var e=a.parentNode;"A"===e.tagName&&(t.test(e.href)||r.test(e.href))&&(e.href=a.dataset.original)})});</script><script>!function(r){r.imageLazyLoadSetting.processImages=t;var a=r.imageLazyLoadSetting.isSPA,n=r.imageLazyLoadSetting.preloadRatio||1,d=o();function o(){var t=Array.prototype.slice.call(document.querySelectorAll("img[data-original]")),e=Array.prototype.slice.call(document.querySelectorAll("[bg-lazy]"));return t.concat(e)}function t(t){(a||t)&&(d=o());for(var e,i=0;i<d.length;i++)0<=(e=(e=d[i]).getBoundingClientRect()).bottom&&0<=e.left&&e.top<=(r.innerHeight*n||document.documentElement.clientHeight*n)&&function(){var t,e,a,n,o=d[i];e=function(){d=d.filter(function(t){return o!==t}),r.imageLazyLoadSetting.onImageLoaded&&r.imageLazyLoadSetting.onImageLoaded(o)},(t=o).dataset.loaded||(t.hasAttribute("bg-lazy")?(t.removeAttribute("bg-lazy"),e&&e()):(a=new Image,n=t.getAttribute("data-original"),a.onload=function(){t.src=n,t.removeAttribute("data-original"),t.setAttribute("data-loaded",!0),e&&e()},a.onerror=function(){t.removeAttribute("data-original"),t.setAttribute("data-loaded",!1),t.src=n},t.src!==n&&(a.src=n)))}()}function e(){clearTimeout(t.tId),t.tId=setTimeout(t,500)}t(),document.addEventListener("scroll",e),r.addEventListener("resize",e),r.addEventListener("orientationchange",e)}(this);</script></body>
+
+</html>

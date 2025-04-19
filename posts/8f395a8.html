@@ -1,0 +1,1904 @@
+<!DOCTYPE HTML>
+<html lang="en">
+
+
+<head>
+    <meta charset="utf-8">
+    <meta name="keywords" content="第二章 高级网络功能, 西伯">
+    <meta name="description" content="第二章 高级网络功能1、网络启动与配置参数网络启动Docker 启动时会在主机上自动创建一个 docker0 虚拟网桥，实际上是一个 Linux 网桥，可以理解为一个软件交换机，它会在挂载其上的接口之间进行转发。
+
+同时，Docker 随机">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <meta name="renderer" content="webkit|ie-stand|ie-comp">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="format-detection" content="telephone=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="referrer" content="no-referrer-when-downgrade">
+    <!-- Global site tag (gtag.js) - Google Analytics -->
+
+
+    <title>第二章 高级网络功能 | 西伯</title>
+    <link rel="icon" type="image/png" href="/favicon.png">
+    
+
+
+    <!-- bg-cover style     -->
+
+
+
+<link rel="stylesheet" type="text/css" href="/libs/awesome/css/all.min.css">
+<link rel="stylesheet" type="text/css" href="/libs/materialize/materialize.min.css">
+<link rel="stylesheet" type="text/css" href="/libs/aos/aos.css">
+<link rel="stylesheet" type="text/css" href="/libs/animate/animate.min.css">
+<link rel="stylesheet" type="text/css" href="/libs/lightGallery/css/lightgallery.min.css">
+<link rel="stylesheet" type="text/css" href="/css/matery.css">
+<link rel="stylesheet" type="text/css" href="/css/my.css">
+<link rel="stylesheet" type="text/css" href="/css/dark.css" media="none" onload="if(media!='all')media='all'">
+
+
+
+
+    <link rel="stylesheet" href="/libs/tocbot/tocbot.css">
+    <link rel="stylesheet" href="/css/post.css">
+
+
+
+
+    
+
+
+
+    <script src="/libs/jquery/jquery-3.6.0.min.js"></script>
+
+<meta name="generator" content="Hexo 7.2.0"></head>
+
+<!-- 预加载动画 -->
+
+    <style type="text/css" lang="css">
+    #loading-container{
+        position: fixed;
+        top: 0;
+        left: 0;
+        min-height: 100vh;
+        width: 100vw;
+        z-index: 9999;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        background: #2c3561;
+        text-align: center;
+        /* loader页面消失采用渐隐的方式*/
+        -webkit-transition: opacity 1s ease;
+        -moz-transition: opacity 1s ease;
+        -o-transition: opacity 1s ease;
+        transition: opacity 1s ease;
+    }
+    .loading-image{
+        width: 120px;
+        height: 50px;
+        transform: translate(-50%);
+    }
+
+    .loading-image div:nth-child(2) {
+        -webkit-animation: pacman-balls 1s linear 0s infinite;
+        animation: pacman-balls 1s linear 0s infinite
+    }
+
+    .loading-image div:nth-child(3) {
+        -webkit-animation: pacman-balls 1s linear .33s infinite;
+        animation: pacman-balls 1s linear .33s infinite
+    }
+
+    .loading-image div:nth-child(4) {
+        -webkit-animation: pacman-balls 1s linear .66s infinite;
+        animation: pacman-balls 1s linear .66s infinite
+    }
+
+    .loading-image div:nth-child(5) {
+        -webkit-animation: pacman-balls 1s linear .99s infinite;
+        animation: pacman-balls 1s linear .99s infinite
+    }
+
+    .loading-image div:first-of-type {
+        width: 0;
+        height: 0;
+        border: 25px solid #49b1f5;
+        border-right-color: transparent;
+        border-radius: 25px;
+        -webkit-animation: rotate_pacman_half_up .5s 0s infinite;
+        animation: rotate_pacman_half_up .5s 0s infinite;
+    }
+    .loading-image div:nth-child(2) {
+        width: 0;
+        height: 0;
+        border: 25px solid #49b1f5;
+        border-right-color: transparent;
+        border-radius: 25px;
+        -webkit-animation: rotate_pacman_half_down .5s 0s infinite;
+        animation: rotate_pacman_half_down .5s 0s infinite;
+        margin-top: -50px;
+    }
+    @-webkit-keyframes rotate_pacman_half_up {0% {transform: rotate(270deg)}50% {transform: rotate(1turn)}to {transform: rotate(270deg)}}
+
+    @keyframes rotate_pacman_half_up {0% {transform: rotate(270deg)}50% {transform: rotate(1turn)}to {transform: rotate(270deg)}}
+
+    @-webkit-keyframes rotate_pacman_half_down {0% {transform: rotate(90deg)}50% {transform: rotate(0deg)}to {transform: rotate(90deg)}}
+
+    @keyframes rotate_pacman_half_down {0% {transform: rotate(90deg)}50% {transform: rotate(0deg)}to {transform: rotate(90deg)}}
+
+    @-webkit-keyframes pacman-balls {75% {opacity: .7}to {transform: translate(-100px, -6.25px)}}
+
+    @keyframes pacman-balls {75% {opacity: .7}to {transform: translate(-100px, -6.25px)}}
+
+
+    .loading-image div:nth-child(3),
+    .loading-image div:nth-child(4),
+    .loading-image div:nth-child(5),
+    .loading-image div:nth-child(6){
+        background-color: #49b1f5;
+        width: 15px;
+        height: 15px;
+        border-radius: 100%;
+        margin: 2px;
+        width: 10px;
+        height: 10px;
+        position: absolute;
+        transform: translateY(-6.25px);
+        top: 25px;
+        left: 100px;
+    }
+    .loading-text{
+        margin-bottom: 20vh;
+        text-align: center;
+        color: #f8c471;
+        font-size: 2rem;
+        box-sizing: border-box;
+        padding: 0 10px;
+        text-shadow: 0 2px 10px rgba(0,0,0,0.2);
+    }
+    @media only screen and (max-width: 500px) {
+        .loading-text{
+            font-size: 1.5rem;
+        }
+    }
+    .fadeout {
+        opacity: 0;
+        filter: alpha(opacity=0);
+    }
+    /* logo出现动画 */
+    @-webkit-keyframes fadeInDown{0%{opacity:0;-webkit-transform:translate3d(0,-100%,0);transform:translate3d(0,-100%,0)}100%{opacity:1;-webkit-transform:none;transform:none}}
+    @keyframes fadeInDown{0%{opacity:0;-webkit-transform:translate3d(0,-100%,0);}}
+</style>
+<script>
+    (function () {
+        const loaded = function(){
+            setTimeout(function(){
+                const loader = document.getElementById("loading-container");
+                loader.className="fadeout" ;//使用渐隐的方法淡出loading page
+                // document.getElementById("body-wrap").style.display="flex";
+                setTimeout(function(){
+                    loader.style.display="none";
+                },2500);
+            },800);//强制显示loading page 0.8s
+        };
+        loaded();
+    })()
+</script>
+
+<body>
+    <!--动态背景-->
+    <div id="bg"><canvas></canvas><canvas></canvas><canvas></canvas></div>
+    <script src="/js/canva_moving_effect.js"></script>
+
+    
+        <div id="loading-container">
+            <p class="loading-text">客官坐会儿，请稍等片刻. . . </p>
+            <div class="loading-image">
+                <div></div>
+                <div></div>
+                <div></div>
+                <div></div>
+                <div></div>
+            </div>
+        </div>
+    
+
+    <header class="navbar-fixed">
+    <nav id="headNav" class="bg-color nav-transparent">
+        <div id="navContainer" class="nav-wrapper">
+            <div class="brand-logo">
+                <a href="/" class="waves-effect waves-light">
+                    <div>&nbsp;
+                        
+                            <img src="/medias/logo2.png" class="logo-img" alt="LOGO">
+                        
+                        <span class="logo-span">西伯</span>
+                    </div>
+                </a>
+            </div>
+            
+
+<a href="#" data-target="mobile-nav" class="sidenav-trigger button-collapse"><i class="fas fa-bars"></i></a>
+<ul class="right nav-menu">
+  
+  <li class="hide-on-med-and-down nav-item">
+    
+    <a href="/" class="waves-effect waves-light">
+      
+      <i class="fas fa-home" style="zoom: 0.6;"></i>
+      
+      <span>Index</span>
+    </a>
+    
+  </li>
+  
+  <li class="hide-on-med-and-down nav-item">
+    
+    <a href="/tags" class="waves-effect waves-light">
+      
+      <i class="fas fa-tags" style="zoom: 0.6;"></i>
+      
+      <span>Tags</span>
+    </a>
+    
+  </li>
+  
+  <li class="hide-on-med-and-down nav-item">
+    
+    <a href="/categories" class="waves-effect waves-light">
+      
+      <i class="fas fa-bookmark" style="zoom: 0.6;"></i>
+      
+      <span>Categories</span>
+    </a>
+    
+  </li>
+  
+  <li class="hide-on-med-and-down nav-item">
+    
+    <a href="/archives" class="waves-effect waves-light">
+      
+      <i class="fas fa-archive" style="zoom: 0.6;"></i>
+      
+      <span>Archives</span>
+    </a>
+    
+  </li>
+  
+  <li class="hide-on-med-and-down nav-item">
+    
+    <a href="/about" class="waves-effect waves-light">
+      
+      <i class="fas fa-user-circle" style="zoom: 0.6;"></i>
+      
+      <span>About</span>
+    </a>
+    
+  </li>
+  
+  <li class="hide-on-med-and-down nav-item">
+    
+    <a href="/contact" class="waves-effect waves-light">
+      
+      <i class="fas fa-comments" style="zoom: 0.6;"></i>
+      
+      <span>Contact</span>
+    </a>
+    
+  </li>
+  
+  <li class="hide-on-med-and-down nav-item">
+    
+    <a href="/friends" class="waves-effect waves-light">
+      
+      <i class="fas fa-address-book" style="zoom: 0.6;"></i>
+      
+      <span>Friends</span>
+    </a>
+    
+  </li>
+  
+  <li>
+    <a href="#searchModal" class="modal-trigger waves-effect waves-light">
+      <i id="searchIcon" class="fas fa-search" title="Search" style="zoom: 0.95;"></i>
+    </a>
+  </li>
+
+  <!-- 全屏 -->
+<!--   <li id="fullscreen_li" class="fullscreen"> -->
+<!--     <a href="javascript:void(0);" class="modal-trigger waves-effect waves-light"> -->
+<!--       <i id="fullscreen" class="fas fa-expand-arrows-alt" title="全屏" style="zoom: 0.85;"></i> -->
+<!--     </a> -->
+<!--   </li> -->
+
+  <!-- 主题背景 -->
+  <li>
+    <a href="javascript:;" class="modal-trigger waves-effect waves-light" onclick="switchNightMode()" title="深色/浅色模式" >
+      <i id="sum-moon-icon" class="fas fa-sun" style="zoom: 0.85;"></i>
+    </a>
+  </li>
+  &nbsp;
+</ul>
+
+
+<div id="mobile-nav" class="side-nav sidenav">
+
+    <div class="mobile-head bg-color">
+        
+        <img src="/medias/logo2.png" class="logo-img circle responsive-img">
+        
+        <div class="logo-name">西伯</div>
+        <div class="logo-desc">
+            
+            Never give up and never give in...
+            
+        </div>
+    </div>
+
+    <ul class="menu-list mobile-menu-list">
+        
+        <li class="m-nav-item">
+	  
+		<a href="/" class="waves-effect waves-light">
+			
+			    <i class="fa-fw fas fa-home"></i>
+			
+			Index
+		</a>
+          
+        </li>
+        
+        <li class="m-nav-item">
+	  
+		<a href="/tags" class="waves-effect waves-light">
+			
+			    <i class="fa-fw fas fa-tags"></i>
+			
+			Tags
+		</a>
+          
+        </li>
+        
+        <li class="m-nav-item">
+	  
+		<a href="/categories" class="waves-effect waves-light">
+			
+			    <i class="fa-fw fas fa-bookmark"></i>
+			
+			Categories
+		</a>
+          
+        </li>
+        
+        <li class="m-nav-item">
+	  
+		<a href="/archives" class="waves-effect waves-light">
+			
+			    <i class="fa-fw fas fa-archive"></i>
+			
+			Archives
+		</a>
+          
+        </li>
+        
+        <li class="m-nav-item">
+	  
+		<a href="/about" class="waves-effect waves-light">
+			
+			    <i class="fa-fw fas fa-user-circle"></i>
+			
+			About
+		</a>
+          
+        </li>
+        
+        <li class="m-nav-item">
+	  
+		<a href="/contact" class="waves-effect waves-light">
+			
+			    <i class="fa-fw fas fa-comments"></i>
+			
+			Contact
+		</a>
+          
+        </li>
+        
+        <li class="m-nav-item">
+	  
+		<a href="/friends" class="waves-effect waves-light">
+			
+			    <i class="fa-fw fas fa-address-book"></i>
+			
+			Friends
+		</a>
+          
+        </li>
+        
+        
+    </ul>
+</div>
+
+
+        </div>
+
+        
+    </nav>
+
+</header>
+
+    
+
+
+
+<div class="bg-cover pd-header post-cover" style="background-image: url('/medias/featureimages/0.jpg')">
+    <div class="container" style="right: 0px;left: 0px;">
+        <div class="row">
+            <div class="col s12 m12 l12">
+                <div class="brand">
+                    <h1 class="description center-align post-title">第二章 高级网络功能</h1>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+<main class="post-container content">
+
+    
+    <div class="row">
+    <div id="main-content" class="col s12 m12 l9">
+        <!-- 文章内容详情 -->
+<div id="artDetail">
+    <div class="card">
+        <div class="card-content article-info">
+            <div class="row tag-cate">
+                <div class="col s7">
+                    
+                    <div class="article-tag">
+                        
+                            <a href="/tags/Docker-%E8%BF%9B%E9%98%B6/">
+                                <span class="chip bg-color">Docker 进阶</span>
+                            </a>
+                        
+                    </div>
+                    
+                </div>
+                <div class="col s5 right-align">
+                    
+                    <div class="post-cate">
+                        <i class="fas fa-bookmark fa-fw icon-category"></i>
+                        
+                            <a href="/categories/Docker-%E8%BF%9B%E9%98%B6/" class="post-category">
+                                Docker 进阶
+                            </a>
+                        
+                    </div>
+                    
+                </div>
+            </div>
+
+            <div class="post-info">
+                
+                <div class="post-date info-break-policy">
+                    <i class="far fa-calendar-minus fa-fw"></i>Publish Date:&nbsp;&nbsp;
+                    2025-04-19
+                </div>
+                
+
+                
+
+                
+                <div class="info-break-policy">
+                    <i class="far fa-file-word fa-fw"></i>Word Count:&nbsp;&nbsp;
+                    6k
+                </div>
+                
+
+                
+                <div class="info-break-policy">
+                    <i class="far fa-clock fa-fw"></i>Read Times:&nbsp;&nbsp;
+                    25 Min
+                </div>
+                
+
+                
+                    <div id="busuanzi_container_page_pv" class="info-break-policy">
+                        <i class="far fa-eye fa-fw"></i>Read Count:&nbsp;&nbsp;
+                        <span id="busuanzi_value_page_pv"></span>
+                    </div>
+				
+            </div>
+        </div>
+        <hr class="clearfix">
+
+        
+        <!-- 是否加载使用自带的 prismjs. -->
+        <link rel="stylesheet" href="/libs/prism/prism.min.css">
+        
+
+        
+        <!-- 代码块折行 -->
+        <style type="text/css">
+            code[class*="language-"], pre[class*="language-"] { white-space: pre-wrap !important; }
+        </style>
+        
+
+        <div class="card-content article-card-content">
+            <div id="articleContent">
+                <h1 id="第二章-高级网络功能"><a href="#第二章-高级网络功能" class="headerlink" title="第二章 高级网络功能"></a>第二章 高级网络功能</h1><h2 id="1、网络启动与配置参数"><a href="#1、网络启动与配置参数" class="headerlink" title="1、网络启动与配置参数"></a>1、网络启动与配置参数</h2><h3 id="网络启动"><a href="#网络启动" class="headerlink" title="网络启动"></a>网络启动</h3><p>Docker 启动时会在主机上自动创建一个 docker0 虚拟网桥，实际上是一个 Linux 网桥，可以理解为一个软件交换机，它会在挂载其上的接口之间进行转发。</p>
+<p><img src="/medias/loading.gif" data-original="https://raw.githubusercontent.com/luyaguo/pictures-guo/main/docker/202504191217126.png" alt="image-20230603170944949"></p>
+<p><strong>同时，Docker 随机分配一个本地未占用的私有网段（在RFC1918中定义）中的一个地址给<code>docker0</code> 接口</strong>。比如典型的 172.17.42.1，掩码为 255.255.0.0。此后启动的容器内的网口也会自动分配一个同一网段（172.17.0.0&#x2F;16）的地址。</p>
+<p><strong>当创建一个 Docker 容器的时候，同时会创建了一对 <code>veth pair</code> 接口（当数据包发送到一个接口时，另外一个接口也可以收到相同的数据包）。这对接口一端在容器内，即 <code>eth0</code>；另一端在本地并被挂载到 docker0 网桥，名称以 <code>veth</code> 开头（例如 vethAQI2QT）</strong>。</p>
+<p>通过这种方式，主机可以跟容器通信，容器之间也可以相互通信。如此一来，Docker 就创建了在主机和所有容器之间一个虚拟共享网络。</p>
+<h3 id="配置参数"><a href="#配置参数" class="headerlink" title="配置参数"></a>配置参数</h3><p>跟 Docker 网络相关的命令参数：</p>
+<ul>
+<li>-b BRIDGE or –bridge&#x3D;BRIDGE——指定容器挂载的网桥；</li>
+<li>–bip&#x3D;CIDR——定制 docker0 的掩码；</li>
+<li>-H SOCKET… or –host&#x3D;SOCKET…——Docker 服务端接收命令的通道；</li>
+<li>–icc&#x3D;true|false——是否支持容器之间进行通信；</li>
+<li>–ip-forward&#x3D;true|false——启用 net.ipv4.ip_forward，即打开转发功能；</li>
+<li>–iptables&#x3D;true|false——禁止 Docker 添加 iptables 规则；</li>
+<li>–mtu&#x3D;BYTES——容器网络中的 MTU。</li>
+</ul>
+<p>下面 2 个命令选项既可以在启动服务时指定，也可以 Docker 容器启动（docker run）时候指定。在 Docker 服务启动的时候指定则会成为默认值，后续执行 docker run 时可以覆盖设置的默认值。</p>
+<ul>
+<li>–dns&#x3D;IP_ADDRESS…——使用指定的 DNS 服务器；</li>
+<li>–dns-search&#x3D;DOMAIN…——指定 DNS 搜索域。</li>
+</ul>
+<p>最后这些选项只能在 docker run 执行时使用，因为它是针对容器的特性内容：</p>
+<ul>
+<li>-h HOSTNAME or –hostname&#x3D;HOSTNAME——配置容器主机名；</li>
+<li>–link&#x3D;CONTAINER_NAME：ALIAS——添加到另一个容器的连接；</li>
+<li>–net&#x3D;bridge|none|container：NAME_or_ID|host|user_defined_network——配置容器的桥接模式；</li>
+<li>-p SPEC or –publish&#x3D;SPEC——映射容器端口到宿主主机；</li>
+<li>-P or –publish-all&#x3D;true|false——映射容器所有端口到宿主主机。</li>
+</ul>
+<p>其中，–net 选项支持五种模式，如下所示：</p>
+<ul>
+<li>–net&#x3D;bridge——默认配置。为容器创建独立的网络命名空间，分配网卡、IP 地址等网络配置，并通过 veth 接口对将容器挂载到一个虚拟网桥（默认为 docker0）上；</li>
+<li>–net&#x3D;none——为容器创建独立的网络命名空间，但不进行网络配置，即容器内没有创建网卡、IP 地址等；</li>
+<li>–net&#x3D;container：NAME_or_ID——意味着新创建的容器共享指定的已存在容器的网络命名空间，两个容器内的网络配置共享，但其他资源（进程空间、文件系统等）还是相互隔离的；</li>
+<li>–net&#x3D;host——意味着不为容器创建独立的网络命名空间，容器内看到的网络配置（网卡信息、路由表、Iptables规则等）均与主机上保持一致。注意其他资源还是与主机隔离的；</li>
+<li>–net&#x3D;user_defined_network——用户自行用 network 相关命令创建一个网络，同一个网络内的容器彼此可见，可以采用更多类型的网络插件。</li>
+</ul>
+<h2 id="2、配置容器-DNS-和主机名"><a href="#2、配置容器-DNS-和主机名" class="headerlink" title="2、配置容器 DNS 和主机名"></a>2、配置容器 DNS 和主机名</h2><p>Docker 支持自定义容器的主机名和 DNS 配置。</p>
+<h3 id="相关配置文件"><a href="#相关配置文件" class="headerlink" title="相关配置文件"></a>相关配置文件</h3><p>实际上，容器中主机名和 DNS 配置信息都是通过三个系统配置文件来维护的：<code>/etc/resolv.conf</code>、<code>/etc/hostname</code> 和 <code>/etc/hosts</code>。</p>
+<p>启动一个容器，在容器中使用 <code>mount</code> 命令可以看到这三个文件挂载信息：</p>
+<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash">$ <span class="token function">docker</span> run <span class="token parameter variable">-it</span> ubuntu
+root@75dbd6685305:/<span class="token comment"># mount</span>
+<span class="token punctuation">..</span>.
+/dev/mapper/ubuntu--vg-root on /etc/resolv.conf <span class="token builtin class-name">type</span> ext4 <span class="token punctuation">(</span>rw,relatime,errors<span class="token operator">=</span>remount-ro,data<span class="token operator">=</span>ordered<span class="token punctuation">)</span>
+/dev/mapper/ubuntu--vg-root on /etc/hostname <span class="token builtin class-name">type</span> ext4 <span class="token punctuation">(</span>rw,relatime,errors<span class="token operator">=</span>remount-ro,data<span class="token operator">=</span>ordered<span class="token punctuation">)</span>
+/dev/mapper/ubuntu--vg-root on /etc/hosts <span class="token builtin class-name">type</span> ext4 <span class="token punctuation">(</span>rw,relatime,errors<span class="token operator">=</span>remount-ro,data<span class="token operator">=</span>ordered<span class="token punctuation">)</span>
+<span class="token punctuation">..</span>.<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<p>其中，<code>/etc/resolv.conf</code> 文件在创建容器时候，默认会与宿主机&#x2F;etc&#x2F;resolv.conf文件内容保持一致：</p>
+<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash">root@75dbd6685305:/$ <span class="token function">cat</span> /etc/resolv.conf
+<span class="token comment"># Dynamic resolv.conf(5) file for glibc resolver(3) generated by resolvconf(8)</span>
+<span class="token comment"># DO NOT EDIT THIS FILE BY HAND -- YOUR CHANGES WILL BE OVERWRITTEN</span>
+nameserver <span class="token number">8.8</span>.8.8
+search my-docker-cloud.com<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<p><code>/etc/hosts</code> 文件中默认只记录了容器自身的一些地址和名称：</p>
+<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash">root@75dbd6685305:/$ <span class="token function">cat</span> /etc/hosts
+<span class="token number">172.17</span>.0.2 75dbd6685305
+::1    		 localhost ip6-localhost ip6-loopback
+fe00::0    ip6-localnet
+ff00::0    ip6-mcastprefix
+ff02::1    ip6-allnodes
+ff02::2    ip6-allrouters
+<span class="token number">127.0</span>.0.1  localhost<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<p><code>/etc/hostname</code> 文件则记录了容器的主机名。</p>
+<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash">root@75dbd6685305:/$ <span class="token function">cat</span> /etc/hostname
+75dbd6685305<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre>
+
+<h3 id="容器内修改配置文件"><a href="#容器内修改配置文件" class="headerlink" title="容器内修改配置文件"></a>容器内修改配置文件</h3><p>Docker 1.2.0 开始支持在运行中的容器里直接编辑 &#x2F;etc&#x2F;hosts，&#x2F;etc&#x2F;hostname和  &#x2F;etc&#x2F;resolve.conf 文件。</p>
+<p><strong>但是这些修改是临时的，只在运行的容器中保留，容器终止或重启后并不会被保存下来。也不会被 docker commit 提交</strong>。</p>
+<h3 id="通过参数指定"><a href="#通过参数指定" class="headerlink" title="通过参数指定"></a>通过参数指定</h3><p>如果用户想要自定义容器的配置，可以在创建或启动容器时利用下面的参数指定：</p>
+<p>1）指定主机名 <code>-h HOSTNAME</code> 或者 <code>--hostname=HOSTNAME</code>。设定容器的主机名，它会被写到容器内的 &#x2F;etc&#x2F;hostname 和 &#x2F;etc&#x2F;hosts。但这个主机名只有容器内能看到，在容器外部则看不到，既不会在 docker ps 中显示，也不会在其他的容器的 &#x2F;etc&#x2F;hosts 看到。</p>
+<p>2）记录其他容器主机名 <code>--link=CONTAINER_NAME</code>：ALIAS。选项会在创建容器的时候，添加一个所连接容器的主机名到容器内 <code>/etc/hosts</code> 文件中。这样，新创建容器可以直接使用主机名来与所连接容器通信。</p>
+<p>3）指定 DNS 服务器 <code>--dns=IP_ADDRESS</code>。添加 DNS 服务器到容器的 <code>/etc/resolv.conf </code>中，容器会用指定的服务器来解析所有不在 &#x2F;etc&#x2F;hosts 中的主机名。</p>
+<p>4）指定 DNS 搜索域 <code>--dns-search=DOMAIN</code>。设定容器的搜索域，当设定搜索域为 .example.com 时，在搜索一个名为 host 的主机时，DNS 不仅搜索 host，还会搜索 host.example.com。</p>
+<h2 id="3、容器访问控制"><a href="#3、容器访问控制" class="headerlink" title="3、容器访问控制"></a>3、容器访问控制</h2><p>容器的访问控制主要通过 Linux 上的 <code>iptables</code> 防火墙软件来进行管理和实现。iptables 是 Linux 系统流行的防火墙软件，在大部分发行版中都自带。</p>
+<h3 id="容器访问外部网络"><a href="#容器访问外部网络" class="headerlink" title="容器访问外部网络"></a>容器访问外部网络</h3><p>我们知道容器默认指定了网关为 docker0 网桥上的 docker0 内部接口。docker0 内部接口同时也是宿主机的一个本地接口。<strong>因此，容器默认情况下是可以访问到宿主机本地的。</strong></p>
+<p>容器要想通过宿主机访问到外部网络，需要宿主机进行转发。在宿主机 Linux 系统中，检查转发是否打开：</p>
+<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash">$ <span class="token function">sudo</span> <span class="token function">sysctl</span> net.ipv4.ip_forward<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+
+<p>如果为 0，说明没有开启转发，则需要手动打开：</p>
+<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash">$ <span class="token function">sudo</span> <span class="token function">sysctl</span> <span class="token parameter variable">-w</span> <span class="token assign-left variable">net.ipv4.ip_forward</span><span class="token operator">=</span><span class="token number">1</span><span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+
+<p>更简单的，在启动 Docker 服务的时候设定 <code>--ip-forward=true</code>，Docker 服务会自动打开宿主机系统的转发服务。</p>
+<h3 id="容器之间的访问"><a href="#容器之间的访问" class="headerlink" title="容器之间的访问"></a>容器之间的访问</h3><p>容器之间相互访问，需要两方面的支持：</p>
+<ul>
+<li><strong>网络拓扑是否已经连通</strong>。默认情况下，所有容器都会连接到 docker0 网桥上，这意味着默认情况下拓扑是互通的；</li>
+<li><strong>本地系统的防火墙软件 iptables 是否允许访问通过</strong>。这取决于防火墙的默认规则是允许（大部分情况）还是禁止。</li>
+</ul>
+<h4 id="访问所有端口"><a href="#访问所有端口" class="headerlink" title="访问所有端口"></a>访问所有端口</h4><p>当启动 Docker 服务时候，默认会添加一条“允许”转发策略到 iptables 的 FORWARD 链上。通过配置 <code>--icc=true|false</code>（默认值为true）参数可以控制默认的策略。</p>
+<p>为了安全考虑，可以在 Docker 配置文件中配置 <code>DOCKER_OPTS=--icc=false</code> 来默认禁止容器之间的相互访问。</p>
+<blockquote>
+<p>同时，如果启动 Docker 服务时手动指定 –iptables&#x3D;false 参数则不会修改宿主机系统上的 iptables 规则。</p>
+</blockquote>
+<h4 id="访问指定端口"><a href="#访问指定端口" class="headerlink" title="访问指定端口"></a>访问指定端口</h4><p>在通过 <code>-icc=false</code> 禁止容器间相互访问后，仍可以通过</p>
+<p> <code>--link=CONTAINER_NAME:ALIAS</code>  选项来允许访问指定容器的开放端口。</p>
+<p>例如，在启动 Docker 服务时，可以同时使用 <code>icc=false--iptables=true</code> 参数来配置容器间禁止访问，并允许 Docker 自动修改系统中的 iptables 规则。</p>
+<p>此时，系统中的 iptables 规则可能是类似如下规则，禁止所有转发流量：</p>
+<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash">$ <span class="token function">sudo</span> iptables <span class="token parameter variable">-nL</span>
+<span class="token punctuation">..</span>.
+Chain FORWARD <span class="token punctuation">(</span>policy ACCEPT<span class="token punctuation">)</span>
+target     prot opt <span class="token builtin class-name">source</span>               destination
+DROP       all  --  <span class="token number">0.0</span>.0.0/0            <span class="token number">0.0</span>.0.0/0
+<span class="token punctuation">..</span>.<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<p>启动容器（docker run）时使用 –link&#x3D;CONTAINER_NAME:ALIAS 选项。Docker 会在 iptable 中为两个互联容器分别添加一条 <code>ACCEPT </code>规则，允许相互访问开放的端口（取决于 Dockerfile 中的 EXPOSE 行）。</p>
+<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash">$ <span class="token function">sudo</span> iptables <span class="token parameter variable">-nL</span>
+<span class="token punctuation">..</span>.
+Chain FORWARD <span class="token punctuation">(</span>policy ACCEPT<span class="token punctuation">)</span>
+target     prot opt <span class="token builtin class-name">source</span>               destination
+ACCEPT     tcp  --  <span class="token number">172.17</span>.0.2           <span class="token number">172.17</span>.0.3           tcp spt:80
+ACCEPT     tcp  --  <span class="token number">172.17</span>.0.3           <span class="token number">172.17</span>.0.2           tcp dpt:80
+DROP       all  --  <span class="token number">0.0</span>.0.0/0            <span class="token number">0.0</span>.0.0/0<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<blockquote>
+<p><strong>–link&#x3D;CONTAINER_NAME:ALIAS 中的 CONTAINER_NAME 目前必须是 Docker 自动分配的容器名，或使用 –name 参数指定的名字。不能为容器 -h 参数配置的主机名。</strong></p>
+</blockquote>
+<h2 id="4、映射容器端口到宿主主机"><a href="#4、映射容器端口到宿主主机" class="headerlink" title="4、映射容器端口到宿主主机"></a>4、映射容器端口到宿主主机</h2><p>默认情况下，容器可以主动访问到外部网络的连接，但是外部网络无法访问到容器。</p>
+<h3 id="容器访问外部实现"><a href="#容器访问外部实现" class="headerlink" title="容器访问外部实现"></a>容器访问外部实现</h3><p>假设容器内部的网络地址为 172.17.0.2，本地网络地址为 10.0.2.2。容器要能访问外部网络，源地址不能为 172.17.0.2，需要进行 <strong>源地址映射</strong>（Source NAT，SNAT），修改为本地系统的IP地址 10.0.2.2。</p>
+<blockquote>
+<p>映射是通过 iptables 的源地址伪装操作实现的。</p>
+</blockquote>
+<p>查看主机 nat 表上 POSTROUTING 链的规则。该链负责网包要离开主机前，改写其源地址。</p>
+<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash">$ <span class="token function">sudo</span> iptables <span class="token parameter variable">-t</span> nat <span class="token parameter variable">-nvL</span> POSTROUTING
+Chain POSTROUTING <span class="token punctuation">(</span>policy ACCEPT <span class="token number">12</span> packets, <span class="token number">738</span> bytes<span class="token punctuation">)</span>
+pkts bytes target     prot opt <span class="token keyword">in</span>     out     <span class="token builtin class-name">source</span>               destination
+<span class="token punctuation">..</span>.
+<span class="token number">0</span>     <span class="token number">0</span> MASQUERADE  all  --  *      <span class="token operator">!</span>docker0  <span class="token number">172.17</span>.0.0/16        <span class="token number">0.0</span>.0.0/0
+<span class="token punctuation">..</span>.<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<p>上述规则将所有源地址在 172.17.0.0&#x2F;16 网段，且不是从 docker0 接口发出的流量（即从容器中出来的流量），动态伪装为从系统网卡发出。MASQUERADE 行动跟传统 SNAT 行动相比，好处是它能从网卡动态获取地址。</p>
+<h3 id="外部访问容器实现"><a href="#外部访问容器实现" class="headerlink" title="外部访问容器实现"></a>外部访问容器实现</h3><p>容器允许外部访问，可以在 docker run 时候通过 -p 或 -P 参数来启用。<strong>不管用那种办法，其实也是在本地的 iptable 的 nat 表中添加相应的规则，将访问外部 IP 地址的网包进行目标地址 DNAT，将目标地址修改为容器的 IP 地址。</strong></p>
+<p>以一个开放 80 端口的 Web 容器为例，使用 -P 时，会自动映射本地 49000~49900 范文内的端口随机端口到容器的 80 端口：</p>
+<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash">$ iptables <span class="token parameter variable">-t</span> nat <span class="token parameter variable">-nvL</span>
+<span class="token punctuation">..</span>.
+Chain PREROUTING <span class="token punctuation">(</span>policy ACCEPT <span class="token number">236</span> packets, <span class="token number">33317</span> bytes<span class="token punctuation">)</span>
+pkts bytes target     prot opt <span class="token keyword">in</span>     out     <span class="token builtin class-name">source</span>          destination
+<span class="token number">567</span> <span class="token number">30236</span> DOCKER     all  --  *      *       <span class="token number">0.0</span>.0.0/0       <span class="token number">0.0</span>.0.0/0  ADDRTYPE match dst-type LOCAL
+
+Chain DOCKER <span class="token punctuation">(</span><span class="token number">2</span> references<span class="token punctuation">)</span>
+pkts bytes target     prot opt <span class="token keyword">in</span>     out     <span class="token builtin class-name">source</span>          destination
+<span class="token number">0</span>     <span class="token number">0</span> DNAT       tcp  --  <span class="token operator">!</span>docker0 *       <span class="token number">0.0</span>.0.0/0     <span class="token number">0.0</span>.0.0/0     tcp dpt:49153 to:172.17.0.2:80
+<span class="token punctuation">..</span>.<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<blockquote>
+<p>“dpt” 是 “destination port” 的缩写，表示目标端口。</p>
+</blockquote>
+<p>可以看到，<code>nat</code> 表中涉及两条链：</p>
+<ol>
+<li><code>PREROUTING 链</code>负责包到达网络接口时，改写其目的地址。其中规则将所有流量都扔到 DOCKER 链。</li>
+<li>而 <code>DOCKER 链</code>中将所有不是从 docker0 进来的网包（意味着不是本地主机产生），将目标端口为 49153 的，修改目标地址为 172.17.0.2:80。</li>
+</ol>
+<p>使用 -p 80:80 时，与上面类似，只是本地端口也为 80：</p>
+<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash">$ iptables <span class="token parameter variable">-t</span> nat <span class="token parameter variable">-nvL</span>
+<span class="token punctuation">..</span>.
+Chain PREROUTING <span class="token punctuation">(</span>policy ACCEPT <span class="token number">236</span> packets, <span class="token number">33317</span> bytes<span class="token punctuation">)</span>
+pkts bytes target     prot opt <span class="token keyword">in</span>     out     <span class="token builtin class-name">source</span>          destination
+<span class="token number">567</span> <span class="token number">30236</span> DOCKER     all  --  *      *       <span class="token number">0.0</span>.0.0/0       <span class="token number">0.0</span>.0.0/0 ADDRTYPE match dst-type LOCAL
+
+Chain DOCKER <span class="token punctuation">(</span><span class="token number">2</span> references<span class="token punctuation">)</span>
+pkts bytes target     prot opt <span class="token keyword">in</span>     out     <span class="token builtin class-name">source</span>          destination
+<span class="token number">0</span>     <span class="token number">0</span> DNAT       tcp  --  <span class="token operator">!</span>docker0 *       <span class="token number">0.0</span>.0.0/0     <span class="token number">0.0</span>.0.0/0 
+tcp dpt:80 to:172.17.0.2:80.<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<p>有两点需要注意：</p>
+<ol>
+<li>这里的规则映射了 0.0.0.0，意味着将接受主机来自所有网络接口上的流量。用户可以通过 <code>-p IP:host_port:container_port</code> 或 <code>-p IP::port</code> 来指定绑定的外部网络接口，以制定更严格的访问规则；</li>
+<li>如果希望映射永久绑定到某个固定的 IP 地址，可以在 Docker 配置文件 <code>/etc/default/docker</code> 中指定 <code>DOCKER_OPTS=&quot;--ip=IP_ADDRESS&quot;</code>，之后重启 Docker 服务即可生效。</li>
+</ol>
+<h2 id="5、配置-docker0-网桥"><a href="#5、配置-docker0-网桥" class="headerlink" title="5、配置 docker0 网桥"></a>5、配置 docker0 网桥</h2><p>Docker 服务默认会创建一个名称为 docker0 的 Linux 网桥（其上有一个 docker0 内部接口），它在内核层连通了其他的物理或虚拟网卡，这就将所有容器和本地主机都放到同一个物理网络。</p>
+<p>用户使用 Docker 创建多个自定义网络时可能会出现多个容器网桥。</p>
+<p><strong>Docker 默认指定了 docker0 接口的 IP 地址和子网掩码，让主机和容器之间可以通过网桥相互通信，它还给出了MTU（接口允许接收的最大传输单元），通常是 1500 字节，或宿主主机网络路由上支持的默认值</strong>。这些值都可以在服务启动的时候进行配置：</p>
+<ul>
+<li>–bip&#x3D;CIDR——IP 地址加掩码格式，例如 192.168.1.5&#x2F;24；</li>
+<li>–mtu&#x3D;BYTES——覆盖默认的 Docker mtu 配置。</li>
+</ul>
+<p>每次创建一个新容器的时候，Docker 从可用的地址段中选择一个空闲的IP地址分配给容器的 <code>eth0</code> 端口。并且使用本地主机上 docker0 接口的 IP 作为容器的默认网关：</p>
+<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash">$ <span class="token function">docker</span> run <span class="token parameter variable">-i</span> <span class="token parameter variable">-t</span> <span class="token parameter variable">--rm</span> base /bin/bash
+$ <span class="token function">ip</span> addr show eth0
+<span class="token number">24</span>: eth0: <span class="token operator">&lt;</span>BROADCAST,UP,LOWER_UP<span class="token operator">></span> mtu <span class="token number">1500</span> qdisc pfifo_fast state UP group 
+    default qlen <span class="token number">1000</span>
+    link/ether <span class="token number">32</span>:6f:e0:35:57:91 brd ff:ff:ff:ff:ff:ff
+    inet <span class="token number">172.17</span>.0.3/16 scope global eth0
+        valid_lft forever preferred_lft forever
+    inet6 fe80::306f:e0ff:fe35:5791/64 scope <span class="token function">link</span>
+        valid_lft forever preferred_lft forever
+$ <span class="token function">ip</span> route
+default via <span class="token number">172.17</span>.42.1 dev eth0
+<span class="token number">172.17</span>.0.0/16 dev eth0  proto kernel  scope <span class="token function">link</span>  src <span class="token number">172.17</span>.0.3
+$ <span class="token builtin class-name">exit</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<blockquote>
+<p>目前，Docker 不支持在启动容器时候指定 IP 地址。</p>
+</blockquote>
+<h2 id="6、自定义网桥"><a href="#6、自定义网桥" class="headerlink" title="6、自定义网桥"></a>6、自定义网桥</h2><p>除了默认的 docker0 网桥，用户也可以指定网桥来连接各个容器。在启动 Docker 服务的时候，使用 -b BRIDGE 或 –bridge&#x3D;BRIDGE 来指定使用的网桥。</p>
+<p>如果服务已经运行，那需要先停止服务，并删除旧的网桥：</p>
+<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash">$ <span class="token function">sudo</span> <span class="token function">service</span> <span class="token function">docker</span> stop
+$ <span class="token function">sudo</span> <span class="token function">ip</span> <span class="token function">link</span> <span class="token builtin class-name">set</span> dev docker0 down
+$ <span class="token function">sudo</span> brctl delbr docker0<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span></span></code></pre>
+
+<p>然后创建一个网桥 bridge0：</p>
+<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash">$ <span class="token function">sudo</span> brctl addbr bridge0
+$ <span class="token function">sudo</span> <span class="token function">ip</span> addr <span class="token function">add</span> <span class="token number">192.168</span>.5.1/24 dev bridge0
+$ <span class="token function">sudo</span> <span class="token function">ip</span> <span class="token function">link</span> <span class="token builtin class-name">set</span> dev bridge0 up<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span></span></code></pre>
+
+<blockquote>
+<p>“brctl” 是 Linux 操作系统中的一个命令行工具，用于管理 Linux 内核中的网桥（bridge）。<strong>网桥是一种网络设备，可以将多个网络接口（如以太网接口）连接在一起形成一个虚拟的网络交换机，从而实现不同网络接口之间的数据交换和转发。</strong></p>
+<p>“brctl” 命令可以用于创建、删除、配置和显示 Linux 内核中的网桥，以及将网络接口添加到或从网桥中删除。它还可以用于显示当前系统中存在的网桥和其配置信息，例如网桥的名称、MAC 地址、状态等。</p>
+<p>以下是一些常见的 “brctl” 命令选项：</p>
+<ul>
+<li>“brctl addbr [bridge_name]”：创建一个名为 [bridge_name] 的新网桥。</li>
+<li>“brctl delbr [bridge_name]”：删除名为 [bridge_name] 的网桥。</li>
+<li>“brctl addif [bridge_name] [interface_name]”：将名为 [interface_name] 的网络接口添加到名为 [bridge_name] 的网桥中。</li>
+<li>“brctl delif [bridge_name] [interface_name]”：从名为 [bridge_name] 的网桥中删除名为 [interface_name] 的网络接口。</li>
+<li>“brctl show”：显示当前系统中存在的所有网桥的配置信息。</li>
+</ul>
+</blockquote>
+<p>查看确认网桥创建并启动：</p>
+<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash">$ <span class="token function">ip</span> addr show bridge0
+<span class="token number">4</span>: bridge0: <span class="token operator">&lt;</span>BROADCAST,MULTICAST<span class="token operator">></span> mtu <span class="token number">1500</span> qdisc noop state UP group default
+    link/ether <span class="token number">66</span>:38:d0:0d:76:18 brd ff:ff:ff:ff:ff:ff
+    inet <span class="token number">192.168</span>.5.1/24 scope global bridge0
+        valid_lft forever preferred_lft forever<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<p>配置 Docker 服务，默认桥接到创建的网桥上：</p>
+<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash">$ <span class="token builtin class-name">echo</span> <span class="token string">'DOCKER_OPTS="-b=bridge0"'</span> <span class="token operator">>></span> /etc/default/docker
+$ <span class="token function">sudo</span> <span class="token function">service</span> <span class="token function">docker</span> start<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre>
+
+<p>启动 Docker 服务。新建一个容器，可以看到它已经桥接到了 bridge0 上。可以继续用 brctl show 命令查看桥接的信息。</p>
+<h2 id="7、使用-OpenvSwitch-网桥"><a href="#7、使用-OpenvSwitch-网桥" class="headerlink" title="7、使用 OpenvSwitch 网桥"></a>7、使用 OpenvSwitch 网桥</h2><p>Docker 默认使用的是 Linux 自带的网桥实现，实际上，OpenvSwitch 项目作为一个成熟的虚拟交换机实现，具备更丰富的功能。笔者认为，将来会有越来越多的容器支持 OpenvSwitch 作为底层网桥实现。</p>
+<h3 id="环境"><a href="#环境" class="headerlink" title="环境"></a>环境</h3><p>在 Ubuntu 系统中进行测试。操作流程也适用于 RedHat&#x2F;CentOS  系列系统，但少数命令和配置文件可能略有差异。</p>
+<h3 id="安装-Docker"><a href="#安装-Docker" class="headerlink" title="安装 Docker"></a>安装 Docker</h3><p>安装最近版本的 Docker 并启动服务。默认情况下，Docker 服务会创建一个名为 docker0 的 Linux 网桥，作为连接容器的本地网桥。</p>
+<p>可以通过如下命令查看：</p>
+<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash">$ <span class="token function">sudo</span> brctl show
+bridge name     bridge <span class="token function">id</span>               STP enabled     interfaces
+docker0         <span class="token number">8000.000000000000</span>       no<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span></span></code></pre>
+
+<p>网桥 docker0 内部接口的默认地址可能为 172.17.42.1。</p>
+<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash">$ <span class="token function">ifconfig</span> docker0
+docker0   Link encap:Ethernet  HWaddr <span class="token number">56</span>:84:7a:fe:97:99
+          inet addr:172.17.42.1  Bcast:0.0.0.0  Mask:255.255.0.0
+          BROADCAST MULTICAST  MTU:1500  Metric:1
+          RX packets:0 errors:0 dropped:0 overruns:0 frame:0
+          TX packets:0 errors:0 dropped:0 overruns:0 carrier:0
+          collisions:0 txqueuelen:0
+          RX bytes:0 <span class="token punctuation">(</span><span class="token number">0.0</span> B<span class="token punctuation">)</span>  TX bytes:0 <span class="token punctuation">(</span><span class="token number">0.0</span> B<span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<h3 id="安装-OpenvSwitch"><a href="#安装-OpenvSwitch" class="headerlink" title="安装 OpenvSwitch"></a>安装 OpenvSwitch</h3><pre class="line-numbers language-bash" data-language="bash"><code class="language-bash">$ <span class="token function">sudo</span> <span class="token function">aptitude</span> <span class="token function">install</span> openvswitch-switch<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+
+<p>测试添加一个网桥 br0 并查看：</p>
+<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash">$ <span class="token function">sudo</span> ovs-vsctl add-br br0
+$ <span class="token function">sudo</span> ovs-vsctl show
+20d0b972-e323-4e3c-9e66-1d8bb57c7ff5
+    Bridge ovs-br
+        Port ovs-br
+            Interface br0
+                type: internal
+    ovs_version: <span class="token string">"2.0.2"</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<h3 id="配置容器连接到-OpenvSwitch-网桥"><a href="#配置容器连接到-OpenvSwitch-网桥" class="headerlink" title="配置容器连接到 OpenvSwitch 网桥"></a>配置容器连接到 OpenvSwitch 网桥</h3><p>目前 OpenvSwitch 网桥还不能直接支持挂载容器，需要手动在 OpenvSwitch 网桥上创建虚拟网口并挂载到容器中。</p>
+<h4 id="（1）创建无网口容器"><a href="#（1）创建无网口容器" class="headerlink" title="（1）创建无网口容器"></a>（1）创建无网口容器</h4><p>启动一个 ubuntu 容器，并指定不创建网络，后面我们手动添加网络。较新版本的 Docker 默认不允许在容器内修改网络配置，需要在 run 的时候指定参数 –privileged&#x3D;true：</p>
+<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash">$ <span class="token function">docker</span> run <span class="token parameter variable">--net</span><span class="token operator">=</span>none <span class="token parameter variable">--privileged</span><span class="token operator">=</span>true <span class="token parameter variable">-it</span> ubuntu:14.04 <span class="token function">bash</span>
+root@298bbb17c244:/<span class="token comment">#</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre>
+
+<p>此时在容器内查看网络信息，只能看到一个本地网卡 lo：</p>
+<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash">root@298bbb17c244:/<span class="token comment"># ifconfig</span>
+lo        Link encap:Local Loopback
+          inet addr:127.0.0.1  Mask:255.0.0.0
+          inet6 addr: ::1/128 Scope:Host
+          UP LOOPBACK RUNNING  MTU:65536  Metric:1
+          RX packets:0 errors:0 dropped:0 overruns:0 frame:0
+          TX packets:0 errors:0 dropped:0 overruns:0 carrier:0
+          collisions:0 txqueuelen:0
+          RX bytes:0 <span class="token punctuation">(</span><span class="token number">0.0</span> B<span class="token punctuation">)</span>  TX bytes:0 <span class="token punctuation">(</span><span class="token number">0.0</span> B<span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<h4 id="（2）手动为容器添加网络"><a href="#（2）手动为容器添加网络" class="headerlink" title="（2）手动为容器添加网络"></a>（2）手动为容器添加网络</h4><p>下载 OpenvSwitch 项目提供的支持 Docker 容器的辅助脚本 ovs-docker：</p>
+<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash">$ <span class="token function">wget</span> https://github.com/openvswitch/ovs/raw/master/utilities/ovs-docker
+$ <span class="token function">sudo</span> <span class="token function">chmod</span> a+x ovs-docker<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre>
+
+<p>为容器添加网卡，并挂载到 br0 上，命令为：</p>
+<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash">$ <span class="token function">sudo</span> ./ovs-docker add-port br0 eth0 298bbb17c244 <span class="token parameter variable">--ipaddress</span><span class="token operator">=</span><span class="token number">172.17</span>.0.2/16<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+
+<p>添加成功后，在容器内查看网络信息，多了一个新添加的网卡eth0，对应添加的IP地址：</p>
+<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash">root@298bbb17c244:/<span class="token comment"># ifconfig</span>
+eth0      Link encap:Ethernet  HWaddr ae:3d:75:2c:18:ba
+          inet addr:172.17.0.2  Bcast:172.17.255.255  Mask:255.255.0.0
+          inet6 addr: fe80::ac3d:75ff:fe2c:18ba/64 Scope:Link
+          UP BROADCAST RUNNING MULTICAST  MTU:1500  Metric:1
+          RX packets:187 errors:0 dropped:2 overruns:0 frame:0
+          TX packets:11 errors:0 dropped:0 overruns:0 carrier:0
+          collisions:0 txqueuelen:1000
+          RX bytes:33840 <span class="token punctuation">(</span><span class="token number">33.8</span> KB<span class="token punctuation">)</span>  TX bytes:1170 <span class="token punctuation">(</span><span class="token number">1.1</span> KB<span class="token punctuation">)</span>
+lo        Link encap:Local Loopback
+          inet addr:127.0.0.1  Mask:255.0.0.0
+          inet6 addr: ::1/128 Scope:Host
+          UP LOOPBACK RUNNING  MTU:65536  Metric:1
+          RX packets:0 errors:0 dropped:0 overruns:0 frame:0
+          TX packets:0 errors:0 dropped:0 overruns:0 carrier:0
+          collisions:0 txqueuelen:0
+          RX bytes:0 <span class="token punctuation">(</span><span class="token number">0.0</span> B<span class="token punctuation">)</span>  TX bytes:0 <span class="token punctuation">(</span><span class="token number">0.0</span> B<span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<p>在容器外，配置 OpenvSwitch 的网桥 br0 内部接口地址为 172.17.42.2&#x2F;16（只要与所挂载容器IP在同一个子网内即可）：</p>
+<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash">$ <span class="token function">sudo</span> <span class="token function">ifconfig</span> br0 <span class="token number">172.17</span>.42.2/16<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+
+<h4 id="（3）测试连通"><a href="#（3）测试连通" class="headerlink" title="（3）测试连通"></a>（3）测试连通</h4><p>经过上面步骤，容器已经连接到了网桥 br0 上了，拓扑如下所示：</p>
+<pre class="line-numbers language-ini" data-language="ini"><code class="language-ini">容器（172.17.0.2/16）&lt;- -> br0 网桥 &lt;- -> br0 内部端口（172.17.42.2/16）<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+
+<p>此时，在容器内就可以测试是否连通到网桥br0上了：</p>
+<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash">root@298bbb17c244:/<span class="token comment"># ping 172.17.42.2</span>
+PING <span class="token number">172.17</span>.42.2 <span class="token punctuation">(</span><span class="token number">172.17</span>.42.2<span class="token punctuation">)</span> <span class="token number">56</span><span class="token punctuation">(</span><span class="token number">84</span><span class="token punctuation">)</span> bytes of data.
+<span class="token number">64</span> bytes from <span class="token number">172.17</span>.42.2: <span class="token assign-left variable">icmp_seq</span><span class="token operator">=</span><span class="token number">1</span> <span class="token assign-left variable">ttl</span><span class="token operator">=</span><span class="token number">64</span> <span class="token assign-left variable">time</span><span class="token operator">=</span><span class="token number">0.874</span> ms
+<span class="token number">64</span> bytes from <span class="token number">172.17</span>.42.2: <span class="token assign-left variable">icmp_seq</span><span class="token operator">=</span><span class="token number">2</span> <span class="token assign-left variable">ttl</span><span class="token operator">=</span><span class="token number">64</span> <span class="token assign-left variable">time</span><span class="token operator">=</span><span class="token number">0.079</span> ms
+^C
+--- <span class="token number">172.17</span>.42.2 <span class="token function">ping</span> statistics ---
+<span class="token number">2</span> packets transmitted, <span class="token number">2</span> received, <span class="token number">0</span>% packet loss, <span class="token function">time</span> 1001ms
+rtt min/avg/max/mdev <span class="token operator">=</span> <span class="token number">0.079</span>/0.476/0.874/0.398 ms<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<p>在容器内也可以配置默认网关为 br0 接口地址：</p>
+<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash">root@298bbb17c244:/<span class="token comment"># route add default gw 172.17.42.2</span><span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+
+<p>另外，删除该接口的命令为：</p>
+<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash">$ <span class="token function">sudo</span> ./ovs-docker del-port br0 eth0 <span class="token operator">&lt;</span>CONTAINER_ID<span class="token operator">></span><span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+
+<h2 id="8、创建一个点到点连接"><a href="#8、创建一个点到点连接" class="headerlink" title="8、创建一个点到点连接"></a>8、创建一个点到点连接</h2><p>默认情况下，Docker 会将所有容器连接到由 docker0 提供的虚拟子网中。用户有时候需要两个容器之间可以直连通信，而不用通过主机网桥进行桥接。</p>
+<p>解决办法很简单：<strong>创建一对 peer 接口，分别放到两个容器中，配置成点到点链路类型即可</strong>。下面这个过程我们将手动执行 Docker 配置容器网络的大部分步骤。</p>
+<p>首先启动两个容器：</p>
+<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash">$ <span class="token function">docker</span> run <span class="token parameter variable">-it</span> <span class="token parameter variable">--rm</span> <span class="token parameter variable">--net</span><span class="token operator">=</span>none base /bin/bash
+root@1f1f4c1f931a:/<span class="token comment">#</span>
+$ <span class="token function">docker</span> run <span class="token parameter variable">-it</span> <span class="token parameter variable">--rm</span> <span class="token parameter variable">--net</span><span class="token operator">=</span>none base /bin/bash
+root@12e343489d2f:/<span class="token comment">#</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span></span></code></pre>
+
+<p>找到进程号，然后创建网络命名空间的跟踪文件：</p>
+<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash">$ <span class="token function">docker</span> inspect <span class="token parameter variable">-f</span> <span class="token string">'&#123;&#123;.State.Pid&#125;&#125;'</span> 1f1f4c1f931a
+<span class="token number">2989</span>
+$ <span class="token function">docker</span> inspect <span class="token parameter variable">-f</span> <span class="token string">'&#123;&#123;.State.Pid&#125;&#125;'</span> 12e343489d2f
+<span class="token number">3004</span>
+$ <span class="token function">sudo</span> <span class="token function">mkdir</span> <span class="token parameter variable">-p</span> /var/run/netns
+$ <span class="token function">sudo</span> <span class="token function">ln</span> <span class="token parameter variable">-s</span> /proc/2989/ns/net /var/run/netns/2989
+$ <span class="token function">sudo</span> <span class="token function">ln</span> <span class="token parameter variable">-s</span> /proc/3004/ns/net /var/run/netns/3004<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<p>创建一对 peer 接口。</p>
+<blockquote>
+<p>“ln” 是 Linux 和类 Unix 操作系统中的一个命令行工具，用于创建链接（link）。链接是一种文件系统对象，可以让用户在文件系统中创建一个指向另一个文件或目录的引用，从而 现在不同位置共享文件或目录的目的。</p>
+<p>“ln” 命令可以使用两种不同的方式创建链接：硬链接（hard link）和符号链接（symbolic link）。</p>
+<ol>
+<li>硬链接是在同一文件系统中创建的链接，它们共享同一个 inode 和文件数据，因此它们的文件权限、文件类型和文件内容都完全相同。</li>
+<li>符号链接则是一个指向目标文件的指针，它们类似于 Windows 操作系统中的快捷方式，可以链接到不同文件系统中的文件或目录，并且可以随意更改目标文件或目录。</li>
+</ol>
+<p>以下是一些常见的 “ln” 命令选项：</p>
+<ul>
+<li>“<code>ln -s [source_file] [target_file]</code>“：创建一个指向 [source_file] 的符号链接，链接的名称为 [target_file]。</li>
+<li>“ln [source_file] [target_file]”：创建一个指向 [source_file] 的硬链接，链接的名称为 [target_file]。</li>
+<li>“ln -f [source_file] [target_file]”：强制创建一个链接，如果目标文件已经存在，则覆盖它。</li>
+<li>“ln -i [source_file] [target_file]”：在创建链接之前，提示用户是否覆盖目标文件。</li>
+<li>“ln -v [source_file] [target_file]”：显示创建链接的详细信息，包括链接名称、目标文件和链接类型等。</li>
+</ul>
+</blockquote>
+<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash">$ <span class="token function">sudo</span> <span class="token function">ip</span> <span class="token function">link</span> <span class="token function">add</span> A <span class="token builtin class-name">type</span> veth peer name B<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+
+<p>添加 IP 地址和路由信息：</p>
+<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash">$ <span class="token function">sudo</span> <span class="token function">ip</span> <span class="token function">link</span> <span class="token builtin class-name">set</span> A netns <span class="token number">2989</span>
+$ <span class="token function">sudo</span> <span class="token function">ip</span> netns <span class="token builtin class-name">exec</span> <span class="token number">2989</span> <span class="token function">ip</span> addr <span class="token function">add</span> <span class="token number">10.1</span>.1.1/32 dev A
+$ <span class="token function">sudo</span> <span class="token function">ip</span> netns <span class="token builtin class-name">exec</span> <span class="token number">2989</span> <span class="token function">ip</span> <span class="token function">link</span> <span class="token builtin class-name">set</span> A up
+$ <span class="token function">sudo</span> <span class="token function">ip</span> netns <span class="token builtin class-name">exec</span> <span class="token number">2989</span> <span class="token function">ip</span> route <span class="token function">add</span> <span class="token number">10.1</span>.1.2/32 dev A
+$ <span class="token function">sudo</span> <span class="token function">ip</span> <span class="token function">link</span> <span class="token builtin class-name">set</span> B netns <span class="token number">3004</span>
+$ <span class="token function">sudo</span> <span class="token function">ip</span> netns <span class="token builtin class-name">exec</span> <span class="token number">3004</span> <span class="token function">ip</span> addr <span class="token function">add</span> <span class="token number">10.1</span>.1.2/32 dev B
+$ <span class="token function">sudo</span> <span class="token function">ip</span> netns <span class="token builtin class-name">exec</span> <span class="token number">3004</span> <span class="token function">ip</span> <span class="token function">link</span> <span class="token builtin class-name">set</span> B up
+$ <span class="token function">sudo</span> <span class="token function">ip</span> netns <span class="token builtin class-name">exec</span> <span class="token number">3004</span> <span class="token function">ip</span> route <span class="token function">add</span> <span class="token number">10.1</span>.1.1/32 dev B<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<p>现在这两个容器就可以相互 ping 通，并成功建立连接。点到点链路不需要子网和子网掩码。</p>
+<p>此外，也可以不指定 –net&#x3D;none 来创建点到点链路。这样容器还可以通过原先的网络来通信。</p>
+<p>利用类似的办法，可以创建一个只跟主机通信的容器。但是一般情况下，更推荐使用 –icc&#x3D;false 来关闭容器之间的通信。</p>
+
+                
+            </div>
+            <hr/>
+
+            
+
+
+
+            <div class="tag_share" style="display: block;">
+                <div class="post-meta__tag-list" style="display: inline-block;">
+                    
+                        <div class="article-tag">
+                            
+                                <a href="/tags/Docker-%E8%BF%9B%E9%98%B6/">
+                                    <span class="chip bg-color">Docker 进阶</span>
+                                </a>
+                            
+                        </div>
+                    
+                </div>
+                <div class="post_share" style="zoom: 80%; width: fit-content; display: inline-block; float: right; margin: -0.15rem 0;">
+                    <link rel="stylesheet" type="text/css" href="/libs/share/css/share.min.css">
+<div id="article-share">
+
+    
+    <div class="social-share" data-sites="twitter,facebook,google,qq,qzone,wechat,weibo,douban,linkedin" data-wechat-qrcode-helper="<p>微信扫一扫即可分享！</p>"></div>
+    <script src="/libs/share/js/social-share.min.js"></script>
+    
+
+    
+
+</div>
+
+                </div>
+            </div>
+            
+        </div>
+    </div>
+
+    
+
+    
+
+    
+
+    
+
+    
+        <style>
+    .valine-card {
+        margin: 1.5rem auto;
+    }
+
+    .valine-card .card-content {
+        padding: 20px 20px 5px 20px;
+    }
+
+    #vcomments textarea {
+        box-sizing: border-box;
+        background: url("/medias/bg.webp") 100% 100% no-repeat;
+    }
+
+    #vcomments p {
+        margin: 2px 2px 10px;
+        font-size: 1.05rem;
+        line-height: 1.78rem;
+    }
+
+    #vcomments blockquote p {
+        text-indent: 0.2rem;
+    }
+
+    #vcomments a {
+        padding: 0 2px;
+        color: #4cbf30;
+        font-weight: 500;
+        text-decoration: none;
+    }
+
+    #vcomments img {
+        max-width: 100%;
+        height: auto;
+        cursor: pointer;
+    }
+
+    #vcomments ol li {
+        list-style-type: decimal;
+    }
+
+    #vcomments ol,
+    ul {
+        display: block;
+        padding-left: 2em;
+        word-spacing: 0.05rem;
+    }
+
+    #vcomments ul li,
+    ol li {
+        display: list-item;
+        line-height: 1.8rem;
+        font-size: 1rem;
+    }
+
+    #vcomments ul li {
+        list-style-type: disc;
+    }
+
+    #vcomments ul ul li {
+        list-style-type: circle;
+    }
+
+    #vcomments table, th, td {
+        padding: 12px 13px;
+        border: 1px solid #dfe2e5;
+    }
+
+    #vcomments table, th, td {
+        border: 0;
+    }
+
+    table tr:nth-child(2n), thead {
+        background-color: #fafafa;
+    }
+
+    #vcomments table th {
+        background-color: #f2f2f2;
+        min-width: 80px;
+    }
+
+    #vcomments table td {
+        min-width: 80px;
+    }
+
+    #vcomments h1 {
+        font-size: 1.85rem;
+        font-weight: bold;
+        line-height: 2.2rem;
+    }
+
+    #vcomments h2 {
+        font-size: 1.65rem;
+        font-weight: bold;
+        line-height: 1.9rem;
+    }
+
+    #vcomments h3 {
+        font-size: 1.45rem;
+        font-weight: bold;
+        line-height: 1.7rem;
+    }
+
+    #vcomments h4 {
+        font-size: 1.25rem;
+        font-weight: bold;
+        line-height: 1.5rem;
+    }
+
+    #vcomments h5 {
+        font-size: 1.1rem;
+        font-weight: bold;
+        line-height: 1.4rem;
+    }
+
+    #vcomments h6 {
+        font-size: 1rem;
+        line-height: 1.3rem;
+    }
+
+    #vcomments p {
+        font-size: 1rem;
+        line-height: 1.5rem;
+    }
+
+    #vcomments hr {
+        margin: 12px 0;
+        border: 0;
+        border-top: 1px solid #ccc;
+    }
+
+    #vcomments blockquote {
+        margin: 15px 0;
+        border-left: 5px solid #42b983;
+        padding: 1rem 0.8rem 0.3rem 0.8rem;
+        color: #666;
+        background-color: rgba(66, 185, 131, .1);
+    }
+
+    #vcomments pre {
+        font-family: monospace, monospace;
+        padding: 1.2em;
+        margin: .5em 0;
+        background: #272822;
+        overflow: auto;
+        border-radius: 0.3em;
+        tab-size: 4;
+    }
+
+    #vcomments code {
+        font-family: monospace, monospace;
+        padding: 1px 3px;
+        font-size: 0.92rem;
+        color: #e96900;
+        background-color: #f8f8f8;
+        border-radius: 2px;
+    }
+
+    #vcomments pre code {
+        font-family: monospace, monospace;
+        padding: 0;
+        color: #e8eaf6;
+        background-color: #272822;
+    }
+
+    #vcomments pre[class*="language-"] {
+        padding: 1.2em;
+        margin: .5em 0;
+    }
+
+    #vcomments code[class*="language-"],
+    pre[class*="language-"] {
+        color: #e8eaf6;
+    }
+
+    #vcomments [type="checkbox"]:not(:checked), [type="checkbox"]:checked {
+        position: inherit;
+        margin-left: -1.3rem;
+        margin-right: 0.4rem;
+        margin-top: -1px;
+        vertical-align: middle;
+        left: unset;
+        visibility: visible;
+    }
+
+    #vcomments b,
+    strong {
+        font-weight: bold;
+    }
+
+    #vcomments dfn {
+        font-style: italic;
+    }
+
+    #vcomments small {
+        font-size: 85%;
+    }
+
+    #vcomments cite {
+        font-style: normal;
+    }
+
+    #vcomments mark {
+        background-color: #fcf8e3;
+        padding: .2em;
+    }
+
+    #vcomments table, th, td {
+        padding: 12px 13px;
+        border: 1px solid #dfe2e5;
+    }
+
+    table tr:nth-child(2n), thead {
+        background-color: #fafafa;
+    }
+
+    #vcomments table th {
+        background-color: #f2f2f2;
+        min-width: 80px;
+    }
+
+    #vcomments table td {
+        min-width: 80px;
+    }
+
+    #vcomments [type="checkbox"]:not(:checked), [type="checkbox"]:checked {
+        position: inherit;
+        margin-left: -1.3rem;
+        margin-right: 0.4rem;
+        margin-top: -1px;
+        vertical-align: middle;
+        left: unset;
+        visibility: visible;
+    }
+</style>
+
+<div class="card valine-card" data-aos="fade-up">
+    <div class="comment_headling" style="font-size: 20px; font-weight: 700; position: relative; padding-left: 20px; top: 15px; padding-bottom: 5px;">
+        <i class="fas fa-comments fa-fw" aria-hidden="true"></i>
+        <span>评论</span>
+    </div>
+    <div id="vcomments" class="card-content" style="display: grid">
+    </div>
+</div>
+
+<script src="/libs/valine/av-min.js"></script>
+<script src="/libs/valine/Valine.min.js"></script>
+<script>
+    new Valine({
+        el: '#vcomments',
+        appId: 'XGAJufgp6Z2bX17baB3E7enQ-gzGzoHsz',
+        appKey: 'j9yun8pjBYMNT3Gg8ehomdsf',
+        serverURLs: 'https://xgajufgp.lc-cn-n1-shared.com',
+        notify: 'false' === 'true',
+        verify: 'false' === 'true',
+        visitor: 'true' === 'true',
+        avatar: 'wavatar',
+        pageSize: '10',
+        lang: 'en',
+        placeholder: '支持markdown格式以及丰富的小表情，快来留下些记忆吧~'
+    });
+</script>
+
+<!--酷Q推送-->
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+<article id="prenext-posts" class="prev-next articles">
+    <div class="row article-row">
+        
+        <div class="article col s12 m6" data-aos="fade-up">
+            <div class="article-badge left-badge text-color">
+                <i class="fas fa-chevron-left"></i>&nbsp;Previous</div>
+            <div class="card">
+                <a href="/posts/7f4978dc.html">
+                    <div class="card-image">
+                        
+                        
+                        <img src="/medias/featureimages/3.jpg" class="responsive-img" alt="第三章 libnetwork插件化网络功能">
+                        
+                        <span class="card-title">第三章 libnetwork插件化网络功能</span>
+                    </div>
+                </a>
+                <div class="card-content article-content">
+                    <div class="summary block-with-text">
+                        
+                            
+                        
+                    </div>
+                    <div class="publish-info">
+                        <span class="publish-date">
+                            <i class="far fa-clock fa-fw icon-date"></i>2025-04-19
+                        </span>
+                        <span class="publish-author">
+                            
+                            <i class="fas fa-bookmark fa-fw icon-category"></i>
+                            
+                            <a href="/categories/Docker-%E8%BF%9B%E9%98%B6/" class="post-category">
+                                    Docker 进阶
+                                </a>
+                            
+                            
+                        </span>
+                    </div>
+                </div>
+                
+                <div class="card-action article-tags">
+                    
+                    <a href="/tags/Docker-%E8%BF%9B%E9%98%B6/">
+                        <span class="chip bg-color">Docker 进阶</span>
+                    </a>
+                    
+                </div>
+                
+            </div>
+        </div>
+        
+        
+        <div class="article col s12 m6" data-aos="fade-up">
+            <div class="article-badge right-badge text-color">
+                Next&nbsp;<i class="fas fa-chevron-right"></i>
+            </div>
+            <div class="card">
+                <a href="/posts/c6fae49c.html">
+                    <div class="card-image">
+                        
+                        
+                        <img src="/medias/featureimages/8.jpg" class="responsive-img" alt="第一章 Docker核心实现技术">
+                        
+                        <span class="card-title">第一章 Docker核心实现技术</span>
+                    </div>
+                </a>
+                <div class="card-content article-content">
+                    <div class="summary block-with-text">
+                        
+                            
+                        
+                    </div>
+                    <div class="publish-info">
+                            <span class="publish-date">
+                                <i class="far fa-clock fa-fw icon-date"></i>2025-04-19
+                            </span>
+                        <span class="publish-author">
+                            
+                            <i class="fas fa-bookmark fa-fw icon-category"></i>
+                            
+                            <a href="/categories/Docker-%E8%BF%9B%E9%98%B6/" class="post-category">
+                                    Docker 进阶
+                                </a>
+                            
+                            
+                        </span>
+                    </div>
+                </div>
+                
+                <div class="card-action article-tags">
+                    
+                    <a href="/tags/Docker-%E8%BF%9B%E9%98%B6/">
+                        <span class="chip bg-color">Docker 进阶</span>
+                    </a>
+                    
+                </div>
+                
+            </div>
+        </div>
+        
+    </div>
+</article>
+
+</div>
+
+
+<script>
+    $('#articleContent').on('copy', function (e) {
+        // IE8 or earlier browser is 'undefined'
+        if (typeof window.getSelection === 'undefined') return;
+
+        var selection = window.getSelection();
+        // if the selection is short let's not annoy our users.
+        if (('' + selection).length < Number.parseInt('120')) {
+            return;
+        }
+
+        // create a div outside of the visible area and fill it with the selected text.
+        var bodyElement = document.getElementsByTagName('body')[0];
+        var newdiv = document.createElement('div');
+        newdiv.style.position = 'absolute';
+        newdiv.style.left = '-99999px';
+        bodyElement.appendChild(newdiv);
+        newdiv.appendChild(selection.getRangeAt(0).cloneContents());
+
+        // we need a <pre> tag workaround.
+        // otherwise the text inside "pre" loses all the line breaks!
+        if (selection.getRangeAt(0).commonAncestorContainer.nodeName === 'PRE' || selection.getRangeAt(0).commonAncestorContainer.nodeName === 'CODE') {
+            newdiv.innerHTML = "<pre>" + newdiv.innerHTML + "</pre>";
+        }
+
+        var url = document.location.href;
+        newdiv.innerHTML += '<br />'
+            + 'From: 西伯<br />'
+            + 'Author: 西伯<br />'
+            + 'Link: <a href="' + url + '">' + url + '</a><br />'
+            + '本文章著作权归作者所有，任何形式的转载都请注明出处。';
+
+        selection.selectAllChildren(newdiv);
+        window.setTimeout(function () {bodyElement.removeChild(newdiv);}, 200);
+    });
+</script>
+
+
+<!-- 代码块功能依赖 -->
+<script type="text/javascript" src="/libs/codeBlock/codeBlockFuction.js"></script>
+
+
+  <!-- 是否加载使用自带的 prismjs. -->
+  <script type="text/javascript" src="/libs/prism/prism.min.js"></script>
+
+
+<!-- 代码语言 -->
+
+<script type="text/javascript" src="/libs/codeBlock/codeLang.js"></script>
+
+
+<!-- 代码块复制 -->
+
+<script type="text/javascript" src="/libs/codeBlock/codeCopy.js"></script>
+
+
+<!-- 代码块收缩 -->
+
+<script type="text/javascript" src="/libs/codeBlock/codeShrink.js"></script>
+
+
+
+    </div>
+    <div id="toc-aside" class="expanded col l3 hide-on-med-and-down">
+        <div class="toc-widget card" style="background-color: white;">
+            <div class="toc-title"><i class="far fa-list-alt"></i>&nbsp;&nbsp;TOC</div>
+            <div id="toc-content"></div>
+        </div>
+    </div>
+</div>
+
+<!-- TOC 悬浮按钮. -->
+
+<div id="floating-toc-btn" class="hide-on-med-and-down">
+    <a class="btn-floating btn-large bg-color">
+        <i class="fas fa-list-ul"></i>
+    </a>
+</div>
+
+
+<script src="/libs/tocbot/tocbot.min.js"></script>
+<script>
+    $(function () {
+        tocbot.init({
+            tocSelector: '#toc-content',
+            contentSelector: '#articleContent',
+            headingsOffset: -($(window).height() * 0.4 - 45),
+            collapseDepth: Number('0'),
+            headingSelector: 'h2, h3, h4'
+        });
+
+        // Set scroll toc fixed.
+        let tocHeight = parseInt($(window).height() * 0.4 - 64);
+        let $tocWidget = $('.toc-widget');
+        $(window).scroll(function () {
+            let scroll = $(window).scrollTop();
+            /* add post toc fixed. */
+            if (scroll > tocHeight) {
+                $tocWidget.addClass('toc-fixed');
+            } else {
+                $tocWidget.removeClass('toc-fixed');
+            }
+        });
+
+        
+        /* 修复文章卡片 div 的宽度. */
+        let fixPostCardWidth = function (srcId, targetId) {
+            let srcDiv = $('#' + srcId);
+            if (srcDiv.length === 0) {
+                return;
+            }
+
+            let w = srcDiv.width();
+            if (w >= 450) {
+                w = w + 21;
+            } else if (w >= 350 && w < 450) {
+                w = w + 18;
+            } else if (w >= 300 && w < 350) {
+                w = w + 16;
+            } else {
+                w = w + 14;
+            }
+            $('#' + targetId).width(w);
+        };
+
+        // 切换TOC目录展开收缩的相关操作.
+        const expandedClass = 'expanded';
+        let $tocAside = $('#toc-aside');
+        let $mainContent = $('#main-content');
+        $('#floating-toc-btn .btn-floating').click(function () {
+            if ($tocAside.hasClass(expandedClass)) {
+                $tocAside.removeClass(expandedClass).hide();
+                $mainContent.removeClass('l9');
+            } else {
+                $tocAside.addClass(expandedClass).show();
+                $mainContent.addClass('l9');
+            }
+            fixPostCardWidth('artDetail', 'prenext-posts');
+        });
+        
+    });
+</script>
+
+    
+
+</main>
+
+
+
+
+    <footer class="page-footer bg-color">
+    
+        <link rel="stylesheet" href="/libs/aplayer/APlayer.min.css">
+<style>
+    .aplayer .aplayer-lrc p {
+        
+        display: none;
+        
+        font-size: 12px;
+        font-weight: 700;
+        line-height: 16px !important;
+    }
+
+    .aplayer .aplayer-lrc p.aplayer-lrc-current {
+        
+        display: none;
+        
+        font-size: 15px;
+        color: #42b983;
+    }
+
+    
+    .aplayer.aplayer-fixed.aplayer-narrow .aplayer-body {
+        left: -66px !important;
+    }
+
+    .aplayer.aplayer-fixed.aplayer-narrow .aplayer-body:hover {
+        left: 0px !important;
+    }
+
+    
+</style>
+<div class="">
+    
+    <div class="row">
+        <meting-js class="col l8 offset-l2 m10 offset-m1 s12"
+                   server="netease"
+                   type="playlist"
+                   id="8428618004"
+                   fixed='true'
+                   autoplay='false'
+                   theme='#42b983'
+                   loop='all'
+                   order='random'
+                   preload='auto'
+                   volume='0.7'
+                   list-folded='true'
+        >
+        </meting-js>
+    </div>
+</div>
+
+<script src="/libs/aplayer/APlayer.min.js"></script>
+<script src="/libs/aplayer/Meting.min.js"></script>
+
+    
+
+    <div class="container row center-align"
+         style="margin-bottom: 15px !important;">
+        <div class="col s12 m8 l8 copy-right">
+            Copyright&nbsp;&copy;
+            
+                <span id="year">2024-2025</span>
+            
+            <a href="/about" target="_blank">西伯</a>
+            
+            <br>
+            
+                &nbsp;<i class="fas fa-chart-area"></i>&nbsp;Total Words:&nbsp;<span
+                        class="white-color">888.3k</span>
+            
+            
+            
+                
+            
+            
+                <span id="busuanzi_container_site_pv">
+                &nbsp;|&nbsp;<i class="far fa-eye"></i>&nbsp;Total visits:&nbsp;
+                    <span id="busuanzi_value_site_pv" class="white-color"></span>
+            </span>
+            
+            
+                <span id="busuanzi_container_site_uv">
+                &nbsp;|&nbsp;<i class="fas fa-users"></i>&nbsp;Total visitors:&nbsp;
+                    <span id="busuanzi_value_site_uv" class="white-color"></span>
+            </span>
+            
+            <br>
+
+            <a style="margin-inline:5px" target="_blank" href="https://hexo.io"><img src="https://img.shields.io/badge/Frame-Hexo-blue?style=flat&logo=hexo" title="基于Hexo框架"></a>
+            <a style="margin-inline:5px" target="_blank" href="https://github.com/blinkfox/hexo-theme-matery"><img src="https://img.shields.io/badge/Theme-Matery-7138b6?style=flat&logo=MEGA" title="Themes Matery"></a>
+            <a style="margin-inline:5px" target="_blank" href="https://cloudflare.com"><img src="https://img.shields.io/badge/Hosted-Cloudflare-brightgreen?style=flat&logo=Cloudflare" title="基于Cloudflare Pages托管部署"></a>
+            <a style="margin-inline:5px" target="_blank" href="https://github.com"><img src="https://img.shields.io/badge/Source-Github-67e1fb?style=flat&logo=GitHub" title="静态文件托管于GitHub"></a>
+            <br>
+
+            <!-- 运行天数提醒. -->
+            
+                <span id="sitetime"> Loading ...</span>
+                <script>
+                    var calcSiteTime = function () {
+                        var seconds = 1000;
+                        var minutes = seconds * 60;
+                        var hours = minutes * 60;
+                        var days = hours * 24;
+                        var years = days * 365;
+                        var today = new Date();
+                        var startYear = "2024";
+                        var startMonth = "5";
+                        var startDate = "20";
+                        var startHour = "0";
+                        var startMinute = "0";
+                        var startSecond = "0";
+                        var todayYear = today.getFullYear();
+                        var todayMonth = today.getMonth() + 1;
+                        var todayDate = today.getDate();
+                        var todayHour = today.getHours();
+                        var todayMinute = today.getMinutes();
+                        var todaySecond = today.getSeconds();
+                        var t1 = Date.UTC(startYear, startMonth, startDate, startHour, startMinute, startSecond);
+                        var t2 = Date.UTC(todayYear, todayMonth, todayDate, todayHour, todayMinute, todaySecond);
+                        var diff = t2 - t1;
+                        var diffYears = Math.floor(diff / years);
+                        var diffDays = Math.floor((diff / days) - diffYears * 365);
+
+                        // 区分是否有年份.
+                        var language = 'en';
+                        if (startYear === String(todayYear)) {
+                            document.getElementById("year").innerHTML = todayYear;
+                            var daysTip = 'This site has been running for ' + diffDays + ' days';
+                            if (language === 'zh-CN') {
+                                daysTip = '本站已运行 ' + diffDays + ' 天';
+                            } else if (language === 'zh-HK') {
+                                daysTip = '本站已運行 ' + diffDays + ' 天';
+                            }
+                            document.getElementById("sitetime").innerHTML = daysTip;
+                        } else {
+                            document.getElementById("year").innerHTML = startYear + " - " + todayYear;
+                            var yearsAndDaysTip = 'This site has been running for ' + diffYears + ' years and '
+                                + diffDays + ' days';
+                            if (language === 'zh-CN') {
+                                yearsAndDaysTip = '本站已运行 ' + diffYears + ' 年 ' + diffDays + ' 天';
+                            } else if (language === 'zh-HK') {
+                                yearsAndDaysTip = '本站已運行 ' + diffYears + ' 年 ' + diffDays + ' 天';
+                            }
+                            document.getElementById("sitetime").innerHTML = yearsAndDaysTip;
+                        }
+                    }
+
+                    calcSiteTime();
+                </script>
+            
+            <br>
+            
+        </div>
+        <div class="col s12 m4 l4 social-link social-statis">
+    <a href="https://github.com/luyaguo" class="tooltipped" target="_blank" data-tooltip="访问我的GitHub" data-position="top" data-delay="50">
+        <i class="fab fa-github"></i>
+    </a>
+
+
+
+    <a href="mailto:luyaguo839@gmail.com" class="tooltipped" target="_blank" data-tooltip="邮件联系我" data-position="top" data-delay="50">
+        <i class="fas fa-envelope-open"></i>
+    </a>
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <a href="/atom.xml" class="tooltipped" target="_blank" data-tooltip="RSS 订阅" data-position="top" data-delay="50">
+        <i class="fas fa-rss"></i>
+    </a>
+
+</div>
+    </div>
+</footer>
+
+<div class="progress-bar"></div>
+
+
+    <!-- 搜索遮罩框 -->
+<div id="searchModal" class="modal">
+    <div class="modal-content">
+        <div class="search-header">
+            <span class="title"><i class="fas fa-search"></i>&nbsp;&nbsp;Search</span>
+            <input type="search" id="searchInput" name="s" placeholder="Please enter a search keyword"
+                   class="search-input">
+        </div>
+        <div id="searchResult"></div>
+    </div>
+</div>
+
+<script type="text/javascript">
+$(function () {
+    var searchFunc = function (path, search_id, content_id) {
+        'use strict';
+        $.ajax({
+            url: path,
+            dataType: "xml",
+            success: function (xmlResponse) {
+                // get the contents from search data
+                var datas = $("entry", xmlResponse).map(function () {
+                    return {
+                        title: $("title", this).text(),
+                        content: $("content", this).text(),
+                        url: $("url", this).text()
+                    };
+                }).get();
+                var $input = document.getElementById(search_id);
+                var $resultContent = document.getElementById(content_id);
+                $input.addEventListener('input', function () {
+                    var str = '<ul class=\"search-result-list\">';
+                    var keywords = this.value.trim().toLowerCase().split(/[\s\-]+/);
+                    $resultContent.innerHTML = "";
+                    if (this.value.trim().length <= 0) {
+                        return;
+                    }
+                    // perform local searching
+                    datas.forEach(function (data) {
+                        var isMatch = true;
+                        var data_title = data.title.trim().toLowerCase();
+                        var data_content = data.content.trim().replace(/<[^>]+>/g, "").toLowerCase();
+                        var data_url = data.url;
+                        data_url = data_url.indexOf('/') === 0 ? data.url : '/' + data_url;
+                        var index_title = -1;
+                        var index_content = -1;
+                        var first_occur = -1;
+                        // only match artiles with not empty titles and contents
+                        if (data_title !== '' && data_content !== '') {
+                            keywords.forEach(function (keyword, i) {
+                                index_title = data_title.indexOf(keyword);
+                                index_content = data_content.indexOf(keyword);
+                                if (index_title < 0 && index_content < 0) {
+                                    isMatch = false;
+                                } else {
+                                    if (index_content < 0) {
+                                        index_content = 0;
+                                    }
+                                    if (i === 0) {
+                                        first_occur = index_content;
+                                    }
+                                }
+                            });
+                        }
+                        // show search results
+                        if (isMatch) {
+                            str += "<li><a href='" + data_url + "' class='search-result-title'>" + data_title + "</a>";
+                            var content = data.content.trim().replace(/<[^>]+>/g, "");
+                            if (first_occur >= 0) {
+                                // cut out 100 characters
+                                var start = first_occur - 20;
+                                var end = first_occur + 80;
+                                if (start < 0) {
+                                    start = 0;
+                                }
+                                if (start === 0) {
+                                    end = 100;
+                                }
+                                if (end > content.length) {
+                                    end = content.length;
+                                }
+                                var match_content = content.substr(start, end);
+                                // highlight all keywords
+                                keywords.forEach(function (keyword) {
+                                    var regS = new RegExp(keyword, "gi");
+                                    match_content = match_content.replace(regS, "<em class=\"search-keyword\">" + keyword + "</em>");
+                                });
+
+                                str += "<p class=\"search-result\">" + match_content + "...</p>"
+                            }
+                            str += "</li>";
+                        }
+                    });
+                    str += "</ul>";
+                    $resultContent.innerHTML = str;
+                });
+            }
+        });
+    };
+
+    searchFunc('/search.xml', 'searchInput', 'searchResult');
+});
+</script>
+
+    <!-- 白天和黑夜主题 -->
+<div class="stars-con">
+    <div id="stars"></div>
+    <div id="stars2"></div>
+    <div id="stars3"></div>  
+</div>
+
+<script>
+    function switchNightMode() {
+        $('<div class="Cuteen_DarkSky"><div class="Cuteen_DarkPlanet"></div></div>').appendTo($('body')),
+        setTimeout(function () {
+            $('body').hasClass('DarkMode') 
+            ? ($('body').removeClass('DarkMode'), localStorage.setItem('isDark', '0'), $('#sum-moon-icon').removeClass("fa-sun").addClass('fa-moon')) 
+            : ($('body').addClass('DarkMode'), localStorage.setItem('isDark', '1'), $('#sum-moon-icon').addClass("fa-sun").removeClass('fa-moon')),
+            
+            setTimeout(function () {
+            $('.Cuteen_DarkSky').fadeOut(1e3, function () {
+                $(this).remove()
+            })
+            }, 2e3)
+        })
+    }
+</script>
+
+    <!-- 回到顶部按钮 -->
+<div id="backTop" class="top-scroll">
+    <a class="btn-floating btn-large waves-effect waves-light" href="#!">
+        <i class="fas fa-arrow-up"></i>
+    </a>
+</div>
+
+
+    <script src="/libs/materialize/materialize.min.js"></script>
+    <script src="/libs/masonry/masonry.pkgd.min.js"></script>
+    <script src="/libs/aos/aos.js"></script>
+    <script src="/libs/scrollprogress/scrollProgress.min.js"></script>
+    <script src="/libs/lightGallery/js/lightgallery-all.min.js"></script>
+    <script src="/js/matery.js"></script>
+
+    
+
+    
+    
+    
+
+    <!-- 雪花特效 -->
+    
+
+    <!-- 鼠标星星特效 -->
+     
+        <script type="text/javascript">
+            // 只在桌面版网页启用特效
+            var windowWidth = $(window).width();
+            if (windowWidth > 768) {
+                document.write('<script type="text/javascript" src="/libs/others/star.js"><\/script>');
+            }
+        </script>
+    
+
+     
+        <script src="https://ssl.captcha.qq.com/TCaptcha.js"></script>
+        <script src="/libs/others/TencentCaptcha.js"></script>
+        <button id="TencentCaptcha" data-appid="xxxxxxxxxx" data-cbfn="callback" type="button" hidden></button>
+    
+
+    <!-- Baidu Analytics -->
+
+    <!-- Baidu Push -->
+
+<script>
+    (function () {
+        var bp = document.createElement('script');
+        var curProtocol = window.location.protocol.split(':')[0];
+        if (curProtocol === 'https') {
+            bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+        } else {
+            bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+        }
+        var s = document.getElementsByTagName("script")[0];
+        s.parentNode.insertBefore(bp, s);
+    })();
+</script>
+
+    
+    <script src="/libs/others/clicklove.js" async="async"></script>
+    
+    
+    <script async src="/libs/others/busuanzi.pure.mini.js"></script>
+    
+
+    
+
+    
+
+    <!--腾讯兔小巢-->
+    
+    
+
+    
+
+    
+
+    
+    <script src="/libs/instantpage/instantpage.js" type="module"></script>
+    
+
+    <!-- 冒泡 -->
+    
+
+    <!--全屏-->
+    <script src="/js/fullscreen.js" type="module"></script>
+
+        <style>
+            [bg-lazy] {
+                background-image: none !important;
+                background-color: #eee !important;
+            }
+        </style>
+        <script>
+            window.imageLazyLoadSetting = {
+                isSPA: false,
+                preloadRatio: 1,
+                processImages: null,
+            };
+        </script><script>window.addEventListener("load",function(){var t=/\.(gif|jpg|jpeg|tiff|png)$/i,r=/^data:image\/[a-z\d\-\.\+]+;base64,/;Array.prototype.slice.call(document.querySelectorAll("img[data-original]")).forEach(function(a){var e=a.parentNode;"A"===e.tagName&&(t.test(e.href)||r.test(e.href))&&(e.href=a.dataset.original)})});</script><script>!function(r){r.imageLazyLoadSetting.processImages=t;var a=r.imageLazyLoadSetting.isSPA,n=r.imageLazyLoadSetting.preloadRatio||1,d=o();function o(){var t=Array.prototype.slice.call(document.querySelectorAll("img[data-original]")),e=Array.prototype.slice.call(document.querySelectorAll("[bg-lazy]"));return t.concat(e)}function t(t){(a||t)&&(d=o());for(var e,i=0;i<d.length;i++)0<=(e=(e=d[i]).getBoundingClientRect()).bottom&&0<=e.left&&e.top<=(r.innerHeight*n||document.documentElement.clientHeight*n)&&function(){var t,e,a,n,o=d[i];e=function(){d=d.filter(function(t){return o!==t}),r.imageLazyLoadSetting.onImageLoaded&&r.imageLazyLoadSetting.onImageLoaded(o)},(t=o).dataset.loaded||(t.hasAttribute("bg-lazy")?(t.removeAttribute("bg-lazy"),e&&e()):(a=new Image,n=t.getAttribute("data-original"),a.onload=function(){t.src=n,t.removeAttribute("data-original"),t.setAttribute("data-loaded",!0),e&&e()},a.onerror=function(){t.removeAttribute("data-original"),t.setAttribute("data-loaded",!1),t.src=n},t.src!==n&&(a.src=n)))}()}function e(){clearTimeout(t.tId),t.tId=setTimeout(t,500)}t(),document.addEventListener("scroll",e),r.addEventListener("resize",e),r.addEventListener("orientationchange",e)}(this);</script></body>
+
+</html>
