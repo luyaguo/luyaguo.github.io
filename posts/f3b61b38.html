@@ -4,9 +4,11 @@
 
 <head>
     <meta charset="utf-8">
-    <meta name="keywords" content="第十一章 Java 对象内存布局和对象头, 西伯">
-    <meta name="description" content="第十一章 Java 对象内存布局和对象头1、Java 对象内存布局《深入理解Java虚拟机是这样定义的》：
-在HotSpot虚拟机里， 对象在堆内存中的存储布局可以划分为三个部分：对象头（Header）、实例数据（Instance Data">
+    <meta name="keywords" content="第五章 @RequestBody 接收 Json 格式数据, 西伯">
+    <meta name="description" content="第五章 @RequestBody 接收 Json 格式数据1、本文内容1、掌握接收 json 格式数据的使用步骤及原理
+2、掌握 @RequestBody 注解的用法
+3、（重点）springmvc 控制器具体可以接收哪些参数呢？
+2、软件">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
     <meta name="renderer" content="webkit|ie-stand|ie-comp">
@@ -18,7 +20,7 @@
     <!-- Global site tag (gtag.js) - Google Analytics -->
 
 
-    <title>第十一章 Java 对象内存布局和对象头 | 西伯</title>
+    <title>第五章 @RequestBody 接收 Json 格式数据 | 西伯</title>
     <link rel="icon" type="image/png" href="/favicon.png">
     
 
@@ -432,12 +434,12 @@
 
 
 
-<div class="bg-cover pd-header post-cover" style="background-image: url('/medias/featureimages/11.jpg')">
+<div class="bg-cover pd-header post-cover" style="background-image: url('/medias/featureimages/23.jpg')">
     <div class="container" style="right: 0px;left: 0px;">
         <div class="row">
             <div class="col s12 m12 l12">
                 <div class="brand">
-                    <h1 class="description center-align post-title">第十一章 Java 对象内存布局和对象头</h1>
+                    <h1 class="description center-align post-title">第五章 @RequestBody 接收 Json 格式数据</h1>
                 </div>
             </div>
         </div>
@@ -461,8 +463,8 @@
                     
                     <div class="article-tag">
                         
-                            <a href="/tags/JUC-%E8%BF%9B%E9%98%B6/">
-                                <span class="chip bg-color">JUC 进阶</span>
+                            <a href="/tags/SpringMVC/">
+                                <span class="chip bg-color">SpringMVC</span>
                             </a>
                         
                     </div>
@@ -473,8 +475,8 @@
                     <div class="post-cate">
                         <i class="fas fa-bookmark fa-fw icon-category"></i>
                         
-                            <a href="/categories/JUC-%E8%BF%9B%E9%98%B6/" class="post-category">
-                                JUC 进阶
+                            <a href="/categories/SpringMVC/" class="post-category">
+                                SpringMVC
                             </a>
                         
                     </div>
@@ -486,7 +488,7 @@
                 
                 <div class="post-date info-break-policy">
                     <i class="far fa-calendar-minus fa-fw"></i>Publish Date:&nbsp;&nbsp;
-                    2025-04-17
+                    2025-04-25
                 </div>
                 
 
@@ -495,7 +497,7 @@
                 
                 <div class="info-break-policy">
                     <i class="far fa-file-word fa-fw"></i>Word Count:&nbsp;&nbsp;
-                    2.2k
+                    2k
                 </div>
                 
 
@@ -530,189 +532,249 @@
 
         <div class="card-content article-card-content">
             <div id="articleContent">
-                <h1 id="第十一章-Java-对象内存布局和对象头"><a href="#第十一章-Java-对象内存布局和对象头" class="headerlink" title="第十一章 Java 对象内存布局和对象头"></a>第十一章 Java 对象内存布局和对象头</h1><h2 id="1、Java-对象内存布局"><a href="#1、Java-对象内存布局" class="headerlink" title="1、Java 对象内存布局"></a>1、Java 对象内存布局</h2><p>《深入理解Java虚拟机是这样定义的》：</p>
-<p>在HotSpot虚拟机里， 对象在堆内存中的存储布局可以划分为三个部分：对象头（Header）、实例数据（Instance Data）和对齐填充（Padding）。</p>
-<p><img src="/medias/loading.gif" data-original="https://raw.githubusercontent.com/luyaguo/pictures-guo/main/juc/202504180008520.png" alt="image-20230226162745480"></p>
-<h2 id="2、对象在堆内存中的存储布局"><a href="#2、对象在堆内存中的存储布局" class="headerlink" title="2、对象在堆内存中的存储布局"></a>2、对象在堆内存中的存储布局</h2><p><img src="/medias/loading.gif" data-original="https://raw.githubusercontent.com/luyaguo/pictures-guo/main/juc/202504180008872.png" alt="image-20230226163037459"></p>
-<ol>
-<li>对象内部结构分为：对象头、实例数据、对齐填充（保证8个字节的倍数）。</li>
-<li><strong>对象头分为对象标记（markOop）和类元信息（klassOop），类元信息存储的是指向该对象类元数据（klass）的首地址。</strong></li>
-</ol>
-<h3 id="对象头"><a href="#对象头" class="headerlink" title="对象头"></a>对象头</h3><h4 id="对象标记-Mark-Word"><a href="#对象标记-Mark-Word" class="headerlink" title="对象标记 Mark Word"></a>对象标记 Mark Word</h4><p>​	HotSpot 虚拟机对象的对象头部分包括两类信息。第一类是用于存储对象自身的运行时数据，如哈希码（HashCode）、GC分代年龄、锁状态标志、线程持有的锁、偏向线程ID、偏向时间戳等，这部分数据的长度在32位和64位的虚拟机（未开启压缩指针）中分别为32个比特和64个比特， 官方称它为“Mark Word”。</p>
-<p><img src="/medias/loading.gif" data-original="https://raw.githubusercontent.com/luyaguo/pictures-guo/main/juc/202504180008406.png" alt="image-20230226163842118"></p>
-<p>​	<strong>在64位系统中，Mark Word占了8个字节，类型指针占了8个字节，一共是16个字节</strong>。上图中说对象头为12字节的原因为：指针压缩。</p>
+                <h1 id="第五章-RequestBody-接收-Json-格式数据"><a href="#第五章-RequestBody-接收-Json-格式数据" class="headerlink" title="第五章 @RequestBody 接收 Json 格式数据"></a>第五章 @RequestBody 接收 Json 格式数据</h1><h2 id="1、本文内容"><a href="#1、本文内容" class="headerlink" title="1、本文内容"></a>1、本文内容</h2><p>1、掌握接收 json 格式数据的使用步骤及原理</p>
+<p>2、掌握 @RequestBody 注解的用法</p>
+<p>3、（重点）springmvc 控制器具体可以接收哪些参数呢？</p>
+<h2 id="2、软件版本"><a href="#2、软件版本" class="headerlink" title="2、软件版本"></a>2、软件版本</h2><p>1、idea 2020.3.3</p>
+<p>2、jdk1.8</p>
+<p>3、≥maven3.6.1</p>
+<p>4、spring5.3.6</p>
+<p>5、apache-tomcat-9.0.46</p>
+<h2 id="3、json-格式数据的好处"><a href="#3、json-格式数据的好处" class="headerlink" title="3、json 格式数据的好处"></a>3、json 格式数据的好处</h2><p>当 http 请求传输的数据格式比较复杂的时，可以采用 json 格式</p>
 <ul>
-<li>默认存储对象的HashCode、分代年龄和锁标志位等信息。</li>
-<li>这些信息都是与对象自身定义无关的数据，所以MarkWord被设计成一个非固定的数据结构以便在极小的空间内存存储尽量多的数据。</li>
-<li>它会根据对象的状态复用自己的存储空间，也就是说在运行期间MarkWord里存储的数据会随着锁标志位的变化而变化。</li>
+<li>数据量更小</li>
+<li>组装数据更容易</li>
+<li>数据结构看起来更清晰</li>
 </ul>
-<p>​	对象需要存储的运行时数据很多，其实已经超出了 32、64 位 Bitmap 结构所能记录的最大限度，但对象头里的信息是与对象自身定义的数据无关的额外存储成本，考虑到虚拟机的空间效率，<strong>Mark Word被设计成一个有着动态定义的数据结构，以便在极小的空间内存储尽量多的数据，</strong>根据对象的状态复用自己的存储空间。例如在32位的HotSpot虚拟机中，如对象未被同步锁锁定的状态下，Mark Word 的 32 个比特存储空间中的 25 个比特用于存储对象哈希码，4 个比特用于存储对象分代年龄，2 个比特用于存储锁标志位，1 个比特固定为0，在其他状态（轻量级锁定、重量级锁定、GC标记、可偏向）下对象的存储内容如表所示：</p>
-<p><img src="/medias/loading.gif" data-original="https://raw.githubusercontent.com/luyaguo/pictures-guo/main/juc/202504180008079.png" alt="image-20230226163529540"></p>
-<p><img src="/medias/loading.gif" data-original="https://raw.githubusercontent.com/luyaguo/pictures-guo/main/juc/202504180008694.png" alt="image-20230226163452263"></p>
-<h4 id="类元信息-又叫类型指针-Class-Pointer"><a href="#类元信息-又叫类型指针-Class-Pointer" class="headerlink" title="类元信息(又叫类型指针) Class Pointer"></a>类元信息(又叫类型指针) Class Pointer</h4><p>​	<strong>对象头的另外一部分是类型指针，即对象指向它的类型元数据的指针，Java虚拟机通过这个指针来确定该对象是哪个类的实例。</strong>并不是所有的虚拟机实现都必须在对象数据上保留类型指针，换句话说，查找对象的元数据信息并不一定要经过对象本身，这点我们会在下一节具体讨论。<strong>此外， 如果对象是一个Java数组，那在对象头中还必须有一块用于记录数组长度的数据</strong>，因为虚拟机可以通过普通Java对象的元数据信息确定Java对象的大小，但是如果数组的长度是不确定的，将无法通过元数据中的信息推断出数组的大小。</p>
-<p><img src="/medias/loading.gif" data-original="https://raw.githubusercontent.com/luyaguo/pictures-guo/main/juc/202504180008767.png" alt="image-20230226164751843"></p>
-<blockquote>
-<p>   所谓的类元信息（类型指针）其实就可以说是<strong>模板</strong></p>
-</blockquote>
-<h3 id="实例数据"><a href="#实例数据" class="headerlink" title="实例数据"></a>实例数据</h3><p>​	接下来实例数据部分是对象真正存储的有效信息， 即存放类的属性(Field)数据信息，包括父类的属性信息，以及子类中定义的字段都必须记录起来。如果是数组的实例部分还包括数组的长度，这部分内存按4字节对齐。</p>
-<ol>
-<li>这部分的存储顺序会受到虚拟机分配策略参数（<code>-XX:FieldsAllocationStyle</code>参数） 和字段在 Java 源码中定义顺序的影响。</li>
-<li>HotSpot 虚拟机默认的分配顺序为 longs&#x2F;doubles、ints、shorts&#x2F;chars、bytes&#x2F;booleans、oops（Ordinary Object Pointers）</li>
-<li>从默认的分配策略中可以看出，相同宽度的字段总被分配到一起存放。</li>
-<li>在满足这个前提条件的情况下，在父类中定义的变量会出现在子类之前。</li>
-<li>如果 HotSpot 虚拟机的 +XX：CompactFields参数值为true（默认也是true），那么子类中较窄的变量也允许插入父类变量的空隙之间，以节省一点点空间。</li>
-</ol>
-<blockquote>
-<p>   实例数据相当于类中的属性</p>
-</blockquote>
-<h3 id="对齐填充"><a href="#对齐填充" class="headerlink" title="对齐填充"></a>对齐填充</h3><p>​	对象的第三部分是对齐填充，<strong>这并不是必然存在的，也没有特别的含义，它仅仅起着占位符的作用。</strong>由于 HotSpot 虚拟机的自动内存管理系统要求对象起始地址必须是 8 字节的整数倍，换句话说就是任何对象的大小都必须是 8 字节的整数倍。<strong>对象头部分已经被精心设计成正好是 8 字节的倍数（1倍或者2倍），因此，如果对象实例数据部分没有对齐的话，就需要通过对齐填充来补全。</strong></p>
-<pre class="line-numbers language-java" data-language="java"><code class="language-java"><span class="token keyword">public</span> <span class="token keyword">class</span> <span class="token class-name">Customer</span> <span class="token punctuation">&#123;</span>
-    <span class="token comment">// 第一种情况，只有对象头，没有其它任何实例数据</span>
-<span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span></span></code></pre>
+<h2 id="4、Http-发起-json格式的请求"><a href="#4、Http-发起-json格式的请求" class="headerlink" title="4、Http 发起 json格式的请求"></a>4、Http 发起 json格式的请求</h2><p>1、头中需要设置 Content-Type 的值为 application&#x2F;json</p>
+<p>2、请求 body 中数据格式为 json 文本</p>
+<p><img src="/medias/loading.gif" data-original="https://raw.githubusercontent.com/luyaguo/pictures-guo/main/servlet/image-20221202103710108.png" alt="image-20221202103710108"></p>
+<h2 id="5、我们来实现一个需求"><a href="#5、我们来实现一个需求" class="headerlink" title="5、我们来实现一个需求"></a>5、我们来实现一个需求</h2><p>http发送json格式的请求，如：</p>
+<pre class="line-numbers language-http" data-language="http"><code class="language-http">### 发送json请求(body中数据为json格式)
+POST http://localhost:8080/user/add.do
+<span class="token header"><span class="token header-name keyword">Content-Type</span><span class="token punctuation">:</span> <span class="token header-value">application/json;charset=UTF-8</span></span>
 
-<ul>
-<li>只有一个对象头的实例对象，16字节，不需要对齐填充。</li>
-</ul>
-<pre class="line-numbers language-java" data-language="java"><code class="language-java"><span class="token keyword">public</span> <span class="token keyword">class</span> <span class="token class-name">Customer</span> <span class="token punctuation">&#123;</span>
-    <span class="token comment">// 第二种情况，int + boolean，默认满足对其填充，24 bytes</span>
-    <span class="token keyword">int</span> id<span class="token punctuation">;</span>
-    <span class="token keyword">boolean</span> flag <span class="token operator">=</span> <span class="token boolean">false</span><span class="token punctuation">;</span>
-<span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+&#123;
+  "name": "路人",
+  "age": 10,
+  "address": "上海"
+&#125;<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
 
-<ul>
-<li>只有一个对象头的实例对象，16字节（忽略压缩指针的影响）+ 4字节+ 1字节 &#x3D; 21字节 ，需要对齐填充为 24字节。</li>
-</ul>
-<h3 id="底层源码理论证明"><a href="#底层源码理论证明" class="headerlink" title="底层源码理论证明"></a>底层源码理论证明</h3><h4 id="oop-hpp"><a href="#oop-hpp" class="headerlink" title="oop.hpp"></a>oop.hpp</h4><p><img src="/medias/loading.gif" data-original="https://raw.githubusercontent.com/luyaguo/pictures-guo/main/juc/202504180007903.png" alt="image-20230226174326695"></p>
-<p><code>_mark</code>字段是 mark word，<code>_metadata</code>是类指针 klass pointer，对象头（object header）即是由这两个字段组成，这些术语可以参考Hotspot术语表。</p>
-<h3 id="Hotspot-术语表"><a href="#Hotspot-术语表" class="headerlink" title="Hotspot 术语表"></a>Hotspot 术语表</h3><p>Hotspot术语表官网：<a target="_blank" rel="noopener" href="https://openjdk.org/groups/hotspot/docs/HotSpotGlossary.html">HotSpot Glossary of Terms (openjdk.org)</a></p>
-<p><img src="/medias/loading.gif" data-original="https://raw.githubusercontent.com/luyaguo/pictures-guo/main/juc/202504180007987.png" alt="image-20230226164526224"></p>
-<h2 id="3、对象头的-MarkWord"><a href="#3、对象头的-MarkWord" class="headerlink" title="3、对象头的 MarkWord"></a>3、对象头的 MarkWord</h2><h3 id="markOop-hpp"><a href="#markOop-hpp" class="headerlink" title="markOop.hpp"></a>markOop.hpp</h3><p><img src="/medias/loading.gif" data-original="https://raw.githubusercontent.com/luyaguo/pictures-guo/main/juc/202504180007647.png" alt="image-20230226174346268"></p>
-<h3 id="32-位虚拟机-Mark-Word"><a href="#32-位虚拟机-Mark-Word" class="headerlink" title="32 位虚拟机 Mark Word"></a>32 位虚拟机 Mark Word</h3><p><img src="/medias/loading.gif" data-original="https://raw.githubusercontent.com/luyaguo/pictures-guo/main/juc/202504180007863.png" alt="image-20230226174611310"></p>
-<p><img src="/medias/loading.gif" data-original="https://raw.githubusercontent.com/luyaguo/pictures-guo/main/juc/202504180007735.png" alt="image-20230226172606368"></p>
-<h3 id="64-位虚拟机-Mark-Word"><a href="#64-位虚拟机-Mark-Word" class="headerlink" title="64 位虚拟机 Mark Word"></a>64 位虚拟机 Mark Word</h3><p><img src="/medias/loading.gif" data-original="https://raw.githubusercontent.com/luyaguo/pictures-guo/main/juc/202504180007167.png" alt="image-20230226175006965"></p>
-<p><img src="/medias/loading.gif" data-original="https://raw.githubusercontent.com/luyaguo/pictures-guo/main/juc/202504180007753.png" alt="image-20230226172633543"></p>
+<p>我们希望下面这个方法可以处理这个请求，由 springmvc 负责将 body 中的 json 格式的数据转换为 UserDto 对象，然后传递给下面的 add 方法。</p>
+<p><code>UserController</code></p>
+<pre class="line-numbers language-java" data-language="java"><code class="language-java"><span class="token annotation punctuation">@PostMapping</span><span class="token punctuation">(</span><span class="token string">"/user/add.do"</span><span class="token punctuation">)</span>
+<span class="token keyword">public</span> <span class="token class-name">ModelAndView</span> <span class="token function">add</span><span class="token punctuation">(</span><span class="token class-name">UserDto</span> user<span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre>
+
+<p><code>UserDto</code></p>
+<pre class="line-numbers language-java" data-language="java"><code class="language-java"><span class="token keyword">public</span> <span class="token keyword">class</span> <span class="token class-name">UserDto</span> <span class="token punctuation">&#123;</span>
+    <span class="token comment">//姓名</span>
+    <span class="token keyword">private</span> <span class="token class-name">String</span> name<span class="token punctuation">;</span>
+    <span class="token comment">//年龄</span>
+    <span class="token keyword">private</span> <span class="token class-name">Integer</span> age<span class="token punctuation">;</span>
+    <span class="token comment">//地址</span>
+    <span class="token keyword">private</span> <span class="token class-name">String</span> address<span class="token punctuation">;</span>
+    <span class="token comment">//省略get、set</span>
+    <span class="token annotation punctuation">@Override</span>
+    <span class="token keyword">public</span> <span class="token class-name">String</span> <span class="token function">toString</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+        <span class="token keyword">return</span> <span class="token string">"UserDto&#123;"</span> <span class="token operator">+</span>
+                <span class="token string">"name='"</span> <span class="token operator">+</span> name <span class="token operator">+</span> <span class="token char">'\''</span> <span class="token operator">+</span>
+                <span class="token string">", age="</span> <span class="token operator">+</span> age <span class="token operator">+</span>
+                <span class="token string">", address='"</span> <span class="token operator">+</span> address <span class="token operator">+</span> <span class="token char">'\''</span> <span class="token operator">+</span>
+                <span class="token char">'&#125;'</span><span class="token punctuation">;</span>
+    <span class="token punctuation">&#125;</span>
+<span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<h2 id="6、SpringMVC-接受-json-格式数据-3个步骤"><a href="#6、SpringMVC-接受-json-格式数据-3个步骤" class="headerlink" title="6、SpringMVC 接受 json 格式数据(3个步骤)"></a>6、SpringMVC 接受 json 格式数据(3个步骤)</h2><h3 id="步骤1：maven-添加-jackson-配置"><a href="#步骤1：maven-添加-jackson-配置" class="headerlink" title="步骤1：maven 添加 jackson 配置"></a>步骤1：maven 添加 jackson 配置</h3><pre class="line-numbers language-markup" data-language="markup"><code class="language-markup"><span class="token prolog">&lt;?xml version="1.0" encoding="UTF-8"?></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>project</span> <span class="token attr-name">xmlns</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>http://maven.apache.org/POM/4.0.0<span class="token punctuation">"</span></span>
+         <span class="token attr-name"><span class="token namespace">xmlns:</span>xsi</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>http://www.w3.org/2001/XMLSchema-instance<span class="token punctuation">"</span></span>
+         <span class="token attr-name"><span class="token namespace">xsi:</span>schemaLocation</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd<span class="token punctuation">"</span></span><span class="token punctuation">></span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>parent</span><span class="token punctuation">></span></span>
+        <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>artifactId</span><span class="token punctuation">></span></span>springmvc-guo<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>artifactId</span><span class="token punctuation">></span></span>
+        <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>groupId</span><span class="token punctuation">></span></span>com.guo.spring.mvc<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>groupId</span><span class="token punctuation">></span></span>
+        <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>version</span><span class="token punctuation">></span></span>1.0-SNAPSHOT<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>version</span><span class="token punctuation">></span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>parent</span><span class="token punctuation">></span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>modelVersion</span><span class="token punctuation">></span></span>4.0.0<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>modelVersion</span><span class="token punctuation">></span></span>
+
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>artifactId</span><span class="token punctuation">></span></span>first-guo<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>artifactId</span><span class="token punctuation">></span></span>
+
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>properties</span><span class="token punctuation">></span></span>
+        <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>maven.compiler.source</span><span class="token punctuation">></span></span>8<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>maven.compiler.source</span><span class="token punctuation">></span></span>
+        <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>maven.compiler.target</span><span class="token punctuation">></span></span>8<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>maven.compiler.target</span><span class="token punctuation">></span></span>
+        <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>project.build.sourceEncoding</span><span class="token punctuation">></span></span>UTF-8<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>project.build.sourceEncoding</span><span class="token punctuation">></span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>properties</span><span class="token punctuation">></span></span>
+
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>dependencies</span><span class="token punctuation">></span></span>
+        <span class="token comment">&lt;!-- 添加springmvc依赖 --></span>
+        <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>dependency</span><span class="token punctuation">></span></span>
+            <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>groupId</span><span class="token punctuation">></span></span>org.springframework<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>groupId</span><span class="token punctuation">></span></span>
+            <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>artifactId</span><span class="token punctuation">></span></span>spring-webmvc<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>artifactId</span><span class="token punctuation">></span></span>
+            <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>version</span><span class="token punctuation">></span></span>5.3.6<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>version</span><span class="token punctuation">></span></span>
+        <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>dependency</span><span class="token punctuation">></span></span>
+
+        <span class="token comment">&lt;!-- 添加servlet 依赖 --></span>
+        <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>dependency</span><span class="token punctuation">></span></span>
+            <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>groupId</span><span class="token punctuation">></span></span>javax.servlet<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>groupId</span><span class="token punctuation">></span></span>
+            <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>artifactId</span><span class="token punctuation">></span></span>javax.servlet-api<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>artifactId</span><span class="token punctuation">></span></span>
+            <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>version</span><span class="token punctuation">></span></span>4.0.1<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>version</span><span class="token punctuation">></span></span>
+            <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>scope</span><span class="token punctuation">></span></span>provided<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>scope</span><span class="token punctuation">></span></span>
+        <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>dependency</span><span class="token punctuation">></span></span>
+
+        <span class="token comment">&lt;!-- 添加jackson配置 --></span>
+        <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>dependency</span><span class="token punctuation">></span></span>
+            <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>groupId</span><span class="token punctuation">></span></span>com.fasterxml.jackson.core<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>groupId</span><span class="token punctuation">></span></span>
+            <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>artifactId</span><span class="token punctuation">></span></span>jackson-core<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>artifactId</span><span class="token punctuation">></span></span>
+            <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>version</span><span class="token punctuation">></span></span>2.14.0<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>version</span><span class="token punctuation">></span></span>
+        <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>dependency</span><span class="token punctuation">></span></span>
+
+        <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>dependency</span><span class="token punctuation">></span></span>
+            <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>groupId</span><span class="token punctuation">></span></span>com.fasterxml.jackson.core<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>groupId</span><span class="token punctuation">></span></span>
+            <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>artifactId</span><span class="token punctuation">></span></span>jackson-databind<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>artifactId</span><span class="token punctuation">></span></span>
+            <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>version</span><span class="token punctuation">></span></span>2.12.7.1<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>version</span><span class="token punctuation">></span></span>
+        <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>dependency</span><span class="token punctuation">></span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>dependencies</span><span class="token punctuation">></span></span>
+
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>build</span><span class="token punctuation">></span></span>
+        <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>finalName</span><span class="token punctuation">></span></span>first-guo<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>finalName</span><span class="token punctuation">></span></span>
+        <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>resources</span><span class="token punctuation">></span></span>
+            <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>resource</span><span class="token punctuation">></span></span>
+                <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>directory</span><span class="token punctuation">></span></span>src/main/resources<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>directory</span><span class="token punctuation">></span></span>
+                <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>filtering</span><span class="token punctuation">></span></span>false<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>filtering</span><span class="token punctuation">></span></span>
+                <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>includes</span><span class="token punctuation">></span></span>
+                    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>include</span><span class="token punctuation">></span></span>**/*.*<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>include</span><span class="token punctuation">></span></span>
+                <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>includes</span><span class="token punctuation">></span></span>
+            <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>resource</span><span class="token punctuation">></span></span>
+        <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>resources</span><span class="token punctuation">></span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>build</span><span class="token punctuation">></span></span>
+
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>project</span><span class="token punctuation">></span></span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
 <blockquote>
-<p>   GC年龄采用4位bit存储，最大为15，例如MaxTenuringThreshold参数默认值就是15</p>
+<p>jackson是一个json工具包，可以将json格式的字符串和java对象互转。而我们body中的数据是json格式的，controller中方法是java对象，所以需要将 json数据转换为java对象。而json库有很多，比如jackson、gson、fastjson，此处我们使用 springmvc推荐的 jackson。</p>
 </blockquote>
-<p>​	markword(64位)分布图，对象布局、GC回收和后面的锁升级就是对象标记MarkWord里面标志位的变化</p>
-<p><img src="/medias/loading.gif" data-original="https://raw.githubusercontent.com/luyaguo/pictures-guo/main/juc/202504180007502.png" alt="image-20230226175110489"></p>
-<h2 id="4、JOL-工具"><a href="#4、JOL-工具" class="headerlink" title="4、JOL 工具"></a>4、JOL 工具</h2><h3 id="概念"><a href="#概念" class="headerlink" title="概念"></a>概念</h3><p>​	<strong>JOL</strong>（Java 对象布局）是用于分析 JVM 中对象布局方案的微型工具箱。这些工具大量使用不安全、JVMTI 和可维护性代理 （SA） 来解码<em>实际的</em>对象布局、占用空间和引用。这使得 JOL 比依赖于堆转储、规范假设等的其他工具更准确。<a target="_blank" rel="noopener" href="https://openjdk.org/projects/code-tools/jol/">JOL官网</a></p>
-<p>maven依赖：</p>
-<pre class="line-numbers language-java" data-language="java"><code class="language-java"><span class="token generics"><span class="token punctuation">&lt;</span>dependency<span class="token punctuation">></span></span>
-    <span class="token generics"><span class="token punctuation">&lt;</span>groupId<span class="token punctuation">></span></span>org<span class="token punctuation">.</span>openjdk<span class="token punctuation">.</span>jol<span class="token operator">&lt;</span><span class="token operator">/</span>groupId<span class="token operator">></span>
-    <span class="token generics"><span class="token punctuation">&lt;</span>artifactId<span class="token punctuation">></span></span>jol<span class="token operator">-</span>core<span class="token operator">&lt;</span><span class="token operator">/</span>artifactId<span class="token operator">></span>
-    <span class="token generics"><span class="token punctuation">&lt;</span>version<span class="token punctuation">></span></span><span class="token number">0.16</span><span class="token operator">&lt;</span><span class="token operator">/</span>version<span class="token operator">></span>
-<span class="token operator">&lt;</span><span class="token operator">/</span>dependency<span class="token operator">></span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<h3 id="步骤2：springmvc中添加mvc驱动配置"><a href="#步骤2：springmvc中添加mvc驱动配置" class="headerlink" title="步骤2：springmvc中添加mvc驱动配置"></a>步骤2：springmvc中添加mvc驱动配置</h3><p><code>springmvc.xml</code></p>
+<pre class="line-numbers language-markup" data-language="markup"><code class="language-markup"><span class="token prolog">&lt;?xml version="1.0" encoding="UTF-8"?></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>beans</span> <span class="token attr-name">xmlns</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>http://www.springframework.org/schema/beans<span class="token punctuation">"</span></span>
+       <span class="token attr-name"><span class="token namespace">xmlns:</span>xsi</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>http://www.w3.org/2001/XMLSchema-instance<span class="token punctuation">"</span></span>
+       <span class="token attr-name"><span class="token namespace">xmlns:</span>context</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>http://www.springframework.org/schema/context<span class="token punctuation">"</span></span>
+       <span class="token attr-name"><span class="token namespace">xmlns:</span>mvc</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>http://www.springframework.org/schema/mvc<span class="token punctuation">"</span></span>
+       <span class="token attr-name"><span class="token namespace">xsi:</span>schemaLocation</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/context https://www.springframework.org/schema/context/spring-context.xsd http://www.springframework.org/schema/mvc https://www.springframework.org/schema/mvc/spring-mvc.xsd<span class="token punctuation">"</span></span><span class="token punctuation">></span></span>
 
-<h4 id="初体验"><a href="#初体验" class="headerlink" title="初体验"></a>初体验</h4><pre class="line-numbers language-java" data-language="java"><code class="language-java"><span class="token keyword">public</span> <span class="token keyword">class</span> <span class="token class-name">MyObject</span> <span class="token punctuation">&#123;</span>
-  <span class="token keyword">public</span> <span class="token keyword">static</span> <span class="token keyword">void</span> <span class="token function">main</span><span class="token punctuation">(</span><span class="token class-name">String</span><span class="token punctuation">[</span><span class="token punctuation">]</span> args<span class="token punctuation">)</span><span class="token punctuation">&#123;</span>
-    <span class="token comment">// VM的细节详细情况</span>
-    <span class="token class-name">System</span><span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">println</span><span class="token punctuation">(</span><span class="token constant">VM</span><span class="token punctuation">.</span><span class="token function">current</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">details</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-    <span class="token comment">// 所有的对象分配的字节都是8的整数倍。</span>
-    <span class="token class-name">System</span><span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">println</span><span class="token punctuation">(</span><span class="token constant">VM</span><span class="token punctuation">.</span><span class="token function">current</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">objectAlignment</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-  <span class="token punctuation">&#125;</span>
+    <span class="token comment">&lt;!-- springmvc容器（也就是一个spring容器）会扫描指定包中的组件，将其注册到springmvc容器中 --></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span><span class="token namespace">context:</span>component-scan</span> <span class="token attr-name">base-package</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>com.guo<span class="token punctuation">"</span></span><span class="token punctuation">/></span></span>
+    <span class="token comment">&lt;!-- 添加mvc注解驱动 --></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span><span class="token namespace">mvc:</span>annotation-driven</span><span class="token punctuation">/></span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>beans</span><span class="token punctuation">></span></span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<p><strong>这2个步骤配置好了之后，springmvc就被赋予了一个强大的功能，有能力将body中json格式的数据转换为java对象。</strong></p>
+<blockquote>
+<p>透露一下原理：springmvc容器中被添加了一个MappingJackson2HttpMessageConverter对象，这个类可以将body中json格式的数据转换为java对象，内部用到的是jackson。</p>
+<p>MappingJackson2HttpMessageConverter这类就是在步骤1添加的maven包中。</p>
+</blockquote>
+<h3 id="步骤3：方法参数使用-RquestBody注解标注"><a href="#步骤3：方法参数使用-RquestBody注解标注" class="headerlink" title="步骤3：方法参数使用@RquestBody注解标注"></a>步骤3：方法参数使用@RquestBody注解标注</h3><p>​	当我们希望 controller 中处理器的方法参数的数据来源于 http 请求的 body 时，需要在参数的前面加上<code>@RequestBody</code>注解</p>
+<pre class="line-numbers language-java" data-language="java"><code class="language-java"><span class="token annotation punctuation">@PostMapping</span><span class="token punctuation">(</span><span class="token string">"/user/add.do"</span><span class="token punctuation">)</span>
+<span class="token keyword">public</span> <span class="token class-name">ModelAndView</span> <span class="token function">add</span><span class="token punctuation">(</span><span class="token annotation punctuation">@RequestBody</span> <span class="token class-name">UserDto</span> user<span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+    <span class="token class-name">System</span><span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">println</span><span class="token punctuation">(</span><span class="token string">"user:"</span> <span class="token operator">+</span> user<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token class-name">ModelAndView</span> modelAndView <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">ModelAndView</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    modelAndView<span class="token punctuation">.</span><span class="token function">setViewName</span><span class="token punctuation">(</span><span class="token string">"/WEB-INF/view/result.jsp"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    modelAndView<span class="token punctuation">.</span><span class="token function">addObject</span><span class="token punctuation">(</span><span class="token string">"msg"</span><span class="token punctuation">,</span> user<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token keyword">return</span> modelAndView<span class="token punctuation">;</span>
 <span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
 
-<p><img src="/medias/loading.gif" data-original="https://raw.githubusercontent.com/luyaguo/pictures-guo/main/juc/202504180007885.png" alt="image-20230226183150074"></p>
-<h3 id="查看对象内存布局"><a href="#查看对象内存布局" class="headerlink" title="查看对象内存布局"></a>查看对象内存布局</h3><p>以下演示都存在指针压缩</p>
+<p>​	就这么简单，此时这个方法就可以接受 json 格式的数据，springmvc 会自动将 body 中 json 格式的字符串转换为UserDto 对象，然后传递给上面的 add 方法的第一个参数。</p>
+<h3 id="案例代码"><a href="#案例代码" class="headerlink" title="案例代码"></a>案例代码</h3><p>1、拉取代码：<a target="_blank" rel="noopener" href="https://gitee.com/javacode2018/springmvc-series">https://gitee.com/javacode2018/springmvc-series</a></p>
+<p>2、导入idea</p>
+<p><img src="/medias/loading.gif" data-original="https://raw.githubusercontent.com/luyaguo/pictures-guo/main/servlet/image-20221202104138233.png" alt="image-20221202104138233"></p>
+<p>3、发布到tomcat</p>
+<p>4、运行用例，用例的位置</p>
+<p><img src="/medias/loading.gif" data-original="https://raw.githubusercontent.com/luyaguo/pictures-guo/main/servlet/image-20221202104203410.png" alt="image-20221202104203410"></p>
+<p>输出的结果如下，可以看出json数据被UserDto接收成功了。</p>
+<p><img src="/medias/loading.gif" data-original="https://raw.githubusercontent.com/luyaguo/pictures-guo/main/servlet/image-20221202104225120.png" alt="image-20221202104225120"></p>
+<h2 id="7、-RequestBody-注解"><a href="#7、-RequestBody-注解" class="headerlink" title="7、@RequestBody 注解"></a>7、@RequestBody 注解</h2><h3 id="作用"><a href="#作用" class="headerlink" title="作用"></a>作用</h3><p><strong>用来接收 http 请求 body 的数据。</strong></p>
+<p>​	HTTP请求大家比较熟悉，比如 POST方式提交的请求，是有个 body部分的，在 springmvc 中，我们希望控制器的方法中某个参数的值为 http请求中的 body 的值，那么只需要在这个参数的前面加上 @RequestBody 注解，springmvc 会将 http 请求中 body 的数据读取出来，然后传递给这个参数。来看2个案例。</p>
+<h3 id="案例1：使用-String-类型接受-body"><a href="#案例1：使用-String-类型接受-body" class="headerlink" title="案例1：使用 String 类型接受 body"></a>案例1：使用 String 类型接受 body</h3><pre class="line-numbers language-java" data-language="java"><code class="language-java"><span class="token keyword">public</span> <span class="token keyword">void</span> <span class="token function">m1</span><span class="token punctuation">(</span><span class="token annotation punctuation">@RequestBody</span> <span class="token class-name">String</span> body<span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+
+<p>springmvc 会将请求中 body 部分的数据读取出来，转换为 String 类型传递给这个参数。</p>
+<h3 id="案例2：使用字节数组接受-body-的数据"><a href="#案例2：使用字节数组接受-body-的数据" class="headerlink" title="案例2：使用字节数组接受 body 的数据"></a>案例2：使用字节数组接受 body 的数据</h3><pre class="line-numbers language-java" data-language="java"><code class="language-java"><span class="token keyword">public</span> <span class="token keyword">void</span> <span class="token function">m1</span><span class="token punctuation">(</span><span class="token annotation punctuation">@RequestBody</span> <span class="token keyword">byte</span><span class="token punctuation">[</span><span class="token punctuation">]</span> bytes<span class="token punctuation">)</span><span class="token punctuation">;</span><span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+
+<p>springmvc 会将请求中 body 部分的数据读取出来，然后转换为字节数组然后传递给 bytes 参数。</p>
+<h3 id="2个案例代码位置"><a href="#2个案例代码位置" class="headerlink" title="2个案例代码位置"></a>2个案例代码位置</h3><p><img src="/medias/loading.gif" data-original="https://raw.githubusercontent.com/luyaguo/pictures-guo/main/servlet/image-20221202104341346.png" alt="image-20221202104341346"></p>
+<h2 id="8、-重点-HandlerMethodArgumentResolver"><a href="#8、-重点-HandlerMethodArgumentResolver" class="headerlink" title="8、(重点)HandlerMethodArgumentResolver"></a>8、(重点)HandlerMethodArgumentResolver</h2><p>​	这里给大家扩展点知识，到目前我们知道可以使用 @RequestParam 接收表单的值，@RequestBody 可以接收请求中 body 的数据，@PathVariable 可以接受 url 中动态参数。</p>
+<p>​	<strong>那么问题来了，控制器的方法具体可以接收哪些类型的参数呢？这是个好问题</strong></p>
+<p>​	<strong>说句实话，可以接收参数的类型非常的多，这里我教大家一招，看看 springmvc 具体可以接受哪些类型的参数。</strong></p>
+<p>​	这里只需要掌握一个关键的接口就可以了：<strong>HandlerMethodArgumentResolver（控制器方法参数解析器）</strong>，这个接口特别重要，负责将 http 请求中的数据转换为 controller 中的方法能够接收的数据，就是根据控制器中方法参数信息，将 http 请求中的信息，转换控制器方法需要的参数的值。</p>
+<p>​	这个接口有2个方法大家需要掌握</p>
+<pre class="line-numbers language-java" data-language="java"><code class="language-java"><span class="token keyword">public</span> <span class="token keyword">interface</span> <span class="token class-name">HandlerMethodArgumentResolver</span> <span class="token punctuation">&#123;</span>
+  
+    <span class="token comment">//判断当前解析器是否能处理这个parameter这个参数，也就是说是否能够将请求中的数据转换为parameter指定的参数的值</span>
+    <span class="token keyword">boolean</span> <span class="token function">supportsParameter</span><span class="token punctuation">(</span><span class="token class-name">MethodParameter</span> parameter<span class="token punctuation">)</span><span class="token punctuation">;</span>
+  
+    <span class="token comment">//解析参数：从http请求中解析出控制器需要的参数的值</span>
+    <span class="token class-name">Object</span> <span class="token function">resolveArgument</span><span class="token punctuation">(</span><span class="token class-name">MethodParameter</span> parameter<span class="token punctuation">,</span> <span class="token annotation punctuation">@Nullable</span> <span class="token class-name">ModelAndViewContainer</span> mavContainer<span class="token punctuation">,</span> <span class="token class-name">NativeWebRequest</span> webRequest<span class="token punctuation">,</span> <span class="token annotation punctuation">@Nullable</span> <span class="token class-name">WebDataBinderFactory</span> binderFactory<span class="token punctuation">)</span> <span class="token keyword">throws</span> <span class="token class-name">Exception</span><span class="token punctuation">;</span>
+  
+<span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<p>​	这个接口有很多实现类，列几个比较熟悉的，当大家想知道 springmvc 还可以接收哪些类型的参数，以及这些参数有什么特点的时候，看看源码</p>
 <table>
 <thead>
 <tr>
-<th>字段</th>
+<th>实现类</th>
+<th>对应的控制器参数</th>
 <th>说明</th>
 </tr>
 </thead>
 <tbody><tr>
-<td>OFF(OFFSET)</td>
-<td>偏移量，也就是到这个字段位置所占用的byte数</td>
+<td>PathVariableMapMethodArgumentResolver</td>
+<td><code>@PathVariable </code>标注参数</td>
+<td>从url中提取参数的值</td>
 </tr>
 <tr>
-<td>SZ(SIZE)</td>
-<td>后面类型的字节大小</td>
+<td>RequestHeaderMethodArgumentResolver</td>
+<td><code>@RequestHeader</code>标注参数</td>
+<td>从http头中提取参数值</td>
 </tr>
 <tr>
-<td>TYPE</td>
-<td>是Class中定义的类型</td>
+<td>RequestParamMethodArgumentResolver</td>
+<td>@RequestParam标注参数</td>
+<td>http请求参数中获取值</td>
 </tr>
 <tr>
-<td>DESCRIPTION</td>
-<td>DESCRIPTION是类型的描述</td>
+<td>RequestResponseBodyMethodProcessor</td>
+<td>@RequestBody标注参数</td>
+<td>提取body数据，转换为参数类型</td>
 </tr>
 <tr>
-<td>VALUE</td>
-<td>VALUE是TYPE在内存中的值</td>
+<td>ServletResponseMethodArgumentResolver</td>
+<td>ServletResponse、OutputStream、Writer这3种类型的参数</td>
+<td>这几种类型用来控制http请求的响应输出流</td>
+</tr>
+<tr>
+<td>HttpEntityMethodProcessorHttpEntity</td>
+<td>HttpEntity类型的参数</td>
+<td>HttpEntity中包含了http请求头和body的所有信息</td>
+</tr>
+<tr>
+<td>ExpressionValueMethodArgumentResolver</td>
+<td>@Value标注的参数</td>
+<td>spel表达式，从spring容器中获取值</td>
+</tr>
+<tr>
+<td>MapMethodProcessor</td>
+<td>参数为Map或者子类型</td>
+<td>-</td>
+</tr>
+<tr>
+<td>ModelMethodProcessor</td>
+<td>参数为org.springframework.ui.Model 或子类型</td>
+<td>-</td>
+</tr>
+<tr>
+<td>ModelAttributeMethodProcessor</td>
+<td>@ModelAttribute标注的参数</td>
+<td>-</td>
 </tr>
 </tbody></table>
-<h4 id="Case-Object对象"><a href="#Case-Object对象" class="headerlink" title="Case-Object对象"></a>Case-Object对象</h4><pre class="line-numbers language-java" data-language="java"><code class="language-java"><span class="token keyword">public</span> <span class="token keyword">class</span> <span class="token class-name">JOLDemo</span> <span class="token punctuation">&#123;</span>
-  <span class="token keyword">public</span> <span class="token keyword">static</span> <span class="token keyword">void</span> <span class="token function">main</span><span class="token punctuation">(</span><span class="token class-name">String</span><span class="token punctuation">[</span><span class="token punctuation">]</span> args<span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
-    <span class="token class-name">Object</span> o <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">Object</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-    <span class="token class-name">System</span><span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">println</span><span class="token punctuation">(</span> <span class="token class-name">ClassLayout</span><span class="token punctuation">.</span><span class="token function">parseInstance</span><span class="token punctuation">(</span>o<span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">toPrintable</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-  <span class="token punctuation">&#125;</span>
-<span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
-
-<p><img src="/medias/loading.gif" data-original="https://raw.githubusercontent.com/luyaguo/pictures-guo/main/juc/202504180007871.png" alt="image-20230226183241744"></p>
-<h4 id="Case-ArrayObject对象"><a href="#Case-ArrayObject对象" class="headerlink" title="Case-ArrayObject对象"></a>Case-ArrayObject对象</h4><pre class="line-numbers language-java" data-language="java"><code class="language-java"><span class="token keyword">public</span> <span class="token keyword">void</span> <span class="token class-name">ArrayObjectTest</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
-  <span class="token class-name">Object</span><span class="token punctuation">[</span><span class="token punctuation">]</span> array <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">Object</span><span class="token punctuation">[</span><span class="token number">10</span><span class="token punctuation">]</span><span class="token punctuation">;</span>
-  <span class="token class-name">System</span><span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">println</span><span class="token punctuation">(</span><span class="token class-name">ClassLayout</span><span class="token punctuation">.</span><span class="token function">parseInstance</span><span class="token punctuation">(</span>array<span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">toPrintable</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-<span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span></span></code></pre>
-
-<p><img src="/medias/loading.gif" data-original="https://raw.githubusercontent.com/luyaguo/pictures-guo/main/juc/202504180007480.png" alt="image-20230226183742565"></p>
-<h4 id="Case-自定义Class对象-无字段"><a href="#Case-自定义Class对象-无字段" class="headerlink" title="Case-自定义Class对象(无字段)"></a>Case-自定义Class对象(无字段)</h4><pre class="line-numbers language-java" data-language="java"><code class="language-java"><span class="token keyword">class</span> <span class="token class-name">A</span> <span class="token punctuation">&#123;</span>
-<span class="token punctuation">&#125;</span>
-
-<span class="token annotation punctuation">@Test</span>
-<span class="token keyword">public</span> <span class="token keyword">void</span> <span class="token class-name">ANoFieldTest</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
-    <span class="token class-name">A</span> a <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">A</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span><span class="token comment">// 16 bytes</span>
-    <span class="token class-name">System</span><span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">println</span><span class="token punctuation">(</span><span class="token class-name">ClassLayout</span><span class="token punctuation">.</span><span class="token function">parseInstance</span><span class="token punctuation">(</span>a<span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">toPrintable</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-<span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
-
-<p><img src="/medias/loading.gif" data-original="https://raw.githubusercontent.com/luyaguo/pictures-guo/main/juc/202504180007221.png" alt="image-20230226183905005"></p>
-<h4 id="Case-自定义Class对象-有字段"><a href="#Case-自定义Class对象-有字段" class="headerlink" title="Case-自定义Class对象(有字段)"></a>Case-自定义Class对象(有字段)</h4><pre class="line-numbers language-java" data-language="java"><code class="language-java"><span class="token keyword">class</span> <span class="token class-name">A</span> <span class="token punctuation">&#123;</span>
-    <span class="token keyword">int</span> id<span class="token punctuation">;</span>
-    <span class="token keyword">boolean</span> flag <span class="token operator">=</span> <span class="token boolean">false</span><span class="token punctuation">;</span>
-<span class="token punctuation">&#125;</span>
-
-<span class="token annotation punctuation">@Test</span>
-<span class="token keyword">public</span> <span class="token keyword">void</span> <span class="token class-name">AHasFieldTest</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
-    <span class="token class-name">A</span> a <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">A</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span><span class="token comment">// 16 bytes</span>
-    <span class="token class-name">System</span><span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">println</span><span class="token punctuation">(</span><span class="token class-name">ClassLayout</span><span class="token punctuation">.</span><span class="token function">parseInstance</span><span class="token punctuation">(</span>a<span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">toPrintable</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-<span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
-
-<p><img src="/medias/loading.gif" data-original="https://raw.githubusercontent.com/luyaguo/pictures-guo/main/juc/202504180007432.png" alt="image-20230226184011676"></p>
-<h4 id="Case-自定义子类对象"><a href="#Case-自定义子类对象" class="headerlink" title="Case-自定义子类对象"></a>Case-自定义子类对象</h4><pre class="line-numbers language-java" data-language="java"><code class="language-java"><span class="token keyword">class</span> <span class="token class-name">A</span> <span class="token punctuation">&#123;</span>
-    <span class="token keyword">int</span> id<span class="token punctuation">;</span>
-    <span class="token keyword">boolean</span> flag <span class="token operator">=</span> <span class="token boolean">false</span><span class="token punctuation">;</span>
-<span class="token punctuation">&#125;</span>
-
-<span class="token keyword">class</span> <span class="token class-name">B</span> <span class="token keyword">extends</span> <span class="token class-name">A</span><span class="token punctuation">&#123;</span>
-    <span class="token class-name">String</span> name<span class="token punctuation">;</span>
-<span class="token punctuation">&#125;</span>
-
-<span class="token annotation punctuation">@Test</span>
-<span class="token keyword">public</span> <span class="token keyword">void</span> <span class="token class-name">ChildObjectTest</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
-    <span class="token class-name">B</span> b <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">B</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-    <span class="token class-name">System</span><span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">println</span><span class="token punctuation">(</span><span class="token class-name">ClassLayout</span><span class="token punctuation">.</span><span class="token function">parseInstance</span><span class="token punctuation">(</span>b<span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">toPrintable</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-
-<span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
-
-<p><img src="/medias/loading.gif" data-original="https://raw.githubusercontent.com/luyaguo/pictures-guo/main/juc/202504180007765.png" alt="image-20230226184110742"></p>
-<h2 id="5、指针压缩"><a href="#5、指针压缩" class="headerlink" title="5、指针压缩"></a>5、指针压缩</h2><h3 id="开启"><a href="#开启" class="headerlink" title="开启"></a>开启</h3><p>执行 <code>java -XX:+PrintCommandLineFlags -version</code>，发现指针压缩是<strong>默认开启</strong>的</p>
-<p><img src="/medias/loading.gif" data-original="https://raw.githubusercontent.com/luyaguo/pictures-guo/main/juc/202504180007413.png" alt="image-20230226184242451"></p>
-<p>在参数里加：<code>-XX:+UseCompressedClassPointers</code></p>
-<pre class="line-numbers language-java" data-language="java"><code class="language-java"><span class="token keyword">public</span> <span class="token keyword">void</span> <span class="token class-name">ObjectTest</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
-    <span class="token class-name">Object</span> o <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">Object</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span><span class="token comment">//16 bytes</span>
-    <span class="token class-name">System</span><span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">println</span><span class="token punctuation">(</span><span class="token class-name">ClassLayout</span><span class="token punctuation">.</span><span class="token function">parseInstance</span><span class="token punctuation">(</span>o<span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">toPrintable</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-<span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span></span></code></pre>
-
-<p><img src="/medias/loading.gif" data-original="https://raw.githubusercontent.com/luyaguo/pictures-guo/main/juc/202504180007126.png" alt="image-20230226184532062"></p>
-<p>上述表示开启了类型指针的压缩，以节约空间。</p>
-<h3 id="关闭"><a href="#关闭" class="headerlink" title="关闭"></a>关闭</h3><p>不使用指针压缩，修改参数为：<code>-XX:-UseCompressedClassPointers</code></p>
-<p><img src="/medias/loading.gif" data-original="https://raw.githubusercontent.com/luyaguo/pictures-guo/main/juc/202504180007631.png" alt="image-20230226184618363"></p>
-<h2 id="6、对象分代年龄"><a href="#6、对象分代年龄" class="headerlink" title="6、对象分代年龄"></a>6、对象分代年龄</h2><p>​	<strong>GC年龄采用4位bit存储，最大位15，例如MaxTenuringThreshold参数默认值就是15</strong>，对象分代年龄最大就是15</p>
-<h3 id="证明"><a href="#证明" class="headerlink" title="证明"></a>证明</h3><p>​	我们假如想直接把分代最大年龄修改为16会直接报错。添加参数如下：<code>-XX:MaxTenurningThreshold=16</code>，启动程序</p>
-<p><img src="/medias/loading.gif" data-original="https://raw.githubusercontent.com/luyaguo/pictures-guo/main/juc/202504180007880.png" alt="image-20230226180554322"></p>
-<p>结果无法创建虚拟机，启动程序失败。</p>
-<h2 id="7、面试题"><a href="#7、面试题" class="headerlink" title="7、面试题"></a>7、面试题</h2><p><img src="/medias/loading.gif" data-original="https://raw.githubusercontent.com/luyaguo/pictures-guo/main/juc/202504180007014.png" alt="image-20230226231233360"></p>
+<h2 id="9、Tomcat-乱码问题"><a href="#9、Tomcat-乱码问题" class="headerlink" title="9、Tomcat 乱码问题"></a>9、Tomcat 乱码问题</h2><p>大家在tomcat9中跑案例的时候，控制台可能会输出乱码，需要配置下编码<code>-Dfile.encoding=utf-8</code></p>
+<p><img src="/medias/loading.gif" data-original="https://raw.githubusercontent.com/luyaguo/pictures-guo/main/servlet/image-20221202104428002.png" alt="image-20221202104428002"></p>
 
                 
             </div>
@@ -727,8 +789,8 @@
                     
                         <div class="article-tag">
                             
-                                <a href="/tags/JUC-%E8%BF%9B%E9%98%B6/">
-                                    <span class="chip bg-color">JUC 进阶</span>
+                                <a href="/tags/SpringMVC/">
+                                    <span class="chip bg-color">SpringMVC</span>
                                 </a>
                             
                         </div>
@@ -1041,17 +1103,18 @@
 <article id="prenext-posts" class="prev-next articles">
     <div class="row article-row">
         
-        <div class="article col s12 m6" data-aos="fade-up">
+        <div class="article col s12 m6" data-aos="fade-up" data-aos="fade-up">
             <div class="article-badge left-badge text-color">
-                <i class="fas fa-chevron-left"></i>&nbsp;Previous</div>
+                <i class="far fa-dot-circle"></i>&nbsp;Current
+            </div>
             <div class="card">
-                <a href="/posts/d8da86ef.html">
+                <a href="/posts/f3b61b38.html">
                     <div class="card-image">
                         
                         
-                        <img src="/medias/featureimages/16.jpg" class="responsive-img" alt="第十二章 Synchronized 与锁升级">
+                        <img src="/medias/featureimages/23.jpg" class="responsive-img" alt="第五章 @RequestBody 接收 Json 格式数据">
                         
-                        <span class="card-title">第十二章 Synchronized 与锁升级</span>
+                        <span class="card-title">第五章 @RequestBody 接收 Json 格式数据</span>
                     </div>
                 </a>
                 <div class="card-content article-content">
@@ -1061,26 +1124,27 @@
                         
                     </div>
                     <div class="publish-info">
-                        <span class="publish-date">
-                            <i class="far fa-clock fa-fw icon-date"></i>2025-04-18
-                        </span>
+                            <span class="publish-date">
+                                <i class="far fa-clock fa-fw icon-date"></i>2025-04-25
+                            </span>
                         <span class="publish-author">
                             
                             <i class="fas fa-bookmark fa-fw icon-category"></i>
                             
-                            <a href="/categories/JUC-%E8%BF%9B%E9%98%B6/" class="post-category">
-                                    JUC 进阶
+                            <a href="/categories/SpringMVC/" class="post-category">
+                                    SpringMVC
                                 </a>
                             
                             
                         </span>
                     </div>
                 </div>
+
                 
                 <div class="card-action article-tags">
                     
-                    <a href="/tags/JUC-%E8%BF%9B%E9%98%B6/">
-                        <span class="chip bg-color">JUC 进阶</span>
+                    <a href="/tags/SpringMVC/">
+                        <span class="chip bg-color">SpringMVC</span>
                     </a>
                     
                 </div>
@@ -1094,13 +1158,13 @@
                 Next&nbsp;<i class="fas fa-chevron-right"></i>
             </div>
             <div class="card">
-                <a href="/posts/93c928d2.html">
+                <a href="/posts/6dd28e9b.html">
                     <div class="card-image">
                         
                         
-                        <img src="/medias/featureimages/20.jpg" class="responsive-img" alt="第十章 ThreadLocal">
+                        <img src="/medias/featureimages/12.jpg" class="responsive-img" alt="第四章 如何接受请求中的参数">
                         
-                        <span class="card-title">第十章 ThreadLocal</span>
+                        <span class="card-title">第四章 如何接受请求中的参数</span>
                     </div>
                 </a>
                 <div class="card-content article-content">
@@ -1111,14 +1175,14 @@
                     </div>
                     <div class="publish-info">
                             <span class="publish-date">
-                                <i class="far fa-clock fa-fw icon-date"></i>2025-04-17
+                                <i class="far fa-clock fa-fw icon-date"></i>2025-04-24
                             </span>
                         <span class="publish-author">
                             
                             <i class="fas fa-bookmark fa-fw icon-category"></i>
                             
-                            <a href="/categories/JUC-%E8%BF%9B%E9%98%B6/" class="post-category">
-                                    JUC 进阶
+                            <a href="/categories/SpringMVC/" class="post-category">
+                                    SpringMVC
                                 </a>
                             
                             
@@ -1128,8 +1192,8 @@
                 
                 <div class="card-action article-tags">
                     
-                    <a href="/tags/JUC-%E8%BF%9B%E9%98%B6/">
-                        <span class="chip bg-color">JUC 进阶</span>
+                    <a href="/tags/SpringMVC/">
+                        <span class="chip bg-color">SpringMVC</span>
                     </a>
                     
                 </div>
