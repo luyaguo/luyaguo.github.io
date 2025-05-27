@@ -1,0 +1,1794 @@
+<!DOCTYPE HTML>
+<html lang="en">
+
+
+<head>
+    <meta charset="utf-8">
+    <meta name="keywords" content="第四章 逻辑架构, 向阳">
+    <meta name="description" content="第四章 逻辑架构1. 逻辑架构剖析1.1 服务器处理客户端请求那服务器进程对客户端进程发送的请求做了什么处理，才能产生最后的处理结果呢？这里以查询请求为 例展示：
+
+下面具体展开看一下：
+
+1.2 Connectors1.3 第1层：连接层">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <meta name="renderer" content="webkit|ie-stand|ie-comp">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="format-detection" content="telephone=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="referrer" content="no-referrer-when-downgrade">
+    <!-- Global site tag (gtag.js) - Google Analytics -->
+
+
+    <title>第四章 逻辑架构 | 向阳</title>
+    <link rel="icon" type="image/png" href="/favicon.png">
+    
+
+
+    <!-- bg-cover style     -->
+
+
+
+<link rel="stylesheet" type="text/css" href="/libs/awesome/css/all.min.css">
+<link rel="stylesheet" type="text/css" href="/libs/materialize/materialize.min.css">
+<link rel="stylesheet" type="text/css" href="/libs/aos/aos.css">
+<link rel="stylesheet" type="text/css" href="/libs/animate/animate.min.css">
+<link rel="stylesheet" type="text/css" href="/libs/lightGallery/css/lightgallery.min.css">
+<link rel="stylesheet" type="text/css" href="/css/matery.css">
+<link rel="stylesheet" type="text/css" href="/css/my.css">
+<link rel="stylesheet" type="text/css" href="/css/dark.css" media="none" onload="if(media!='all')media='all'">
+
+
+
+
+    <link rel="stylesheet" href="/libs/tocbot/tocbot.css">
+    <link rel="stylesheet" href="/css/post.css">
+
+
+
+
+    
+
+
+
+    <script src="/libs/jquery/jquery-3.6.0.min.js"></script>
+
+<meta name="generator" content="Hexo 7.2.0"></head>
+
+<!-- 预加载动画 -->
+
+    <style type="text/css" lang="css">
+    #loading-container{
+        position: fixed;
+        top: 0;
+        left: 0;
+        min-height: 100vh;
+        width: 100vw;
+        z-index: 9999;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        background: #2c3561;
+        text-align: center;
+        /* loader页面消失采用渐隐的方式*/
+        -webkit-transition: opacity 1s ease;
+        -moz-transition: opacity 1s ease;
+        -o-transition: opacity 1s ease;
+        transition: opacity 1s ease;
+    }
+    .loading-image{
+        width: 120px;
+        height: 50px;
+        transform: translate(-50%);
+    }
+
+    .loading-image div:nth-child(2) {
+        -webkit-animation: pacman-balls 1s linear 0s infinite;
+        animation: pacman-balls 1s linear 0s infinite
+    }
+
+    .loading-image div:nth-child(3) {
+        -webkit-animation: pacman-balls 1s linear .33s infinite;
+        animation: pacman-balls 1s linear .33s infinite
+    }
+
+    .loading-image div:nth-child(4) {
+        -webkit-animation: pacman-balls 1s linear .66s infinite;
+        animation: pacman-balls 1s linear .66s infinite
+    }
+
+    .loading-image div:nth-child(5) {
+        -webkit-animation: pacman-balls 1s linear .99s infinite;
+        animation: pacman-balls 1s linear .99s infinite
+    }
+
+    .loading-image div:first-of-type {
+        width: 0;
+        height: 0;
+        border: 25px solid #49b1f5;
+        border-right-color: transparent;
+        border-radius: 25px;
+        -webkit-animation: rotate_pacman_half_up .5s 0s infinite;
+        animation: rotate_pacman_half_up .5s 0s infinite;
+    }
+    .loading-image div:nth-child(2) {
+        width: 0;
+        height: 0;
+        border: 25px solid #49b1f5;
+        border-right-color: transparent;
+        border-radius: 25px;
+        -webkit-animation: rotate_pacman_half_down .5s 0s infinite;
+        animation: rotate_pacman_half_down .5s 0s infinite;
+        margin-top: -50px;
+    }
+    @-webkit-keyframes rotate_pacman_half_up {0% {transform: rotate(270deg)}50% {transform: rotate(1turn)}to {transform: rotate(270deg)}}
+
+    @keyframes rotate_pacman_half_up {0% {transform: rotate(270deg)}50% {transform: rotate(1turn)}to {transform: rotate(270deg)}}
+
+    @-webkit-keyframes rotate_pacman_half_down {0% {transform: rotate(90deg)}50% {transform: rotate(0deg)}to {transform: rotate(90deg)}}
+
+    @keyframes rotate_pacman_half_down {0% {transform: rotate(90deg)}50% {transform: rotate(0deg)}to {transform: rotate(90deg)}}
+
+    @-webkit-keyframes pacman-balls {75% {opacity: .7}to {transform: translate(-100px, -6.25px)}}
+
+    @keyframes pacman-balls {75% {opacity: .7}to {transform: translate(-100px, -6.25px)}}
+
+
+    .loading-image div:nth-child(3),
+    .loading-image div:nth-child(4),
+    .loading-image div:nth-child(5),
+    .loading-image div:nth-child(6){
+        background-color: #49b1f5;
+        width: 15px;
+        height: 15px;
+        border-radius: 100%;
+        margin: 2px;
+        width: 10px;
+        height: 10px;
+        position: absolute;
+        transform: translateY(-6.25px);
+        top: 25px;
+        left: 100px;
+    }
+    .loading-text{
+        margin-bottom: 20vh;
+        text-align: center;
+        color: #f8c471;
+        font-size: 2rem;
+        box-sizing: border-box;
+        padding: 0 10px;
+        text-shadow: 0 2px 10px rgba(0,0,0,0.2);
+    }
+    @media only screen and (max-width: 500px) {
+        .loading-text{
+            font-size: 1.5rem;
+        }
+    }
+    .fadeout {
+        opacity: 0;
+        filter: alpha(opacity=0);
+    }
+    /* logo出现动画 */
+    @-webkit-keyframes fadeInDown{0%{opacity:0;-webkit-transform:translate3d(0,-100%,0);transform:translate3d(0,-100%,0)}100%{opacity:1;-webkit-transform:none;transform:none}}
+    @keyframes fadeInDown{0%{opacity:0;-webkit-transform:translate3d(0,-100%,0);}}
+</style>
+<script>
+    (function () {
+        const loaded = function(){
+            setTimeout(function(){
+                const loader = document.getElementById("loading-container");
+                loader.className="fadeout" ;//使用渐隐的方法淡出loading page
+                // document.getElementById("body-wrap").style.display="flex";
+                setTimeout(function(){
+                    loader.style.display="none";
+                },2500);
+            },800);//强制显示loading page 0.8s
+        };
+        loaded();
+    })()
+</script>
+
+<body>
+    <!--动态背景-->
+    <div id="bg"><canvas></canvas><canvas></canvas><canvas></canvas></div>
+    <script src="/js/canva_moving_effect.js"></script>
+
+    
+        <div id="loading-container">
+            <p class="loading-text">客官坐会儿，请稍等片刻. . . </p>
+            <div class="loading-image">
+                <div></div>
+                <div></div>
+                <div></div>
+                <div></div>
+                <div></div>
+            </div>
+        </div>
+    
+
+    <header class="navbar-fixed">
+    <nav id="headNav" class="bg-color nav-transparent">
+        <div id="navContainer" class="nav-wrapper">
+            <div class="brand-logo">
+                <a href="/" class="waves-effect waves-light">
+                    <div>&nbsp;
+                        
+                            <img src="/medias/logo2.png" class="logo-img" alt="LOGO">
+                        
+                        <span class="logo-span">向阳</span>
+                    </div>
+                </a>
+            </div>
+            
+
+<a href="#" data-target="mobile-nav" class="sidenav-trigger button-collapse"><i class="fas fa-bars"></i></a>
+<ul class="right nav-menu">
+  
+  <li class="hide-on-med-and-down nav-item">
+    
+    <a href="/" class="waves-effect waves-light">
+      
+      <i class="fas fa-home" style="zoom: 0.6;"></i>
+      
+      <span>Index</span>
+    </a>
+    
+  </li>
+  
+  <li class="hide-on-med-and-down nav-item">
+    
+    <a href="/tags" class="waves-effect waves-light">
+      
+      <i class="fas fa-tags" style="zoom: 0.6;"></i>
+      
+      <span>Tags</span>
+    </a>
+    
+  </li>
+  
+  <li class="hide-on-med-and-down nav-item">
+    
+    <a href="/categories" class="waves-effect waves-light">
+      
+      <i class="fas fa-bookmark" style="zoom: 0.6;"></i>
+      
+      <span>Categories</span>
+    </a>
+    
+  </li>
+  
+  <li class="hide-on-med-and-down nav-item">
+    
+    <a href="/archives" class="waves-effect waves-light">
+      
+      <i class="fas fa-archive" style="zoom: 0.6;"></i>
+      
+      <span>Archives</span>
+    </a>
+    
+  </li>
+  
+  <li class="hide-on-med-and-down nav-item">
+    
+    <a href="/about" class="waves-effect waves-light">
+      
+      <i class="fas fa-user-circle" style="zoom: 0.6;"></i>
+      
+      <span>About</span>
+    </a>
+    
+  </li>
+  
+  <li class="hide-on-med-and-down nav-item">
+    
+    <a href="/contact" class="waves-effect waves-light">
+      
+      <i class="fas fa-comments" style="zoom: 0.6;"></i>
+      
+      <span>Contact</span>
+    </a>
+    
+  </li>
+  
+  <li class="hide-on-med-and-down nav-item">
+    
+    <a href="/friends" class="waves-effect waves-light">
+      
+      <i class="fas fa-address-book" style="zoom: 0.6;"></i>
+      
+      <span>Friends</span>
+    </a>
+    
+  </li>
+  
+  <li>
+    <a href="#searchModal" class="modal-trigger waves-effect waves-light">
+      <i id="searchIcon" class="fas fa-search" title="Search" style="zoom: 0.95;"></i>
+    </a>
+  </li>
+
+  <!-- 全屏 -->
+<!--   <li id="fullscreen_li" class="fullscreen"> -->
+<!--     <a href="javascript:void(0);" class="modal-trigger waves-effect waves-light"> -->
+<!--       <i id="fullscreen" class="fas fa-expand-arrows-alt" title="全屏" style="zoom: 0.85;"></i> -->
+<!--     </a> -->
+<!--   </li> -->
+
+  <!-- 主题背景 -->
+  <li>
+    <a href="javascript:;" class="modal-trigger waves-effect waves-light" onclick="switchNightMode()" title="深色/浅色模式" >
+      <i id="sum-moon-icon" class="fas fa-sun" style="zoom: 0.85;"></i>
+    </a>
+  </li>
+  &nbsp;
+</ul>
+
+
+<div id="mobile-nav" class="side-nav sidenav">
+
+    <div class="mobile-head bg-color">
+        
+        <img src="/medias/logo2.png" class="logo-img circle responsive-img">
+        
+        <div class="logo-name">向阳</div>
+        <div class="logo-desc">
+            
+            Never give up and never give in...
+            
+        </div>
+    </div>
+
+    <ul class="menu-list mobile-menu-list">
+        
+        <li class="m-nav-item">
+	  
+		<a href="/" class="waves-effect waves-light">
+			
+			    <i class="fa-fw fas fa-home"></i>
+			
+			Index
+		</a>
+          
+        </li>
+        
+        <li class="m-nav-item">
+	  
+		<a href="/tags" class="waves-effect waves-light">
+			
+			    <i class="fa-fw fas fa-tags"></i>
+			
+			Tags
+		</a>
+          
+        </li>
+        
+        <li class="m-nav-item">
+	  
+		<a href="/categories" class="waves-effect waves-light">
+			
+			    <i class="fa-fw fas fa-bookmark"></i>
+			
+			Categories
+		</a>
+          
+        </li>
+        
+        <li class="m-nav-item">
+	  
+		<a href="/archives" class="waves-effect waves-light">
+			
+			    <i class="fa-fw fas fa-archive"></i>
+			
+			Archives
+		</a>
+          
+        </li>
+        
+        <li class="m-nav-item">
+	  
+		<a href="/about" class="waves-effect waves-light">
+			
+			    <i class="fa-fw fas fa-user-circle"></i>
+			
+			About
+		</a>
+          
+        </li>
+        
+        <li class="m-nav-item">
+	  
+		<a href="/contact" class="waves-effect waves-light">
+			
+			    <i class="fa-fw fas fa-comments"></i>
+			
+			Contact
+		</a>
+          
+        </li>
+        
+        <li class="m-nav-item">
+	  
+		<a href="/friends" class="waves-effect waves-light">
+			
+			    <i class="fa-fw fas fa-address-book"></i>
+			
+			Friends
+		</a>
+          
+        </li>
+        
+        
+    </ul>
+</div>
+
+
+        </div>
+
+        
+    </nav>
+
+</header>
+
+    
+
+
+
+<div class="bg-cover pd-header post-cover" style="background-image: url('/medias/featureimages/13.jpg')">
+    <div class="container" style="right: 0px;left: 0px;">
+        <div class="row">
+            <div class="col s12 m12 l12">
+                <div class="brand">
+                    <h1 class="description center-align post-title">第四章 逻辑架构</h1>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+<main class="post-container content">
+
+    
+    <div class="row">
+    <div id="main-content" class="col s12 m12 l9">
+        <!-- 文章内容详情 -->
+<div id="artDetail">
+    <div class="card">
+        <div class="card-content article-info">
+            <div class="row tag-cate">
+                <div class="col s7">
+                    
+                    <div class="article-tag">
+                        
+                            <a href="/tags/MySQL-%E8%BF%9B%E9%98%B6/">
+                                <span class="chip bg-color">MySQL 进阶</span>
+                            </a>
+                        
+                    </div>
+                    
+                </div>
+                <div class="col s5 right-align">
+                    
+                    <div class="post-cate">
+                        <i class="fas fa-bookmark fa-fw icon-category"></i>
+                        
+                            <a href="/categories/MySQL-%E8%BF%9B%E9%98%B6/" class="post-category">
+                                MySQL 进阶
+                            </a>
+                        
+                    </div>
+                    
+                </div>
+            </div>
+
+            <div class="post-info">
+                
+                <div class="post-date info-break-policy">
+                    <i class="far fa-calendar-minus fa-fw"></i>Publish Date:&nbsp;&nbsp;
+                    2025-05-26
+                </div>
+                
+
+                
+
+                
+                <div class="info-break-policy">
+                    <i class="far fa-file-word fa-fw"></i>Word Count:&nbsp;&nbsp;
+                    5.8k
+                </div>
+                
+
+                
+                <div class="info-break-policy">
+                    <i class="far fa-clock fa-fw"></i>Read Times:&nbsp;&nbsp;
+                    20 Min
+                </div>
+                
+
+                
+                    <div id="busuanzi_container_page_pv" class="info-break-policy">
+                        <i class="far fa-eye fa-fw"></i>Read Count:&nbsp;&nbsp;
+                        <span id="busuanzi_value_page_pv"></span>
+                    </div>
+				
+            </div>
+        </div>
+        <hr class="clearfix">
+
+        
+        <!-- 是否加载使用自带的 prismjs. -->
+        <link rel="stylesheet" href="/libs/prism/prism.min.css">
+        
+
+        
+        <!-- 代码块折行 -->
+        <style type="text/css">
+            code[class*="language-"], pre[class*="language-"] { white-space: pre-wrap !important; }
+        </style>
+        
+
+        <div class="card-content article-card-content">
+            <div id="articleContent">
+                <h1 id="第四章-逻辑架构"><a href="#第四章-逻辑架构" class="headerlink" title="第四章 逻辑架构"></a>第四章 逻辑架构</h1><h2 id="1-逻辑架构剖析"><a href="#1-逻辑架构剖析" class="headerlink" title="1. 逻辑架构剖析"></a>1. 逻辑架构剖析</h2><h3 id="1-1-服务器处理客户端请求"><a href="#1-1-服务器处理客户端请求" class="headerlink" title="1.1 服务器处理客户端请求"></a>1.1 服务器处理客户端请求</h3><p>那服务器进程对客户端进程发送的请求做了什么处理，才能产生最后的处理结果呢？这里以查询请求为 例展示：</p>
+<p><img src="/medias/loading.gif" data-original="https://raw.githubusercontent.com/luyaguo/pictures-guo/main/mysql/202505272352054.png" alt="image-20220621224056304"></p>
+<p>下面具体展开看一下：</p>
+<p><img src="/medias/loading.gif" data-original="https://raw.githubusercontent.com/luyaguo/pictures-guo/main/mysql/202505272352638.png" alt="image-20220621224126422"></p>
+<h3 id="1-2-Connectors"><a href="#1-2-Connectors" class="headerlink" title="1.2 Connectors"></a>1.2 Connectors</h3><h3 id="1-3-第1层：连接层"><a href="#1-3-第1层：连接层" class="headerlink" title="1.3 第1层：连接层"></a>1.3 第1层：连接层</h3><p>​	系统（客户端）访问 MySQL 服务器前，做的第一件事就是建立 <strong>TCP</strong> 连接。 </p>
+<p>​	经过三次握手建立连接成功后， <strong>MySQL</strong> 服务器对 <strong>TCP</strong> 传输过来的账号密码做身份认证、权限获取。 </p>
+<ul>
+<li>用户名或密码不对，会收到一个Access denied for user错误，客户端程序结束执行 </li>
+<li>用户名密码认证通过，会从权限表查出账号拥有的权限与连接关联，之后的权限判断逻辑，都将依 赖于此时读到的权限</li>
+</ul>
+<p>​	TCP 连接收到请求后，必须要分配给一个线程专门与这个客户端的交互。所以还会有个线程池，去走后面的流程。每一个连接从线程池中获取线程，省去了创建和销毁线程的开销。</p>
+<h3 id="1-4-第2层：服务层"><a href="#1-4-第2层：服务层" class="headerlink" title="1.4 第2层：服务层"></a>1.4 第2层：服务层</h3><ul>
+<li><p>SQL Interface: SQL接口 </p>
+<ul>
+<li>接收用户的SQL命令，并且返回用户需要查询的结果。比如SELECT … FROM就是调用SQL Interface </li>
+<li>MySQL支持DML（数据操作语言）、DDL（数据定义语言）、存储过程、视图、触发器、自定 义函数等多种SQL语言接口</li>
+</ul>
+</li>
+<li><p>Parser: 解析器 </p>
+<ul>
+<li>在解析器中对 SQL 语句进行语法分析、语义分析。将SQL语句分解成数据结构，并将这个结构 传递到后续步骤，以后SQL语句的传递和处理就是基于这个结构的。如果在分解构成中遇到错 误，那么就说明这个SQL语句是不合理的。 </li>
+<li>在SQL命令传递到解析器的时候会被解析器验证和解析，并为其创建 <strong>语法树</strong> ，并根据数据字 典丰富查询语法树，会 <strong>验证该客户端是否具有执行该查询的权限</strong> 。创建好语法树后，MySQL还会对SQl查询进行语法上的优化，进行查询重写。</li>
+</ul>
+</li>
+<li><p>Optimizer: 查询优化器</p>
+<ul>
+<li><p>SQL语句在语法解析之后、查询之前会使用查询优化器确定 SQL 语句的执行路径，生成一个 执行计划 。 </p>
+</li>
+<li><p>这个执行计划表明应该 <strong>使用哪些索引</strong> 进行查询（全表检索还是使用索引检索），表之间的连接顺序如何，最后会按照执行计划中的步骤调用存储引擎提供的方法来真正的执行查询，并将查询结果返回给用户。 </p>
+</li>
+<li><p>它使用“ <strong>选取-投影-连接</strong> ”策略进行查询。例如：</p>
+<pre class="line-numbers language-sql" data-language="sql"><code class="language-sql"><span class="token keyword">SELECT</span> id<span class="token punctuation">,</span>name <span class="token keyword">FROM</span> student <span class="token keyword">WHERE</span> gender <span class="token operator">=</span> <span class="token string">'女'</span><span class="token punctuation">;</span><span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+
+<p>这个SELECT查询先根据WHERE语句进行 <strong>选取</strong> ，而不是将表全部查询出来以后再进行gender过 滤。 这个SELECT查询先根据id和name进行属性 <strong>投影</strong> ，而不是将属性全部取出以后再进行过滤，将这两个查询条件 <strong>连接</strong> 起来生成最终查询结果。</p>
+</li>
+</ul>
+</li>
+<li><p>Caches &amp; Buffers： 查询缓存组件 </p>
+<ul>
+<li>MySQL内部维持着一些Cache和Buffer，比如Query Cache用来缓存一条SELECT语句的执行结果，如果能够在其中找到对应的查询结果，那么就不必再进行查询解析、优化和执行的整个过程了，直接将结果反馈给客户端。 </li>
+<li>这个缓存机制是由一系列小缓存组成的。比如表缓存，记录缓存，key缓存，权限缓存等 。 </li>
+<li>这个查询缓存可以在 <strong>不同客户端之间共享</strong> 。 </li>
+<li>从MySQL 5.7.20开始，不推荐使用查询缓存，并在 <strong>MySQL 8.0中删除</strong> 。</li>
+</ul>
+</li>
+</ul>
+<blockquote>
+<p>小故事： 如果我问你9+8×16-3×2×17的值是多少，你可能会用计算器去算一下，最终结果35。如果再问你一遍9+8×16- 3×2×17的值是多少，你还用再傻呵呵的再算一遍吗？我们刚刚已经算过了，直接说答案就好了。</p>
+</blockquote>
+<h3 id="1-5-第3层：引擎层"><a href="#1-5-第3层：引擎层" class="headerlink" title="1.5 第3层：引擎层"></a>1.5 第3层：引擎层</h3><p>​	插件式存储引擎层（ Storage Engines），<strong>真正的负责了MySQL中数据的存储和提取，对物理服务器级别维护的底层数据执行操作</strong>，服务器通过API与存储引擎进行通信。不同的存储引擎具有的功能不同，这样 我们可以根据自己的实际需要进行选取。 </p>
+<p>MySQL 8.0.25默认支持的存储引擎如下：</p>
+<p><img src="/medias/loading.gif" data-original="https://raw.githubusercontent.com/luyaguo/pictures-guo/main/mysql/202505272351123.png" alt="image-20220622214741044"></p>
+<h3 id="1-6-存储层"><a href="#1-6-存储层" class="headerlink" title="1.6 存储层"></a>1.6 存储层</h3><p>​	所有的数据，数据库、表的定义，表的每一行的内容，索引，都是存在 <strong>文件系统</strong> 上，以 <strong>文件</strong> 的方式存在的，并完成与存储引擎的交互。当然有些存储引擎比如InnoDB，也支持不使用文件系统直接管理裸设备，但现代文件系统的实现使得这样做没有必要了。在文件系统之下，可以使用本地磁盘，可以使用 DAS、NAS、SAN 等各种存储系统。</p>
+<h3 id="1-7-小结"><a href="#1-7-小结" class="headerlink" title="1.7 小结"></a>1.7 小结</h3><p>MySQL架构图本节开篇所示。下面为了熟悉SQL执行流程方便，我们可以简化如下：</p>
+<p><img src="/medias/loading.gif" data-original="https://raw.githubusercontent.com/luyaguo/pictures-guo/main/mysql/202505272351315.png" alt="image-20220622214928345"></p>
+<p>简化为三层结构： </p>
+<ol>
+<li>连接层：客户端和服务器端建立连接，客户端发送 SQL 至服务器端； </li>
+<li>SQL 层（服务层）：对 SQL 语句进行查询处理；与数据库文件的存储方式无关； </li>
+<li>存储引擎层：与数据库文件打交道，负责数据的存储和读取。</li>
+</ol>
+<h2 id="2-SQL执行流程"><a href="#2-SQL执行流程" class="headerlink" title="2. SQL执行流程"></a>2. SQL执行流程</h2><h3 id="2-1-MySQL-中的-SQL执行流程"><a href="#2-1-MySQL-中的-SQL执行流程" class="headerlink" title="2.1 MySQL 中的 SQL执行流程"></a>2.1 MySQL 中的 SQL执行流程</h3><p><img src="/medias/loading.gif" data-original="https://raw.githubusercontent.com/luyaguo/pictures-guo/main/mysql/202505272351718.png" alt="image-20220622215100853"></p>
+<h4 id="1-查询缓存"><a href="#1-查询缓存" class="headerlink" title="1. 查询缓存"></a>1. 查询缓存</h4><p>​	Server 如果在查询缓存中发现了这条 SQL 语句，就会直接将结果返回给客户端；如果没有，就进入到解析器阶段。需要说明的是，因为查询缓存往往效率不高，所以在 MySQL8.0 之后就抛弃了这个功能。 </p>
+<p>​	大多数情况查询缓存就是个鸡肋，为什么呢？</p>
+<pre class="line-numbers language-sql" data-language="sql"><code class="language-sql"><span class="token keyword">SELECT</span> employee_id<span class="token punctuation">,</span>last_name <span class="token keyword">FROM</span> employees <span class="token keyword">WHERE</span> employee_id <span class="token operator">=</span> <span class="token number">101</span><span class="token punctuation">;</span><span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+
+<p>​	查询缓存是提前把查询结果缓存起来，这样下次不需要执行就可以直接拿到结果。需要说明的是，在 MySQL 中的查询缓存，不是缓存查询计划，而是查询对应的结果。这就意味着查询匹配的 <strong>鲁棒性大大降低</strong> ，只有 <strong>相同的查询操作才会命中查询缓存</strong> 。两个查询请求在任何字符上的不同（例如：空格、注释、 大小写），都会导致缓存不会命中。因此 MySQL 的 <strong>查询缓存命中率不高</strong> 。 </p>
+<p>​	同时，如果查询请求中包含某些系统函数、用户自定义变量和函数、一些系统表，如 mysql 、 information_schema、 performance_schema 数据库中的表，那这个请求就不会被缓存。以某些系统函数 举例，可能同样的函数的两次调用会产生不一样的结果，比如函数 <strong>NOW</strong> ，每次调用都会产生最新的当前 时间，如果在一个查询请求中调用了这个函数，那即使查询请求的文本信息都一样，那不同时间的两次查询也应该得到不同的结果，如果在第一次查询时就缓存了，那第二次查询的时候直接使用第一次查询的结果就是错误的！ </p>
+<p>​	此外，既然是缓存，那就有它<strong>缓存失效的时候</strong> 。MySQL的缓存系统会监测涉及到的每张表，只要该表的结构或者数据被修改，如对该表使用了 <strong>INSERT 、 UPDATE 、 DELETE 、 TRUNCATE TABLE 、 ALTER TABLE 、 DROP TABLE 或 DROP DATABASE</strong> 语句，那使用该表的所有高速缓存查询都将变为无效并从高速缓存中删除！对于 <strong>更新压力大的数据库</strong> 来说，查询缓存的命中率会非常低。</p>
+<h4 id="2-解析器"><a href="#2-解析器" class="headerlink" title="2. 解析器"></a>2. 解析器</h4><p>​	在解析器中对 SQL 语句进行语法分析、语义分析。</p>
+<p><img src="/medias/loading.gif" data-original="https://raw.githubusercontent.com/luyaguo/pictures-guo/main/mysql/202505272351995.png" alt="image-20220622215547099"></p>
+<p>​	分析器先做“ <strong>词法分析</strong> ”。你输入的是由多个字符串和空格组成的一条 SQL 语句，MySQL 需要识别出里面 的字符串分别是什么，代表什么。 MySQL 从你输入的”select”这个关键字识别出来，这是一个查询语句。它也要把字符串“T”识别成“表名 T”，把字符串“ID”识别成“列 ID”。</p>
+<p>​	接着，要做“ <strong>语法分析</strong> ”。根据词法分析的结果，语法分析器（比如：Bison）会根据语法规则，判断你输入的这个 SQL 语句是否满足 MySQL 语法 。</p>
+<pre class="line-numbers language-sql" data-language="sql"><code class="language-sql"><span class="token keyword">select</span> department_id<span class="token punctuation">,</span>job_id<span class="token punctuation">,</span><span class="token function">avg</span><span class="token punctuation">(</span>salary<span class="token punctuation">)</span> <span class="token keyword">from</span> employees <span class="token keyword">group</span> <span class="token keyword">by</span> department_id<span class="token punctuation">;</span><span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+
+<p>如果SQL语句正确，则会生成一个这样的语法树：</p>
+<p><img src="/medias/loading.gif" data-original="https://raw.githubusercontent.com/luyaguo/pictures-guo/main/mysql/202505272351403.png" alt="image-20220622215720818"></p>
+<h4 id="3-优化器"><a href="#3-优化器" class="headerlink" title="3. 优化器"></a>3. 优化器</h4><p>​	在优化器中会确定 SQL 语句的执行路径，比如是根据 <strong>全表检索</strong> ，还是根据 <strong>索引检索</strong> 等。 </p>
+<p>举例：如下语句是执行两个表的 join：</p>
+<pre class="line-numbers language-sql" data-language="sql"><code class="language-sql"><span class="token keyword">select</span> <span class="token operator">*</span> <span class="token keyword">from</span> test1 <span class="token keyword">join</span> test2 <span class="token keyword">using</span><span class="token punctuation">(</span>ID<span class="token punctuation">)</span>
+<span class="token keyword">where</span> test1<span class="token punctuation">.</span>name<span class="token operator">=</span><span class="token string">'zhangwei'</span> <span class="token operator">and</span> test2<span class="token punctuation">.</span>name<span class="token operator">=</span><span class="token string">'mysql高级课程'</span><span class="token punctuation">;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre>
+
+<ul>
+<li>方案1：可以先从表 test1 里面取出 name&#x3D;’zhangwei’的记录的 ID 值，再根据 ID 值关联到表 test2，再判断 test2 里面 name的值是否等于 ‘mysql高级课程’。</li>
+<li>方案2：可以先从表 test2 里面取出 name&#x3D;’mysql高级课程’ 的记录的 ID 值，再根据 ID 值关联到 test1，再判断 test1 里面 name的值是否等于 zhangwei。</li>
+</ul>
+<p>​	这两种执行方法的逻辑结果是一样的，但是执行的效率会有不同，而优化器的作用就是决定选择使用哪一个方案。优化器阶段完成后，这个语句的执行方案就确定下来了，然后进入执行器阶段。如果你还有一些疑问，比如优化器是怎么选择索引的，有没有可能选择错等。后面讲到索引我们再谈。</p>
+<p>​	在查询优化器中，可以分为 <strong>逻辑查询</strong> 优化阶段和 <strong>物理查询</strong> 优化阶段。</p>
+<h4 id="4-执行器"><a href="#4-执行器" class="headerlink" title="4. 执行器"></a>4. 执行器</h4><p>​	截止到现在，还没有真正去读写真实的表，仅仅只是产出了一个执行计划。于是就进入了 <strong>执行器阶段</strong> 。</p>
+<p><img src="/medias/loading.gif" data-original="https://raw.githubusercontent.com/luyaguo/pictures-guo/main/mysql/202505272351915.png" alt="image-20220622220111179"></p>
+<p>​	在执行之前需要判断该用户是否 <strong>具备权限</strong> 。如果没有，就会返回权限错误。如果具备权限，就执行 SQL 查询并返回结果。在 MySQL8.0 以下的版本，如果设置了查询缓存，这时会将查询结果进行缓存。</p>
+<pre class="line-numbers language-sql" data-language="sql"><code class="language-sql"><span class="token keyword">select</span> <span class="token operator">*</span> <span class="token keyword">from</span> test <span class="token keyword">where</span> id<span class="token operator">=</span><span class="token number">1</span><span class="token punctuation">;</span><span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+
+<p>比如：表 test 中，ID 字段没有索引，那么执行器的执行流程是这样的：</p>
+<pre class="line-numbers language-sql" data-language="sql"><code class="language-sql">调用 <span class="token keyword">InnoDB</span> 引擎接口取这个表的第一行，判断 ID 值是不是<span class="token number">1</span>，如果不是则跳过，如果是则将这行存在结果集中；调用引擎接口取“下一行”，重复相同的判断逻辑，直到取到这个表的最后一行。执行器将上述遍历过程中所有满足条件的行组成的记录集作为结果集返回给客户端。<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+
+<p>至此，这个语句就执行完成了。对于有索引的表，执行的逻辑也差不多。 </p>
+<p>SQL 语句在 MySQL 中的流程是： SQL语句→查询缓存→解析器→优化器→执行器 。</p>
+<p><img src="/medias/loading.gif" data-original="https://raw.githubusercontent.com/luyaguo/pictures-guo/main/mysql/202505272350426.png" alt="image-20220622220310845"></p>
+<h3 id="2-2-MySQL8中SQL执行原理"><a href="#2-2-MySQL8中SQL执行原理" class="headerlink" title="2.2 MySQL8中SQL执行原理"></a>2.2 MySQL8中SQL执行原理</h3><h4 id="1、确认profiling-是否开启"><a href="#1、确认profiling-是否开启" class="headerlink" title="1、确认profiling 是否开启"></a>1、确认profiling 是否开启</h4><pre class="line-numbers language-sql" data-language="sql"><code class="language-sql">mysql<span class="token operator">></span> <span class="token keyword">select</span> @<span class="token variable">@profiling</span><span class="token punctuation">;</span>
+mysql<span class="token operator">></span> <span class="token keyword">show</span> variables <span class="token operator">like</span> <span class="token string">'profiling'</span><span class="token punctuation">;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre>
+
+<p><img src="/medias/loading.gif" data-original="https://raw.githubusercontent.com/luyaguo/pictures-guo/main/mysql/202505272350684.png" alt="image-20220622220408290"></p>
+<p><img src="/medias/loading.gif" data-original="https://raw.githubusercontent.com/luyaguo/pictures-guo/main/mysql/202505272350593.png" alt="image-20220622220416431"></p>
+<p>profiling&#x3D;0 代表关闭，我们需要把 profiling 打开，即设置为 1：</p>
+<pre class="line-numbers language-sql" data-language="sql"><code class="language-sql">mysql<span class="token operator">></span> <span class="token keyword">set</span> profiling<span class="token operator">=</span><span class="token number">1</span><span class="token punctuation">;</span><span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+
+<h4 id="2-多次执行相同SQL查询"><a href="#2-多次执行相同SQL查询" class="headerlink" title="2. 多次执行相同SQL查询"></a>2. 多次执行相同SQL查询</h4><p>然后我们执行一个 SQL 查询（你可以执行任何一个 SQL 查询）：</p>
+<pre class="line-numbers language-sql" data-language="sql"><code class="language-sql">mysql<span class="token operator">></span> <span class="token keyword">select</span> <span class="token operator">*</span> <span class="token keyword">from</span> employees<span class="token punctuation">;</span><span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+
+<h4 id="3-查看profiles"><a href="#3-查看profiles" class="headerlink" title="3. 查看profiles"></a>3. 查看profiles</h4><p>查看当前会话所产生的所有 profiles：</p>
+<pre class="line-numbers language-sql" data-language="sql"><code class="language-sql">mysql<span class="token operator">></span> <span class="token keyword">show</span> profiles<span class="token punctuation">;</span> <span class="token comment"># 显示最近的几次查询</span><span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+
+<p><img src="/medias/loading.gif" data-original="https://raw.githubusercontent.com/luyaguo/pictures-guo/main/mysql/202505272350577.png" alt="image-20220622220539590"></p>
+<h4 id="4-查看profile"><a href="#4-查看profile" class="headerlink" title="4. 查看profile"></a>4. 查看profile</h4><p>显示执行计划，查看程序的执行步骤：</p>
+<pre class="line-numbers language-sql" data-language="sql"><code class="language-sql">mysql<span class="token operator">></span> <span class="token keyword">show</span> profile<span class="token punctuation">;</span><span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+
+<p><img src="/medias/loading.gif" data-original="https://raw.githubusercontent.com/luyaguo/pictures-guo/main/mysql/202505272350678.png" alt="image-20220622220623092"></p>
+<p>当然你也可以查询指定的 Query ID，比如：</p>
+<pre class="line-numbers language-sql" data-language="sql"><code class="language-sql">mysql<span class="token operator">></span> <span class="token keyword">show</span> profile <span class="token keyword">for</span> query <span class="token number">7</span><span class="token punctuation">;</span><span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+
+<p>查询 SQL 的执行时间结果和上面是一样的。 </p>
+<p>此外，还可以查询更丰富的内容：</p>
+<pre class="line-numbers language-sql" data-language="sql"><code class="language-sql">mysql<span class="token operator">></span> <span class="token keyword">show</span> profile cpu<span class="token punctuation">,</span>block io <span class="token keyword">for</span> query <span class="token number">6</span><span class="token punctuation">;</span><span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+
+<p><img src="/medias/loading.gif" data-original="https://raw.githubusercontent.com/luyaguo/pictures-guo/main/mysql/202505272350315.png" alt="image-20220622220741761"></p>
+<p>继续：</p>
+<pre class="line-numbers language-sql" data-language="sql"><code class="language-sql">mysql<span class="token operator">></span> <span class="token keyword">show</span> profile cpu<span class="token punctuation">,</span>block io <span class="token keyword">for</span> query <span class="token number">7</span><span class="token punctuation">;</span><span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+
+<p><img src="/medias/loading.gif" data-original="https://raw.githubusercontent.com/luyaguo/pictures-guo/main/mysql/202505272350672.png" alt="image-20220622220811627"></p>
+<h3 id="2-3-MySQL5-7中SQL执行原理"><a href="#2-3-MySQL5-7中SQL执行原理" class="headerlink" title="2.3 MySQL5.7中SQL执行原理"></a>2.3 MySQL5.7中SQL执行原理</h3><p>​	上述操作在MySQL5.7中测试，发现前后两次相同的sql语句，执行的查询过程仍然是相同的。不是会使用 缓存吗？这里我们需要 <strong>显式开启查询缓存模式</strong> 。在MySQL5.7中如下设置：</p>
+<ul>
+<li>配置文件中开启查询缓存，在 &#x2F;etc&#x2F;my.cnf 中新增一行：</li>
+</ul>
+<pre class="line-numbers language-sql" data-language="sql"><code class="language-sql">query_cache_type<span class="token operator">=</span><span class="token number">1</span><span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+
+<ul>
+<li>重启mysql服务</li>
+</ul>
+<pre class="line-numbers language-sql" data-language="sql"><code class="language-sql">systemctl restart mysqld<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+
+<ul>
+<li>开启查询执行计划 由于重启过服务，需要重新执行如下指令，开启profiling。</li>
+</ul>
+<pre class="line-numbers language-sql" data-language="sql"><code class="language-sql">mysql<span class="token operator">></span> <span class="token keyword">set</span> profiling<span class="token operator">=</span><span class="token number">1</span><span class="token punctuation">;</span><span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+
+<ul>
+<li>执行语句两次：</li>
+</ul>
+<pre class="line-numbers language-sql" data-language="sql"><code class="language-sql">mysql<span class="token operator">></span> <span class="token keyword">select</span> <span class="token operator">*</span> <span class="token keyword">from</span> locations<span class="token punctuation">;</span>
+mysql<span class="token operator">></span> <span class="token keyword">select</span> <span class="token operator">*</span> <span class="token keyword">from</span> locations<span class="token punctuation">;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre>
+
+<ul>
+<li>查看profiles</li>
+</ul>
+<p><img src="/medias/loading.gif" data-original="https://raw.githubusercontent.com/luyaguo/pictures-guo/main/mysql/202505272349989.png" alt="image-20220623205123818"></p>
+<ul>
+<li>查看profile 显示执行计划，查看程序的执行步骤：</li>
+</ul>
+<pre class="line-numbers language-sql" data-language="sql"><code class="language-sql">mysql<span class="token operator">></span> <span class="token keyword">show</span> profile <span class="token keyword">for</span> query <span class="token number">1</span><span class="token punctuation">;</span><span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+
+<p><img src="/medias/loading.gif" data-original="https://raw.githubusercontent.com/luyaguo/pictures-guo/main/mysql/202505272349125.png" alt="image-20220623205221589"></p>
+<pre class="line-numbers language-sql" data-language="sql"><code class="language-sql">mysql<span class="token operator">></span> <span class="token keyword">show</span> profile <span class="token keyword">for</span> query <span class="token number">2</span><span class="token punctuation">;</span><span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+
+<p><img src="/medias/loading.gif" data-original="https://raw.githubusercontent.com/luyaguo/pictures-guo/main/mysql/202505272349363.png" alt="image-20220623205257367"></p>
+<p>结论不言而喻。执行编号2时，比执行编号1时少了很多信息，从截图中可以看出查询语句直接从缓存中 获取数据。</p>
+<h3 id="2-4-SQL语法顺序"><a href="#2-4-SQL语法顺序" class="headerlink" title="2.4 SQL语法顺序"></a>2.4 SQL语法顺序</h3><p>​	随着Mysql版本的更新换代，其优化器也在不断的升级，优化器会分析不同执行顺序产生的性能消耗不同 而动态调整执行顺序。 </p>
+<p>需求：查询每个部门年龄高于20岁的人数且高于20岁人数不能少于2人，显示人数最多的第一名部门信息 </p>
+<p>下面是经常出现的查询顺序：</p>
+<p><img src="/medias/loading.gif" data-original="https://raw.githubusercontent.com/luyaguo/pictures-guo/main/mysql/202505272349073.png" alt="image-20220623205417491"></p>
+<h3 id="2-5-Oracle中的SQL执行流程-了解"><a href="#2-5-Oracle中的SQL执行流程-了解" class="headerlink" title="2.5 Oracle中的SQL执行流程(了解)"></a>2.5 Oracle中的SQL执行流程(了解)</h3><p>​	Oracle 中采用了 <strong>共享池</strong> 来判断 SQL 语句是否存在缓存和执行计划，通过这一步骤我们可以知道应该采用硬解析还是软解析。 我们先来看下 SQL 在 Oracle 中的执行过程：</p>
+<p><img src="/medias/loading.gif" data-original="https://raw.githubusercontent.com/luyaguo/pictures-guo/main/mysql/202505272349859.png" alt="image-20220623205559847"></p>
+<p>从上面这张图中可以看出，SQL 语句在 Oracle 中经历了以下的几个步骤。 </p>
+<ol>
+<li><p><strong>语法检查</strong>：检查 SQL 拼写是否正确，如果不正确，Oracle 会报语法错误。 </p>
+</li>
+<li><p><strong>语义检查</strong>：检查 SQL 中的访问对象是否存在。比如我们在写 SELECT 语句的时候，列名写错了，系统 就会提示错误。语法检查和语义检查的作用是保证 SQL 语句没有错误。 </p>
+</li>
+<li><p><strong>权限检查</strong>：看用户是否具备访问该数据的权限。</p>
+</li>
+<li><p><strong>共享池检查</strong>：共享池（Shared Pool）是一块内存池，最主要的作用是缓存 SQL 语句和该语句的执行计划。Oracle 通过检查共享池是否存在 SQL 语句的执行计划，来判断进行软解析，还是硬解析。那软解析 和硬解析又该怎么理解呢？</p>
+</li>
+</ol>
+<p>​	在共享池中，Oracle 首先对 SQL 语句进行 <strong>Hash 运算</strong> ，然后根据 Hash 值在库缓存（Library Cache）中 查找，如果 <strong>存在 SQL 语句的执行计划</strong> ，就直接拿来执行，直接进入“执行器”的环节，这就是 <strong>软解析</strong> 。 如果没有找到 SQL 语句和执行计划，Oracle 就需要创建解析树进行解析，生成执行计划，进入“优化器” 这个步骤，这就是 <strong>硬解析</strong> 。 </p>
+<ol start="5">
+<li><strong>优化器</strong>：优化器中就是要进行硬解析，也就是决定怎么做，比如创建解析树，生成执行计划。 </li>
+<li><strong>执行器</strong>：当有了解析树和执行计划之后，就知道了 SQL 该怎么被执行，这样就可以在执行器中执行语句了。</li>
+</ol>
+<p>​	共享池是 Oracle 中的术语，包括了库缓存，数据字典缓冲区等。我们上面已经讲到了库缓存区，它主要 缓存 SQL 语句和执行计划。而 <strong>数据字典缓冲区</strong> 存储的是 Oracle 中的对象定义，比如表、视图、索引等对 象。当对 SQL 语句进行解析的时候，如果需要相关的数据，会从数据字典缓冲区中提取。 </p>
+<p>​	<strong>库缓存</strong> 这一个步骤，决定了 SQL 语句是否需要进行硬解析。为了提升 SQL 的执行效率，我们应该尽量 避免硬解析，因为在 SQL 的执行过程中，创建解析树，生成执行计划是很消耗资源的。 </p>
+<p>​	你可能会问，如何避免硬解析，尽量使用软解析呢？在 Oracle 中， <strong>绑定变量</strong> 是它的一大特色。绑定变量就是在 SQL 语句中使用变量，通过不同的变量取值来改变 SQL 的执行结果。这样做的好处是能 <strong>提升软解</strong> 析的可能性 ，不足之处在于可能会导致生成的执行计划不够优化，因此是否需要绑定变量还需要视情况而定。</p>
+<p>举个例子，我们可以使用下面的查询语句：</p>
+<pre class="line-numbers language-sql" data-language="sql"><code class="language-sql"><span class="token keyword">SQL</span><span class="token operator">></span> <span class="token keyword">select</span> <span class="token operator">*</span> <span class="token keyword">from</span> player <span class="token keyword">where</span> player_id <span class="token operator">=</span> <span class="token number">10001</span><span class="token punctuation">;</span><span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+
+<p>​	这两个查询语句的效率在 Oracle 中是完全不同的。如果你在查询 player_id &#x3D; 10001 之后，还会查询 10002、10003 之类的数据，那么每一次查询都会创建一个新的查询解析。而第二种方式使用了绑定变量，那么在第一次查询之后，在共享池中就会存在这类查询的执行计划，也就是软解析。 </p>
+<p>​	因此，<strong>我们可以通过使用绑定变量来减少硬解析，减少 Oracle 的解析工作量</strong>。但是这种方式也有缺点， 使用动态 SQL 的方式，因为参数不同，会导致 SQL 的执行效率不同，同时 SQL 优化也会比较困难。</p>
+<pre class="line-numbers language-SQL" data-language="SQL"><code class="language-SQL">SQL&gt; select * from player where player_id &#x3D; 10001 ;
+
+SQL&gt; select * from player where player_id &#x3D; :player_id;<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span></span></code></pre>
+
+
+
+<h4 id="Oracle的架构图"><a href="#Oracle的架构图" class="headerlink" title="Oracle的架构图"></a>Oracle的架构图</h4><p><img src="/medias/loading.gif" data-original="https://raw.githubusercontent.com/luyaguo/pictures-guo/main/mysql/202505272349124.png" alt="image-20220623210223807"></p>
+<h4 id="简图"><a href="#简图" class="headerlink" title="简图"></a>简图</h4><p><img src="/medias/loading.gif" data-original="https://raw.githubusercontent.com/luyaguo/pictures-guo/main/mysql/202505272349379.png" alt="image-20220623210302545"></p>
+<h4 id="小结"><a href="#小结" class="headerlink" title="小结"></a>小结</h4><p>​	Oracle 和 MySQL 在进行 SQL 的查询上面有软件实现层面的差异。Oracle 提出了共享池的概念，通过共享池来判断是进行软解析，还是硬解析。</p>
+<h2 id="3-数据库缓冲池-buffer-pool"><a href="#3-数据库缓冲池-buffer-pool" class="headerlink" title="3. 数据库缓冲池(buffer pool)"></a>3. 数据库缓冲池(buffer pool)</h2><p>​	InnoDB 存储引擎是以页为单位来管理存储空间的，我们进行的增删改查操作其实本质上都是在访问页面（包括读页面、写页面、创建新页面等操作）。而磁盘 I&#x2F;O 需要消耗的时间很多，而在内存中进行操 作，效率则会高很多，为了能让数据表或者索引中的数据随时被我们所用，DBMS 会申请 <strong>占用内存来作为数据缓冲池</strong> ，在真正访问页面之前，需要把在磁盘上的页缓存到内存中的 Buffer Pool 之后才可以访问。 </p>
+<p>​	这样做的好处是可以让磁盘活动最小化，从而<strong>减少与磁盘直接进行 I&#x2F;O 的时间</strong> 。要知道，这种策略对提升 SQL 语句的查询性能来说至关重要。如果索引的数据在缓冲池里，那么访问的成本就会降低很多。</p>
+<h3 id="3-1-缓冲池-vs-查询缓存"><a href="#3-1-缓冲池-vs-查询缓存" class="headerlink" title="3.1 缓冲池 vs 查询缓存"></a>3.1 缓冲池 vs 查询缓存</h3><p>​	缓冲池和查询缓存是一个东西吗？不是。 </p>
+<h4 id="1-缓冲池（Buffer-Pool）"><a href="#1-缓冲池（Buffer-Pool）" class="headerlink" title="1.缓冲池（Buffer Pool）"></a>1.缓冲池（Buffer Pool）</h4><p>首先我们需要了解在 InnoDB 存储引擎中，缓冲池都包括了哪些。 </p>
+<p>在 InnoDB 存储引擎中有一部分数据会放到内存中，缓冲池则占了这部分内存的大部分，它用来存储各种数据的缓存，如下图所示：</p>
+<p><img src="/medias/loading.gif" data-original="https://raw.githubusercontent.com/luyaguo/pictures-guo/main/mysql/202505272349162.png" alt="image-20220623211028459"></p>
+<p>从图中，你能看到 InnoDB 缓冲池包括了数据页、索引页、插入缓冲、锁信息、自适应 Hash 和数据字典信息等。</p>
+<p>缓存池的重要性： </p>
+<p>&#x3D;&#x3D;缓存原则：&#x3D;&#x3D; </p>
+<p>​	<strong>“ 位置 * 频次 ”</strong>这个原则，可以帮我们对 I&#x2F;O 访问效率进行优化。 </p>
+<p>首先，位置决定效率，提供缓冲池就是为了在内存中可以直接访问数据。 </p>
+<p>其次，频次决定优先级顺序。因为缓冲池的大小是有限的，比如磁盘有 200G，但是内存只有 16G，缓冲池大小只有 1G，就无法将所有数据都加载到缓冲池里，这时就涉及到优先级顺序，<strong>会优先对使用频次高的热数据进行加载</strong> 。 </p>
+<p>缓冲池的预读特性：</p>
+<h4 id="2-查询缓存"><a href="#2-查询缓存" class="headerlink" title="2. 查询缓存"></a>2. 查询缓存</h4><p>​	那么什么是查询缓存呢？ </p>
+<p>​	查询缓存是提前把 <strong>查询结果缓存</strong> 起来，这样下次不需要执行就可以直接拿到结果。需要说明的是，在 MySQL 中的查询缓存，不是缓存查询计划，而是查询对应的结果。因为命中条件苛刻，而且只要数据表发生变化，查询缓存就会失效，因此命中率低。 </p>
+<blockquote>
+<p>了解了缓冲池的作用之后，我们还需要了解缓冲池的另一个特性:预读。</p>
+<p>缓冲池的作用就是提升I&#x2F;O效率，而我们进行读取数据的时候存在一个“局部性原理”，也就是说我们使</p>
+<p>用了一些数据，大概率还会使用它周围的一些数据，因此采用“预读”的机制提前加载，可以减少未来</p>
+<p>可能的磁盘I&#x2F;О操作。</p>
+</blockquote>
+<h3 id="3-2-缓冲池如何读取数据"><a href="#3-2-缓冲池如何读取数据" class="headerlink" title="3.2 缓冲池如何读取数据"></a>3.2 缓冲池如何读取数据</h3><p>​	缓冲池管理器会尽量将经常使用的数据保存起来，在数据库进行页面读操作的时候，首先会判断该页面是否在缓冲池中，如果存在就直接读取，如果不存在，就会通过内存或磁盘将页面存放到缓冲池中再进行读取。 缓存在数据库中的结构和作用如下图所示：</p>
+<p><img src="/medias/loading.gif" data-original="https://raw.githubusercontent.com/luyaguo/pictures-guo/main/mysql/202505272349938.png" alt="image-20220623211455127"></p>
+<p>如果我们执行 SQL 语句的时候更新了缓存池中的数据，那么这些数据会马上同步到磁盘上吗？</p>
+<h3 id="3-3-查看-设置缓冲池的大小"><a href="#3-3-查看-设置缓冲池的大小" class="headerlink" title="3.3 查看&#x2F;设置缓冲池的大小"></a>3.3 查看&#x2F;设置缓冲池的大小</h3><p>​	如果你使用的是 InnoDB 存储引擎，可以通过查看 <strong>innodb_buffer_pool_size</strong> 变量来查看缓冲池的大 小。命令如下：</p>
+<pre class="line-numbers language-sql" data-language="sql"><code class="language-sql"><span class="token keyword">show</span> variables <span class="token operator">like</span> <span class="token string">'innodb_buffer_pool_size'</span><span class="token punctuation">;</span><span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+
+<p><img src="/medias/loading.gif" data-original="https://raw.githubusercontent.com/luyaguo/pictures-guo/main/mysql/202505272349843.png" alt="image-20220623211611110"></p>
+<p>你能看到此时 InnoDB 的缓冲池大小只有 134217728&#x2F;1024&#x2F;1024&#x3D;128MB。我们可以修改缓冲池大小，比如改为256MB，方法如下：</p>
+<pre class="line-numbers language-sql" data-language="sql"><code class="language-sql"><span class="token keyword">set</span> <span class="token keyword">global</span> innodb_buffer_pool_size <span class="token operator">=</span> <span class="token number">268435456</span><span class="token punctuation">;</span><span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+
+<p><img src="/medias/loading.gif" data-original="https://raw.githubusercontent.com/luyaguo/pictures-guo/main/mysql/202505272349274.png" alt="image-20220623211946290"></p>
+<p>或者：</p>
+<pre class="line-numbers language-sql" data-language="sql"><code class="language-sql"><span class="token punctuation">[</span>server<span class="token punctuation">]</span>
+innodb_buffer_pool_size <span class="token operator">=</span> <span class="token number">268435456</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre>
+
+<p>然后再来看下修改后的缓冲池大小，此时已成功修改成了 256 MB：</p>
+<p><img src="/medias/loading.gif" data-original="https://raw.githubusercontent.com/luyaguo/pictures-guo/main/mysql/202505272349642.png" alt="image-20220623212118047"></p>
+<h3 id="3-4-多个Buffer-Pool实例"><a href="#3-4-多个Buffer-Pool实例" class="headerlink" title="3.4 多个Buffer Pool实例"></a>3.4 多个Buffer Pool实例</h3><pre class="line-numbers language-sql" data-language="sql"><code class="language-sql"><span class="token punctuation">[</span>server<span class="token punctuation">]</span>
+innodb_buffer_pool_instances <span class="token operator">=</span> <span class="token number">2</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre>
+
+<p>这样就表明我们要创建2个 Buffer Pool 实例。 </p>
+<p>我们看下如何查看缓冲池的个数，使用命令：</p>
+<pre class="line-numbers language-sql" data-language="sql"><code class="language-sql"><span class="token keyword">show</span> variables <span class="token operator">like</span> <span class="token string">'innodb_buffer_pool_instances'</span><span class="token punctuation">;</span><span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+
+<p><img src="/medias/loading.gif" data-original="https://raw.githubusercontent.com/luyaguo/pictures-guo/main/mysql/202505272349235.png" alt="image-20220623212208275"></p>
+<p>那每个 Buffer Pool 实例实际占多少内存空间呢？其实使用这个公式算出来的：</p>
+<pre class="line-numbers language-sql" data-language="sql"><code class="language-sql">innodb_buffer_pool_size<span class="token operator">/</span>innodb_buffer_pool_instances<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+
+<p>也就是总共的大小除以实例的个数，结果就是每个 Buffer Pool 实例占用的大小。</p>
+<h3 id="3-5-引申问题"><a href="#3-5-引申问题" class="headerlink" title="3.5 引申问题"></a>3.5 引申问题</h3><p>​	Buffer Pool是MySQL内存结构中十分核心的一个组成，你可以先把它想象成一个黑盒子。 </p>
+<p>黑盒下的更新数据流程</p>
+<p><img src="/medias/loading.gif" data-original="https://raw.githubusercontent.com/luyaguo/pictures-guo/main/mysql/202505272348829.png" alt="image-20220623212319397"></p>
+<p>​	我更新到一半突然发生错误了，想要回滚到更新之前的版本，该怎么办？连数据持久化的保证、事务回滚都做不到还谈什么崩溃恢复？</p>
+<p><strong>答案：Redo Log &amp; Undo Log</strong></p>
+
+                
+            </div>
+            <hr/>
+
+            
+
+
+
+            <div class="tag_share" style="display: block;">
+                <div class="post-meta__tag-list" style="display: inline-block;">
+                    
+                        <div class="article-tag">
+                            
+                                <a href="/tags/MySQL-%E8%BF%9B%E9%98%B6/">
+                                    <span class="chip bg-color">MySQL 进阶</span>
+                                </a>
+                            
+                        </div>
+                    
+                </div>
+                <div class="post_share" style="zoom: 80%; width: fit-content; display: inline-block; float: right; margin: -0.15rem 0;">
+                    <link rel="stylesheet" type="text/css" href="/libs/share/css/share.min.css">
+<div id="article-share">
+
+    
+    <div class="social-share" data-sites="twitter,facebook,google,qq,qzone,wechat,weibo,douban,linkedin" data-wechat-qrcode-helper="<p>微信扫一扫即可分享！</p>"></div>
+    <script src="/libs/share/js/social-share.min.js"></script>
+    
+
+    
+
+</div>
+
+                </div>
+            </div>
+            
+        </div>
+    </div>
+
+    
+
+    
+
+    
+
+    
+
+    
+        <style>
+    .valine-card {
+        margin: 1.5rem auto;
+    }
+
+    .valine-card .card-content {
+        padding: 20px 20px 5px 20px;
+    }
+
+    #vcomments textarea {
+        box-sizing: border-box;
+        background: url("/medias/bg.webp") 100% 100% no-repeat;
+    }
+
+    #vcomments p {
+        margin: 2px 2px 10px;
+        font-size: 1.05rem;
+        line-height: 1.78rem;
+    }
+
+    #vcomments blockquote p {
+        text-indent: 0.2rem;
+    }
+
+    #vcomments a {
+        padding: 0 2px;
+        color: #4cbf30;
+        font-weight: 500;
+        text-decoration: none;
+    }
+
+    #vcomments img {
+        max-width: 100%;
+        height: auto;
+        cursor: pointer;
+    }
+
+    #vcomments ol li {
+        list-style-type: decimal;
+    }
+
+    #vcomments ol,
+    ul {
+        display: block;
+        padding-left: 2em;
+        word-spacing: 0.05rem;
+    }
+
+    #vcomments ul li,
+    ol li {
+        display: list-item;
+        line-height: 1.8rem;
+        font-size: 1rem;
+    }
+
+    #vcomments ul li {
+        list-style-type: disc;
+    }
+
+    #vcomments ul ul li {
+        list-style-type: circle;
+    }
+
+    #vcomments table, th, td {
+        padding: 12px 13px;
+        border: 1px solid #dfe2e5;
+    }
+
+    #vcomments table, th, td {
+        border: 0;
+    }
+
+    table tr:nth-child(2n), thead {
+        background-color: #fafafa;
+    }
+
+    #vcomments table th {
+        background-color: #f2f2f2;
+        min-width: 80px;
+    }
+
+    #vcomments table td {
+        min-width: 80px;
+    }
+
+    #vcomments h1 {
+        font-size: 1.85rem;
+        font-weight: bold;
+        line-height: 2.2rem;
+    }
+
+    #vcomments h2 {
+        font-size: 1.65rem;
+        font-weight: bold;
+        line-height: 1.9rem;
+    }
+
+    #vcomments h3 {
+        font-size: 1.45rem;
+        font-weight: bold;
+        line-height: 1.7rem;
+    }
+
+    #vcomments h4 {
+        font-size: 1.25rem;
+        font-weight: bold;
+        line-height: 1.5rem;
+    }
+
+    #vcomments h5 {
+        font-size: 1.1rem;
+        font-weight: bold;
+        line-height: 1.4rem;
+    }
+
+    #vcomments h6 {
+        font-size: 1rem;
+        line-height: 1.3rem;
+    }
+
+    #vcomments p {
+        font-size: 1rem;
+        line-height: 1.5rem;
+    }
+
+    #vcomments hr {
+        margin: 12px 0;
+        border: 0;
+        border-top: 1px solid #ccc;
+    }
+
+    #vcomments blockquote {
+        margin: 15px 0;
+        border-left: 5px solid #42b983;
+        padding: 1rem 0.8rem 0.3rem 0.8rem;
+        color: #666;
+        background-color: rgba(66, 185, 131, .1);
+    }
+
+    #vcomments pre {
+        font-family: monospace, monospace;
+        padding: 1.2em;
+        margin: .5em 0;
+        background: #272822;
+        overflow: auto;
+        border-radius: 0.3em;
+        tab-size: 4;
+    }
+
+    #vcomments code {
+        font-family: monospace, monospace;
+        padding: 1px 3px;
+        font-size: 0.92rem;
+        color: #e96900;
+        background-color: #f8f8f8;
+        border-radius: 2px;
+    }
+
+    #vcomments pre code {
+        font-family: monospace, monospace;
+        padding: 0;
+        color: #e8eaf6;
+        background-color: #272822;
+    }
+
+    #vcomments pre[class*="language-"] {
+        padding: 1.2em;
+        margin: .5em 0;
+    }
+
+    #vcomments code[class*="language-"],
+    pre[class*="language-"] {
+        color: #e8eaf6;
+    }
+
+    #vcomments [type="checkbox"]:not(:checked), [type="checkbox"]:checked {
+        position: inherit;
+        margin-left: -1.3rem;
+        margin-right: 0.4rem;
+        margin-top: -1px;
+        vertical-align: middle;
+        left: unset;
+        visibility: visible;
+    }
+
+    #vcomments b,
+    strong {
+        font-weight: bold;
+    }
+
+    #vcomments dfn {
+        font-style: italic;
+    }
+
+    #vcomments small {
+        font-size: 85%;
+    }
+
+    #vcomments cite {
+        font-style: normal;
+    }
+
+    #vcomments mark {
+        background-color: #fcf8e3;
+        padding: .2em;
+    }
+
+    #vcomments table, th, td {
+        padding: 12px 13px;
+        border: 1px solid #dfe2e5;
+    }
+
+    table tr:nth-child(2n), thead {
+        background-color: #fafafa;
+    }
+
+    #vcomments table th {
+        background-color: #f2f2f2;
+        min-width: 80px;
+    }
+
+    #vcomments table td {
+        min-width: 80px;
+    }
+
+    #vcomments [type="checkbox"]:not(:checked), [type="checkbox"]:checked {
+        position: inherit;
+        margin-left: -1.3rem;
+        margin-right: 0.4rem;
+        margin-top: -1px;
+        vertical-align: middle;
+        left: unset;
+        visibility: visible;
+    }
+</style>
+
+<div class="card valine-card" data-aos="fade-up">
+    <div class="comment_headling" style="font-size: 20px; font-weight: 700; position: relative; padding-left: 20px; top: 15px; padding-bottom: 5px;">
+        <i class="fas fa-comments fa-fw" aria-hidden="true"></i>
+        <span>评论</span>
+    </div>
+    <div id="vcomments" class="card-content" style="display: grid">
+    </div>
+</div>
+
+<script src="/libs/valine/av-min.js"></script>
+<script src="/libs/valine/Valine.min.js"></script>
+<script>
+    new Valine({
+        el: '#vcomments',
+        appId: 'XGAJufgp6Z2bX17baB3E7enQ-gzGzoHsz',
+        appKey: 'j9yun8pjBYMNT3Gg8ehomdsf',
+        serverURLs: 'https://xgajufgp.lc-cn-n1-shared.com',
+        notify: 'false' === 'true',
+        verify: 'false' === 'true',
+        visitor: 'true' === 'true',
+        avatar: 'wavatar',
+        pageSize: '10',
+        lang: 'en',
+        placeholder: '支持markdown格式以及丰富的小表情，快来留下些记忆吧~'
+    });
+</script>
+
+<!--酷Q推送-->
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+<article id="prenext-posts" class="prev-next articles">
+    <div class="row article-row">
+        
+        <div class="article col s12 m6" data-aos="fade-up">
+            <div class="article-badge left-badge text-color">
+                <i class="fas fa-chevron-left"></i>&nbsp;Previous</div>
+            <div class="card">
+                <a href="/posts/4d4d030f.html">
+                    <div class="card-image">
+                        
+                        
+                        <img src="/medias/featureimages/23.jpg" class="responsive-img" alt="第五章 存储引擎">
+                        
+                        <span class="card-title">第五章 存储引擎</span>
+                    </div>
+                </a>
+                <div class="card-content article-content">
+                    <div class="summary block-with-text">
+                        
+                            
+                        
+                    </div>
+                    <div class="publish-info">
+                        <span class="publish-date">
+                            <i class="far fa-clock fa-fw icon-date"></i>2025-05-27
+                        </span>
+                        <span class="publish-author">
+                            
+                            <i class="fas fa-bookmark fa-fw icon-category"></i>
+                            
+                            <a href="/categories/MySQL-%E8%BF%9B%E9%98%B6/" class="post-category">
+                                    MySQL 进阶
+                                </a>
+                            
+                            
+                        </span>
+                    </div>
+                </div>
+                
+                <div class="card-action article-tags">
+                    
+                    <a href="/tags/MySQL-%E8%BF%9B%E9%98%B6/">
+                        <span class="chip bg-color">MySQL 进阶</span>
+                    </a>
+                    
+                </div>
+                
+            </div>
+        </div>
+        
+        
+        <div class="article col s12 m6" data-aos="fade-up">
+            <div class="article-badge right-badge text-color">
+                Next&nbsp;<i class="fas fa-chevron-right"></i>
+            </div>
+            <div class="card">
+                <a href="/posts/5819bd53.html">
+                    <div class="card-image">
+                        
+                        
+                        <img src="/medias/featureimages/12.jpg" class="responsive-img" alt="第三章 用户与权限管理">
+                        
+                        <span class="card-title">第三章 用户与权限管理</span>
+                    </div>
+                </a>
+                <div class="card-content article-content">
+                    <div class="summary block-with-text">
+                        
+                            
+                        
+                    </div>
+                    <div class="publish-info">
+                            <span class="publish-date">
+                                <i class="far fa-clock fa-fw icon-date"></i>2025-05-25
+                            </span>
+                        <span class="publish-author">
+                            
+                            <i class="fas fa-bookmark fa-fw icon-category"></i>
+                            
+                            <a href="/categories/MySQL-%E8%BF%9B%E9%98%B6/" class="post-category">
+                                    MySQL 进阶
+                                </a>
+                            
+                            
+                        </span>
+                    </div>
+                </div>
+                
+                <div class="card-action article-tags">
+                    
+                    <a href="/tags/MySQL-%E8%BF%9B%E9%98%B6/">
+                        <span class="chip bg-color">MySQL 进阶</span>
+                    </a>
+                    
+                </div>
+                
+            </div>
+        </div>
+        
+    </div>
+</article>
+
+</div>
+
+
+<script>
+    $('#articleContent').on('copy', function (e) {
+        // IE8 or earlier browser is 'undefined'
+        if (typeof window.getSelection === 'undefined') return;
+
+        var selection = window.getSelection();
+        // if the selection is short let's not annoy our users.
+        if (('' + selection).length < Number.parseInt('120')) {
+            return;
+        }
+
+        // create a div outside of the visible area and fill it with the selected text.
+        var bodyElement = document.getElementsByTagName('body')[0];
+        var newdiv = document.createElement('div');
+        newdiv.style.position = 'absolute';
+        newdiv.style.left = '-99999px';
+        bodyElement.appendChild(newdiv);
+        newdiv.appendChild(selection.getRangeAt(0).cloneContents());
+
+        // we need a <pre> tag workaround.
+        // otherwise the text inside "pre" loses all the line breaks!
+        if (selection.getRangeAt(0).commonAncestorContainer.nodeName === 'PRE' || selection.getRangeAt(0).commonAncestorContainer.nodeName === 'CODE') {
+            newdiv.innerHTML = "<pre>" + newdiv.innerHTML + "</pre>";
+        }
+
+        var url = document.location.href;
+        newdiv.innerHTML += '<br />'
+            + 'From: 向阳<br />'
+            + 'Author: 向阳<br />'
+            + 'Link: <a href="' + url + '">' + url + '</a><br />'
+            + '本文章著作权归作者所有，任何形式的转载都请注明出处。';
+
+        selection.selectAllChildren(newdiv);
+        window.setTimeout(function () {bodyElement.removeChild(newdiv);}, 200);
+    });
+</script>
+
+
+<!-- 代码块功能依赖 -->
+<script type="text/javascript" src="/libs/codeBlock/codeBlockFuction.js"></script>
+
+
+  <!-- 是否加载使用自带的 prismjs. -->
+  <script type="text/javascript" src="/libs/prism/prism.min.js"></script>
+
+
+<!-- 代码语言 -->
+
+<script type="text/javascript" src="/libs/codeBlock/codeLang.js"></script>
+
+
+<!-- 代码块复制 -->
+
+<script type="text/javascript" src="/libs/codeBlock/codeCopy.js"></script>
+
+
+<!-- 代码块收缩 -->
+
+<script type="text/javascript" src="/libs/codeBlock/codeShrink.js"></script>
+
+
+
+    </div>
+    <div id="toc-aside" class="expanded col l3 hide-on-med-and-down">
+        <div class="toc-widget card" style="background-color: white;">
+            <div class="toc-title"><i class="far fa-list-alt"></i>&nbsp;&nbsp;TOC</div>
+            <div id="toc-content"></div>
+        </div>
+    </div>
+</div>
+
+<!-- TOC 悬浮按钮. -->
+
+<div id="floating-toc-btn" class="hide-on-med-and-down">
+    <a class="btn-floating btn-large bg-color">
+        <i class="fas fa-list-ul"></i>
+    </a>
+</div>
+
+
+<script src="/libs/tocbot/tocbot.min.js"></script>
+<script>
+    $(function () {
+        tocbot.init({
+            tocSelector: '#toc-content',
+            contentSelector: '#articleContent',
+            headingsOffset: -($(window).height() * 0.4 - 45),
+            collapseDepth: Number('0'),
+            headingSelector: 'h2, h3, h4'
+        });
+
+        // Set scroll toc fixed.
+        let tocHeight = parseInt($(window).height() * 0.4 - 64);
+        let $tocWidget = $('.toc-widget');
+        $(window).scroll(function () {
+            let scroll = $(window).scrollTop();
+            /* add post toc fixed. */
+            if (scroll > tocHeight) {
+                $tocWidget.addClass('toc-fixed');
+            } else {
+                $tocWidget.removeClass('toc-fixed');
+            }
+        });
+
+        
+        /* 修复文章卡片 div 的宽度. */
+        let fixPostCardWidth = function (srcId, targetId) {
+            let srcDiv = $('#' + srcId);
+            if (srcDiv.length === 0) {
+                return;
+            }
+
+            let w = srcDiv.width();
+            if (w >= 450) {
+                w = w + 21;
+            } else if (w >= 350 && w < 450) {
+                w = w + 18;
+            } else if (w >= 300 && w < 350) {
+                w = w + 16;
+            } else {
+                w = w + 14;
+            }
+            $('#' + targetId).width(w);
+        };
+
+        // 切换TOC目录展开收缩的相关操作.
+        const expandedClass = 'expanded';
+        let $tocAside = $('#toc-aside');
+        let $mainContent = $('#main-content');
+        $('#floating-toc-btn .btn-floating').click(function () {
+            if ($tocAside.hasClass(expandedClass)) {
+                $tocAside.removeClass(expandedClass).hide();
+                $mainContent.removeClass('l9');
+            } else {
+                $tocAside.addClass(expandedClass).show();
+                $mainContent.addClass('l9');
+            }
+            fixPostCardWidth('artDetail', 'prenext-posts');
+        });
+        
+    });
+</script>
+
+    
+
+</main>
+
+
+
+
+    <footer class="page-footer bg-color">
+    
+        <link rel="stylesheet" href="/libs/aplayer/APlayer.min.css">
+<style>
+    .aplayer .aplayer-lrc p {
+        
+        display: none;
+        
+        font-size: 12px;
+        font-weight: 700;
+        line-height: 16px !important;
+    }
+
+    .aplayer .aplayer-lrc p.aplayer-lrc-current {
+        
+        display: none;
+        
+        font-size: 15px;
+        color: #42b983;
+    }
+
+    
+    .aplayer.aplayer-fixed.aplayer-narrow .aplayer-body {
+        left: -66px !important;
+    }
+
+    .aplayer.aplayer-fixed.aplayer-narrow .aplayer-body:hover {
+        left: 0px !important;
+    }
+
+    
+</style>
+<div class="">
+    
+    <div class="row">
+        <meting-js class="col l8 offset-l2 m10 offset-m1 s12"
+                   server="netease"
+                   type="playlist"
+                   id="8428618004"
+                   fixed='true'
+                   autoplay='false'
+                   theme='#42b983'
+                   loop='all'
+                   order='random'
+                   preload='auto'
+                   volume='0.7'
+                   list-folded='true'
+        >
+        </meting-js>
+    </div>
+</div>
+
+<script src="/libs/aplayer/APlayer.min.js"></script>
+<script src="/libs/aplayer/Meting.min.js"></script>
+
+    
+
+    <div class="container row center-align"
+         style="margin-bottom: 15px !important;">
+        <div class="col s12 m8 l8 copy-right">
+            Copyright&nbsp;&copy;
+            
+                <span id="year">2024-2025</span>
+            
+            <a href="/about" target="_blank">向阳</a>
+            
+            <br>
+            
+                &nbsp;<i class="fas fa-chart-area"></i>&nbsp;Total Words:&nbsp;<span
+                        class="white-color">1247.2k</span>
+            
+            
+            
+                
+            
+            
+                <span id="busuanzi_container_site_pv">
+                &nbsp;|&nbsp;<i class="far fa-eye"></i>&nbsp;Total visits:&nbsp;
+                    <span id="busuanzi_value_site_pv" class="white-color"></span>
+            </span>
+            
+            
+                <span id="busuanzi_container_site_uv">
+                &nbsp;|&nbsp;<i class="fas fa-users"></i>&nbsp;Total visitors:&nbsp;
+                    <span id="busuanzi_value_site_uv" class="white-color"></span>
+            </span>
+            
+            <br>
+
+            <a style="margin-inline:5px" target="_blank" href="https://hexo.io"><img src="https://img.shields.io/badge/Frame-Hexo-blue?style=flat&logo=hexo" title="基于Hexo框架"></a>
+            <a style="margin-inline:5px" target="_blank" href="https://github.com/blinkfox/hexo-theme-matery"><img src="https://img.shields.io/badge/Theme-Matery-7138b6?style=flat&logo=MEGA" title="Themes Matery"></a>
+            <a style="margin-inline:5px" target="_blank" href="https://cloudflare.com"><img src="https://img.shields.io/badge/Hosted-Cloudflare-brightgreen?style=flat&logo=Cloudflare" title="基于Cloudflare Pages托管部署"></a>
+            <a style="margin-inline:5px" target="_blank" href="https://github.com"><img src="https://img.shields.io/badge/Source-Github-67e1fb?style=flat&logo=GitHub" title="静态文件托管于GitHub"></a>
+            <br>
+
+            <!-- 运行天数提醒. -->
+            
+                <span id="sitetime"> Loading ...</span>
+                <script>
+                    var calcSiteTime = function () {
+                        var seconds = 1000;
+                        var minutes = seconds * 60;
+                        var hours = minutes * 60;
+                        var days = hours * 24;
+                        var years = days * 365;
+                        var today = new Date();
+                        var startYear = "2024";
+                        var startMonth = "5";
+                        var startDate = "20";
+                        var startHour = "0";
+                        var startMinute = "0";
+                        var startSecond = "0";
+                        var todayYear = today.getFullYear();
+                        var todayMonth = today.getMonth() + 1;
+                        var todayDate = today.getDate();
+                        var todayHour = today.getHours();
+                        var todayMinute = today.getMinutes();
+                        var todaySecond = today.getSeconds();
+                        var t1 = Date.UTC(startYear, startMonth, startDate, startHour, startMinute, startSecond);
+                        var t2 = Date.UTC(todayYear, todayMonth, todayDate, todayHour, todayMinute, todaySecond);
+                        var diff = t2 - t1;
+                        var diffYears = Math.floor(diff / years);
+                        var diffDays = Math.floor((diff / days) - diffYears * 365);
+
+                        // 区分是否有年份.
+                        var language = 'en';
+                        if (startYear === String(todayYear)) {
+                            document.getElementById("year").innerHTML = todayYear;
+                            var daysTip = 'This site has been running for ' + diffDays + ' days';
+                            if (language === 'zh-CN') {
+                                daysTip = '本站已运行 ' + diffDays + ' 天';
+                            } else if (language === 'zh-HK') {
+                                daysTip = '本站已運行 ' + diffDays + ' 天';
+                            }
+                            document.getElementById("sitetime").innerHTML = daysTip;
+                        } else {
+                            document.getElementById("year").innerHTML = startYear + " - " + todayYear;
+                            var yearsAndDaysTip = 'This site has been running for ' + diffYears + ' years and '
+                                + diffDays + ' days';
+                            if (language === 'zh-CN') {
+                                yearsAndDaysTip = '本站已运行 ' + diffYears + ' 年 ' + diffDays + ' 天';
+                            } else if (language === 'zh-HK') {
+                                yearsAndDaysTip = '本站已運行 ' + diffYears + ' 年 ' + diffDays + ' 天';
+                            }
+                            document.getElementById("sitetime").innerHTML = yearsAndDaysTip;
+                        }
+                    }
+
+                    calcSiteTime();
+                </script>
+            
+            <br>
+            
+        </div>
+        <div class="col s12 m4 l4 social-link social-statis">
+    <a href="https://github.com/luyaguo" class="tooltipped" target="_blank" data-tooltip="访问我的GitHub" data-position="top" data-delay="50">
+        <i class="fab fa-github"></i>
+    </a>
+
+
+
+    <a href="mailto:luyaguo839@gmail.com" class="tooltipped" target="_blank" data-tooltip="邮件联系我" data-position="top" data-delay="50">
+        <i class="fas fa-envelope-open"></i>
+    </a>
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <a href="/atom.xml" class="tooltipped" target="_blank" data-tooltip="RSS 订阅" data-position="top" data-delay="50">
+        <i class="fas fa-rss"></i>
+    </a>
+
+</div>
+    </div>
+</footer>
+
+<div class="progress-bar"></div>
+
+
+    <!-- 搜索遮罩框 -->
+<div id="searchModal" class="modal">
+    <div class="modal-content">
+        <div class="search-header">
+            <span class="title"><i class="fas fa-search"></i>&nbsp;&nbsp;Search</span>
+            <input type="search" id="searchInput" name="s" placeholder="Please enter a search keyword"
+                   class="search-input">
+        </div>
+        <div id="searchResult"></div>
+    </div>
+</div>
+
+<script type="text/javascript">
+$(function () {
+    var searchFunc = function (path, search_id, content_id) {
+        'use strict';
+        $.ajax({
+            url: path,
+            dataType: "xml",
+            success: function (xmlResponse) {
+                // get the contents from search data
+                var datas = $("entry", xmlResponse).map(function () {
+                    return {
+                        title: $("title", this).text(),
+                        content: $("content", this).text(),
+                        url: $("url", this).text()
+                    };
+                }).get();
+                var $input = document.getElementById(search_id);
+                var $resultContent = document.getElementById(content_id);
+                $input.addEventListener('input', function () {
+                    var str = '<ul class=\"search-result-list\">';
+                    var keywords = this.value.trim().toLowerCase().split(/[\s\-]+/);
+                    $resultContent.innerHTML = "";
+                    if (this.value.trim().length <= 0) {
+                        return;
+                    }
+                    // perform local searching
+                    datas.forEach(function (data) {
+                        var isMatch = true;
+                        var data_title = data.title.trim().toLowerCase();
+                        var data_content = data.content.trim().replace(/<[^>]+>/g, "").toLowerCase();
+                        var data_url = data.url;
+                        data_url = data_url.indexOf('/') === 0 ? data.url : '/' + data_url;
+                        var index_title = -1;
+                        var index_content = -1;
+                        var first_occur = -1;
+                        // only match artiles with not empty titles and contents
+                        if (data_title !== '' && data_content !== '') {
+                            keywords.forEach(function (keyword, i) {
+                                index_title = data_title.indexOf(keyword);
+                                index_content = data_content.indexOf(keyword);
+                                if (index_title < 0 && index_content < 0) {
+                                    isMatch = false;
+                                } else {
+                                    if (index_content < 0) {
+                                        index_content = 0;
+                                    }
+                                    if (i === 0) {
+                                        first_occur = index_content;
+                                    }
+                                }
+                            });
+                        }
+                        // show search results
+                        if (isMatch) {
+                            str += "<li><a href='" + data_url + "' class='search-result-title'>" + data_title + "</a>";
+                            var content = data.content.trim().replace(/<[^>]+>/g, "");
+                            if (first_occur >= 0) {
+                                // cut out 100 characters
+                                var start = first_occur - 20;
+                                var end = first_occur + 80;
+                                if (start < 0) {
+                                    start = 0;
+                                }
+                                if (start === 0) {
+                                    end = 100;
+                                }
+                                if (end > content.length) {
+                                    end = content.length;
+                                }
+                                var match_content = content.substr(start, end);
+                                // highlight all keywords
+                                keywords.forEach(function (keyword) {
+                                    var regS = new RegExp(keyword, "gi");
+                                    match_content = match_content.replace(regS, "<em class=\"search-keyword\">" + keyword + "</em>");
+                                });
+
+                                str += "<p class=\"search-result\">" + match_content + "...</p>"
+                            }
+                            str += "</li>";
+                        }
+                    });
+                    str += "</ul>";
+                    $resultContent.innerHTML = str;
+                });
+            }
+        });
+    };
+
+    searchFunc('/search.xml', 'searchInput', 'searchResult');
+});
+</script>
+
+    <!-- 白天和黑夜主题 -->
+<div class="stars-con">
+    <div id="stars"></div>
+    <div id="stars2"></div>
+    <div id="stars3"></div>  
+</div>
+
+<script>
+    function switchNightMode() {
+        $('<div class="Cuteen_DarkSky"><div class="Cuteen_DarkPlanet"></div></div>').appendTo($('body')),
+        setTimeout(function () {
+            $('body').hasClass('DarkMode') 
+            ? ($('body').removeClass('DarkMode'), localStorage.setItem('isDark', '0'), $('#sum-moon-icon').removeClass("fa-sun").addClass('fa-moon')) 
+            : ($('body').addClass('DarkMode'), localStorage.setItem('isDark', '1'), $('#sum-moon-icon').addClass("fa-sun").removeClass('fa-moon')),
+            
+            setTimeout(function () {
+            $('.Cuteen_DarkSky').fadeOut(1e3, function () {
+                $(this).remove()
+            })
+            }, 2e3)
+        })
+    }
+</script>
+
+    <!-- 回到顶部按钮 -->
+<div id="backTop" class="top-scroll">
+    <a class="btn-floating btn-large waves-effect waves-light" href="#!">
+        <i class="fas fa-arrow-up"></i>
+    </a>
+</div>
+
+
+    <script src="/libs/materialize/materialize.min.js"></script>
+    <script src="/libs/masonry/masonry.pkgd.min.js"></script>
+    <script src="/libs/aos/aos.js"></script>
+    <script src="/libs/scrollprogress/scrollProgress.min.js"></script>
+    <script src="/libs/lightGallery/js/lightgallery-all.min.js"></script>
+    <script src="/js/matery.js"></script>
+
+    
+
+    
+    
+    
+
+    <!-- 雪花特效 -->
+    
+
+    <!-- 鼠标星星特效 -->
+     
+        <script type="text/javascript">
+            // 只在桌面版网页启用特效
+            var windowWidth = $(window).width();
+            if (windowWidth > 768) {
+                document.write('<script type="text/javascript" src="/libs/others/star.js"><\/script>');
+            }
+        </script>
+    
+
+     
+        <script src="https://ssl.captcha.qq.com/TCaptcha.js"></script>
+        <script src="/libs/others/TencentCaptcha.js"></script>
+        <button id="TencentCaptcha" data-appid="xxxxxxxxxx" data-cbfn="callback" type="button" hidden></button>
+    
+
+    <!-- Baidu Analytics -->
+
+    <!-- Baidu Push -->
+
+<script>
+    (function () {
+        var bp = document.createElement('script');
+        var curProtocol = window.location.protocol.split(':')[0];
+        if (curProtocol === 'https') {
+            bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+        } else {
+            bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+        }
+        var s = document.getElementsByTagName("script")[0];
+        s.parentNode.insertBefore(bp, s);
+    })();
+</script>
+
+    
+    <script src="/libs/others/clicklove.js" async="async"></script>
+    
+    
+    <script async src="/libs/others/busuanzi.pure.mini.js"></script>
+    
+
+    
+
+    
+
+    <!--腾讯兔小巢-->
+    
+    
+
+    
+
+    
+
+    
+    <script src="/libs/instantpage/instantpage.js" type="module"></script>
+    
+
+    <!-- 冒泡 -->
+    
+
+    <!--全屏-->
+    <script src="/js/fullscreen.js" type="module"></script>
+
+        <style>
+            [bg-lazy] {
+                background-image: none !important;
+                background-color: #eee !important;
+            }
+        </style>
+        <script>
+            window.imageLazyLoadSetting = {
+                isSPA: false,
+                preloadRatio: 1,
+                processImages: null,
+            };
+        </script><script>window.addEventListener("load",function(){var t=/\.(gif|jpg|jpeg|tiff|png)$/i,r=/^data:image\/[a-z\d\-\.\+]+;base64,/;Array.prototype.slice.call(document.querySelectorAll("img[data-original]")).forEach(function(a){var e=a.parentNode;"A"===e.tagName&&(t.test(e.href)||r.test(e.href))&&(e.href=a.dataset.original)})});</script><script>!function(r){r.imageLazyLoadSetting.processImages=t;var a=r.imageLazyLoadSetting.isSPA,n=r.imageLazyLoadSetting.preloadRatio||1,d=o();function o(){var t=Array.prototype.slice.call(document.querySelectorAll("img[data-original]")),e=Array.prototype.slice.call(document.querySelectorAll("[bg-lazy]"));return t.concat(e)}function t(t){(a||t)&&(d=o());for(var e,i=0;i<d.length;i++)0<=(e=(e=d[i]).getBoundingClientRect()).bottom&&0<=e.left&&e.top<=(r.innerHeight*n||document.documentElement.clientHeight*n)&&function(){var t,e,a,n,o=d[i];e=function(){d=d.filter(function(t){return o!==t}),r.imageLazyLoadSetting.onImageLoaded&&r.imageLazyLoadSetting.onImageLoaded(o)},(t=o).dataset.loaded||(t.hasAttribute("bg-lazy")?(t.removeAttribute("bg-lazy"),e&&e()):(a=new Image,n=t.getAttribute("data-original"),a.onload=function(){t.src=n,t.removeAttribute("data-original"),t.setAttribute("data-loaded",!0),e&&e()},a.onerror=function(){t.removeAttribute("data-original"),t.setAttribute("data-loaded",!1),t.src=n},t.src!==n&&(a.src=n)))}()}function e(){clearTimeout(t.tId),t.tId=setTimeout(t,500)}t(),document.addEventListener("scroll",e),r.addEventListener("resize",e),r.addEventListener("orientationchange",e)}(this);</script></body>
+
+</html>
