@@ -1,0 +1,2141 @@
+<!DOCTYPE HTML>
+<html lang="en">
+
+
+<head>
+    <meta charset="utf-8">
+    <meta name="keywords" content="九十一、IndexedDB, 向阳">
+    <meta name="description" content="九十一、IndexedDB1、简介IndexedDBIndexedDB 是一个浏览器内建的数据库，它比 localStorage 强大得多。
+
+通过支持多种类型的键，来存储几乎可以是任何类型的值。
+支撑事务的可靠性。
+支持键值范围查询、索引">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <meta name="renderer" content="webkit|ie-stand|ie-comp">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="format-detection" content="telephone=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="referrer" content="no-referrer-when-downgrade">
+    <!-- Global site tag (gtag.js) - Google Analytics -->
+
+
+    <title>九十一、IndexedDB | 向阳</title>
+    <link rel="icon" type="image/png" href="/favicon.png">
+    
+
+
+    <!-- bg-cover style     -->
+
+
+
+<link rel="stylesheet" type="text/css" href="/libs/awesome/css/all.min.css">
+<link rel="stylesheet" type="text/css" href="/libs/materialize/materialize.min.css">
+<link rel="stylesheet" type="text/css" href="/libs/aos/aos.css">
+<link rel="stylesheet" type="text/css" href="/libs/animate/animate.min.css">
+<link rel="stylesheet" type="text/css" href="/libs/lightGallery/css/lightgallery.min.css">
+<link rel="stylesheet" type="text/css" href="/css/matery.css">
+<link rel="stylesheet" type="text/css" href="/css/my.css">
+<link rel="stylesheet" type="text/css" href="/css/dark.css" media="none" onload="if(media!='all')media='all'">
+
+
+
+
+    <link rel="stylesheet" href="/libs/tocbot/tocbot.css">
+    <link rel="stylesheet" href="/css/post.css">
+
+
+
+
+    
+
+
+
+    <script src="/libs/jquery/jquery-3.6.0.min.js"></script>
+
+<meta name="generator" content="Hexo 7.2.0"></head>
+
+<!-- 预加载动画 -->
+
+    <style type="text/css" lang="css">
+    #loading-container{
+        position: fixed;
+        top: 0;
+        left: 0;
+        min-height: 100vh;
+        width: 100vw;
+        z-index: 9999;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        background: #2c3561;
+        text-align: center;
+        /* loader页面消失采用渐隐的方式*/
+        -webkit-transition: opacity 1s ease;
+        -moz-transition: opacity 1s ease;
+        -o-transition: opacity 1s ease;
+        transition: opacity 1s ease;
+    }
+    .loading-image{
+        width: 120px;
+        height: 50px;
+        transform: translate(-50%);
+    }
+
+    .loading-image div:nth-child(2) {
+        -webkit-animation: pacman-balls 1s linear 0s infinite;
+        animation: pacman-balls 1s linear 0s infinite
+    }
+
+    .loading-image div:nth-child(3) {
+        -webkit-animation: pacman-balls 1s linear .33s infinite;
+        animation: pacman-balls 1s linear .33s infinite
+    }
+
+    .loading-image div:nth-child(4) {
+        -webkit-animation: pacman-balls 1s linear .66s infinite;
+        animation: pacman-balls 1s linear .66s infinite
+    }
+
+    .loading-image div:nth-child(5) {
+        -webkit-animation: pacman-balls 1s linear .99s infinite;
+        animation: pacman-balls 1s linear .99s infinite
+    }
+
+    .loading-image div:first-of-type {
+        width: 0;
+        height: 0;
+        border: 25px solid #49b1f5;
+        border-right-color: transparent;
+        border-radius: 25px;
+        -webkit-animation: rotate_pacman_half_up .5s 0s infinite;
+        animation: rotate_pacman_half_up .5s 0s infinite;
+    }
+    .loading-image div:nth-child(2) {
+        width: 0;
+        height: 0;
+        border: 25px solid #49b1f5;
+        border-right-color: transparent;
+        border-radius: 25px;
+        -webkit-animation: rotate_pacman_half_down .5s 0s infinite;
+        animation: rotate_pacman_half_down .5s 0s infinite;
+        margin-top: -50px;
+    }
+    @-webkit-keyframes rotate_pacman_half_up {0% {transform: rotate(270deg)}50% {transform: rotate(1turn)}to {transform: rotate(270deg)}}
+
+    @keyframes rotate_pacman_half_up {0% {transform: rotate(270deg)}50% {transform: rotate(1turn)}to {transform: rotate(270deg)}}
+
+    @-webkit-keyframes rotate_pacman_half_down {0% {transform: rotate(90deg)}50% {transform: rotate(0deg)}to {transform: rotate(90deg)}}
+
+    @keyframes rotate_pacman_half_down {0% {transform: rotate(90deg)}50% {transform: rotate(0deg)}to {transform: rotate(90deg)}}
+
+    @-webkit-keyframes pacman-balls {75% {opacity: .7}to {transform: translate(-100px, -6.25px)}}
+
+    @keyframes pacman-balls {75% {opacity: .7}to {transform: translate(-100px, -6.25px)}}
+
+
+    .loading-image div:nth-child(3),
+    .loading-image div:nth-child(4),
+    .loading-image div:nth-child(5),
+    .loading-image div:nth-child(6){
+        background-color: #49b1f5;
+        width: 15px;
+        height: 15px;
+        border-radius: 100%;
+        margin: 2px;
+        width: 10px;
+        height: 10px;
+        position: absolute;
+        transform: translateY(-6.25px);
+        top: 25px;
+        left: 100px;
+    }
+    .loading-text{
+        margin-bottom: 20vh;
+        text-align: center;
+        color: #f8c471;
+        font-size: 2rem;
+        box-sizing: border-box;
+        padding: 0 10px;
+        text-shadow: 0 2px 10px rgba(0,0,0,0.2);
+    }
+    @media only screen and (max-width: 500px) {
+        .loading-text{
+            font-size: 1.5rem;
+        }
+    }
+    .fadeout {
+        opacity: 0;
+        filter: alpha(opacity=0);
+    }
+    /* logo出现动画 */
+    @-webkit-keyframes fadeInDown{0%{opacity:0;-webkit-transform:translate3d(0,-100%,0);transform:translate3d(0,-100%,0)}100%{opacity:1;-webkit-transform:none;transform:none}}
+    @keyframes fadeInDown{0%{opacity:0;-webkit-transform:translate3d(0,-100%,0);}}
+</style>
+<script>
+    (function () {
+        const loaded = function(){
+            setTimeout(function(){
+                const loader = document.getElementById("loading-container");
+                loader.className="fadeout" ;//使用渐隐的方法淡出loading page
+                // document.getElementById("body-wrap").style.display="flex";
+                setTimeout(function(){
+                    loader.style.display="none";
+                },2500);
+            },800);//强制显示loading page 0.8s
+        };
+        loaded();
+    })()
+</script>
+
+<body>
+    <!--动态背景-->
+    <div id="bg"><canvas></canvas><canvas></canvas><canvas></canvas></div>
+    <script src="/js/canva_moving_effect.js"></script>
+
+    
+        <div id="loading-container">
+            <p class="loading-text">客官坐会儿，请稍等片刻. . . </p>
+            <div class="loading-image">
+                <div></div>
+                <div></div>
+                <div></div>
+                <div></div>
+                <div></div>
+            </div>
+        </div>
+    
+
+    <header class="navbar-fixed">
+    <nav id="headNav" class="bg-color nav-transparent">
+        <div id="navContainer" class="nav-wrapper">
+            <div class="brand-logo">
+                <a href="/" class="waves-effect waves-light">
+                    <div>&nbsp;
+                        
+                            <img src="/medias/logo2.png" class="logo-img" alt="LOGO">
+                        
+                        <span class="logo-span">向阳</span>
+                    </div>
+                </a>
+            </div>
+            
+
+<a href="#" data-target="mobile-nav" class="sidenav-trigger button-collapse"><i class="fas fa-bars"></i></a>
+<ul class="right nav-menu">
+  
+  <li class="hide-on-med-and-down nav-item">
+    
+    <a href="/" class="waves-effect waves-light">
+      
+      <i class="fas fa-home" style="zoom: 0.6;"></i>
+      
+      <span>Index</span>
+    </a>
+    
+  </li>
+  
+  <li class="hide-on-med-and-down nav-item">
+    
+    <a href="/tags" class="waves-effect waves-light">
+      
+      <i class="fas fa-tags" style="zoom: 0.6;"></i>
+      
+      <span>Tags</span>
+    </a>
+    
+  </li>
+  
+  <li class="hide-on-med-and-down nav-item">
+    
+    <a href="/categories" class="waves-effect waves-light">
+      
+      <i class="fas fa-bookmark" style="zoom: 0.6;"></i>
+      
+      <span>Categories</span>
+    </a>
+    
+  </li>
+  
+  <li class="hide-on-med-and-down nav-item">
+    
+    <a href="/archives" class="waves-effect waves-light">
+      
+      <i class="fas fa-archive" style="zoom: 0.6;"></i>
+      
+      <span>Archives</span>
+    </a>
+    
+  </li>
+  
+  <li class="hide-on-med-and-down nav-item">
+    
+    <a href="/about" class="waves-effect waves-light">
+      
+      <i class="fas fa-user-circle" style="zoom: 0.6;"></i>
+      
+      <span>About</span>
+    </a>
+    
+  </li>
+  
+  <li class="hide-on-med-and-down nav-item">
+    
+    <a href="/contact" class="waves-effect waves-light">
+      
+      <i class="fas fa-comments" style="zoom: 0.6;"></i>
+      
+      <span>Contact</span>
+    </a>
+    
+  </li>
+  
+  <li class="hide-on-med-and-down nav-item">
+    
+    <a href="/friends" class="waves-effect waves-light">
+      
+      <i class="fas fa-address-book" style="zoom: 0.6;"></i>
+      
+      <span>Friends</span>
+    </a>
+    
+  </li>
+  
+  <li>
+    <a href="#searchModal" class="modal-trigger waves-effect waves-light">
+      <i id="searchIcon" class="fas fa-search" title="Search" style="zoom: 0.95;"></i>
+    </a>
+  </li>
+
+  <!-- 全屏 -->
+<!--   <li id="fullscreen_li" class="fullscreen"> -->
+<!--     <a href="javascript:void(0);" class="modal-trigger waves-effect waves-light"> -->
+<!--       <i id="fullscreen" class="fas fa-expand-arrows-alt" title="全屏" style="zoom: 0.85;"></i> -->
+<!--     </a> -->
+<!--   </li> -->
+
+  <!-- 主题背景 -->
+  <li>
+    <a href="javascript:;" class="modal-trigger waves-effect waves-light" onclick="switchNightMode()" title="深色/浅色模式" >
+      <i id="sum-moon-icon" class="fas fa-sun" style="zoom: 0.85;"></i>
+    </a>
+  </li>
+  &nbsp;
+</ul>
+
+
+<div id="mobile-nav" class="side-nav sidenav">
+
+    <div class="mobile-head bg-color">
+        
+        <img src="/medias/logo2.png" class="logo-img circle responsive-img">
+        
+        <div class="logo-name">向阳</div>
+        <div class="logo-desc">
+            
+            Never give up and never give in...
+            
+        </div>
+    </div>
+
+    <ul class="menu-list mobile-menu-list">
+        
+        <li class="m-nav-item">
+	  
+		<a href="/" class="waves-effect waves-light">
+			
+			    <i class="fa-fw fas fa-home"></i>
+			
+			Index
+		</a>
+          
+        </li>
+        
+        <li class="m-nav-item">
+	  
+		<a href="/tags" class="waves-effect waves-light">
+			
+			    <i class="fa-fw fas fa-tags"></i>
+			
+			Tags
+		</a>
+          
+        </li>
+        
+        <li class="m-nav-item">
+	  
+		<a href="/categories" class="waves-effect waves-light">
+			
+			    <i class="fa-fw fas fa-bookmark"></i>
+			
+			Categories
+		</a>
+          
+        </li>
+        
+        <li class="m-nav-item">
+	  
+		<a href="/archives" class="waves-effect waves-light">
+			
+			    <i class="fa-fw fas fa-archive"></i>
+			
+			Archives
+		</a>
+          
+        </li>
+        
+        <li class="m-nav-item">
+	  
+		<a href="/about" class="waves-effect waves-light">
+			
+			    <i class="fa-fw fas fa-user-circle"></i>
+			
+			About
+		</a>
+          
+        </li>
+        
+        <li class="m-nav-item">
+	  
+		<a href="/contact" class="waves-effect waves-light">
+			
+			    <i class="fa-fw fas fa-comments"></i>
+			
+			Contact
+		</a>
+          
+        </li>
+        
+        <li class="m-nav-item">
+	  
+		<a href="/friends" class="waves-effect waves-light">
+			
+			    <i class="fa-fw fas fa-address-book"></i>
+			
+			Friends
+		</a>
+          
+        </li>
+        
+        
+    </ul>
+</div>
+
+
+        </div>
+
+        
+    </nav>
+
+</header>
+
+    
+
+
+
+<div class="bg-cover pd-header post-cover" style="background-image: url('/medias/featureimages/14.jpg')">
+    <div class="container" style="right: 0px;left: 0px;">
+        <div class="row">
+            <div class="col s12 m12 l12">
+                <div class="brand">
+                    <h1 class="description center-align post-title">九十一、IndexedDB</h1>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+<main class="post-container content">
+
+    
+    <div class="row">
+    <div id="main-content" class="col s12 m12 l9">
+        <!-- 文章内容详情 -->
+<div id="artDetail">
+    <div class="card">
+        <div class="card-content article-info">
+            <div class="row tag-cate">
+                <div class="col s7">
+                    
+                    <div class="article-tag">
+                        
+                            <a href="/tags/JavaScript-%E8%BF%9B%E9%98%B6/">
+                                <span class="chip bg-color">JavaScript 进阶</span>
+                            </a>
+                        
+                    </div>
+                    
+                </div>
+                <div class="col s5 right-align">
+                    
+                    <div class="post-cate">
+                        <i class="fas fa-bookmark fa-fw icon-category"></i>
+                        
+                            <a href="/categories/JavaScript-%E8%BF%9B%E9%98%B6/" class="post-category">
+                                JavaScript 进阶
+                            </a>
+                        
+                    </div>
+                    
+                </div>
+            </div>
+
+            <div class="post-info">
+                
+                <div class="post-date info-break-policy">
+                    <i class="far fa-calendar-minus fa-fw"></i>Publish Date:&nbsp;&nbsp;
+                    2025-06-08
+                </div>
+                
+
+                
+
+                
+                <div class="info-break-policy">
+                    <i class="far fa-file-word fa-fw"></i>Word Count:&nbsp;&nbsp;
+                    7.5k
+                </div>
+                
+
+                
+                <div class="info-break-policy">
+                    <i class="far fa-clock fa-fw"></i>Read Times:&nbsp;&nbsp;
+                    28 Min
+                </div>
+                
+
+                
+                    <div id="busuanzi_container_page_pv" class="info-break-policy">
+                        <i class="far fa-eye fa-fw"></i>Read Count:&nbsp;&nbsp;
+                        <span id="busuanzi_value_page_pv"></span>
+                    </div>
+				
+            </div>
+        </div>
+        <hr class="clearfix">
+
+        
+        <!-- 是否加载使用自带的 prismjs. -->
+        <link rel="stylesheet" href="/libs/prism/prism.min.css">
+        
+
+        
+        <!-- 代码块折行 -->
+        <style type="text/css">
+            code[class*="language-"], pre[class*="language-"] { white-space: pre-wrap !important; }
+        </style>
+        
+
+        <div class="card-content article-card-content">
+            <div id="articleContent">
+                <h1 id="九十一、IndexedDB"><a href="#九十一、IndexedDB" class="headerlink" title="九十一、IndexedDB"></a>九十一、IndexedDB</h1><h2 id="1、简介"><a href="#1、简介" class="headerlink" title="1、简介"></a>1、简介</h2><h3 id="IndexedDB"><a href="#IndexedDB" class="headerlink" title="IndexedDB"></a>IndexedDB</h3><p>IndexedDB 是一个浏览器内建的数据库，它比 <code>localStorage</code> 强大得多。</p>
+<ul>
+<li>通过支持多种类型的键，来存储几乎可以是任何类型的值。</li>
+<li>支撑事务的可靠性。</li>
+<li>支持键值范围查询、索引。</li>
+<li>和 <code>localStorage</code> 相比，它可以存储更大的数据量。</li>
+</ul>
+<p>对于传统的 客户端-服务器 应用，这些功能通常是没有必要的。IndexedDB 适用于离线应用，可与 ServiceWorkers 和其他技术相结合使用。</p>
+<h3 id="数据在哪儿？"><a href="#数据在哪儿？" class="headerlink" title="数据在哪儿？"></a>数据在哪儿？</h3><p>从技术上讲，数据通常与浏览器设置、扩展程序等一起存储在访问者的主目录中。</p>
+<p>不同的浏览器和操作系统级别的用户都有各自独立的存储。</p>
+<h2 id="2、打开数据库"><a href="#2、打开数据库" class="headerlink" title="2、打开数据库"></a>2、打开数据库</h2><p>要想使用 IndexedDB，首先需要 <code>open</code>（连接）一个数据库。</p>
+<h3 id="语法"><a href="#语法" class="headerlink" title="语法"></a>语法</h3><pre class="line-numbers language-javascript" data-language="javascript"><code class="language-javascript"><span class="token keyword">let</span> openRequest <span class="token operator">=</span> indexedDB<span class="token punctuation">.</span><span class="token function">open</span><span class="token punctuation">(</span>name<span class="token punctuation">,</span> version<span class="token punctuation">)</span><span class="token punctuation">;</span><span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+
+<ul>
+<li><code>name</code> —— 字符串，即数据库名称。</li>
+<li><code>version</code> —— 一个正整数版本，默认为 <code>1</code>（下面解释）。</li>
+</ul>
+<p><strong>数据库可以有许多不同的名称，但是必须存在于当前的源（域&#x2F;协议&#x2F;端口）中。不同的网站不能相互访问对方的数据库。</strong></p>
+<p>调用之后会返回 <code>openRequest</code> 对象，我们需要监听该对象上的事件：</p>
+<ul>
+<li><code>success</code>：数据库准备就绪，<code>openRequest.result</code> 中有了一个数据库对象“Database Object”，我们应该将其用于进一步的调用。</li>
+<li><code>error</code>：打开失败。</li>
+<li><code>upgradeneeded</code>：数据库已准备就绪，但其版本已过时（见下文）。</li>
+</ul>
+<p><strong>IndexedDB 具有内建的“模式（scheme）版本控制”机制，这在服务器端数据库中是不存在的。</strong></p>
+<p>与服务器端数据库不同，IndexedDB 存在于客户端，数据存储在浏览器中。因此，开发人员无法随时都能访问它。</p>
+<p>如果本地数据库版本低于 <code>open</code> 中指定的版本，会触发一个特殊事件 <code>upgradeneeded</code>。我们可以根据需要比较版本并升级数据结构。当数据库还不存在时（从技术上讲，其版本为 <code>0</code>），也会触发 <code>upgradeneeded</code> 事件。因此，我们可以执行初始化。</p>
+<p>假设我们发布了应用程序的第一个版本。</p>
+<p>接下来我们就可以打开版本 <code>1</code> 中的 IndexedDB 数据库，并在一个 <code>upgradeneeded</code> 的处理程序中执行初始化，如下所示：</p>
+<pre class="line-numbers language-javascript" data-language="javascript"><code class="language-javascript"><span class="token keyword">let</span> openRequest <span class="token operator">=</span> indexedDB<span class="token punctuation">.</span><span class="token function">open</span><span class="token punctuation">(</span><span class="token string">"store"</span><span class="token punctuation">,</span> <span class="token number">1</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+openRequest<span class="token punctuation">.</span><span class="token function-variable function">onupgradeneeded</span> <span class="token operator">=</span> <span class="token keyword">function</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+  <span class="token comment">// 如果客户端没有数据库则触发</span>
+  <span class="token comment">// ...执行初始化...</span>
+<span class="token punctuation">&#125;</span><span class="token punctuation">;</span>
+
+openRequest<span class="token punctuation">.</span><span class="token function-variable function">onerror</span> <span class="token operator">=</span> <span class="token keyword">function</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+  console<span class="token punctuation">.</span><span class="token function">error</span><span class="token punctuation">(</span><span class="token string">"Error"</span><span class="token punctuation">,</span> openRequest<span class="token punctuation">.</span>error<span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">&#125;</span><span class="token punctuation">;</span>
+
+openRequest<span class="token punctuation">.</span><span class="token function-variable function">onsuccess</span> <span class="token operator">=</span> <span class="token keyword">function</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+  <span class="token keyword">let</span> db <span class="token operator">=</span> openRequest<span class="token punctuation">.</span>result<span class="token punctuation">;</span>
+  <span class="token comment">// 继续使用 db 对象处理数据库</span>
+<span class="token punctuation">&#125;</span><span class="token punctuation">;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<p>之后不久，我们发布了第二个版本。</p>
+<p>我们可以打开版本 <code>2</code> 中的 IndexedDB 数据库，并像这样进行升级：</p>
+<pre class="line-numbers language-javascript" data-language="javascript"><code class="language-javascript"><span class="token keyword">let</span> openRequest <span class="token operator">=</span> indexedDB<span class="token punctuation">.</span><span class="token function">open</span><span class="token punctuation">(</span><span class="token string">"store"</span><span class="token punctuation">,</span> <span class="token number">2</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+openRequest<span class="token punctuation">.</span><span class="token function-variable function">onupgradeneeded</span> <span class="token operator">=</span> <span class="token keyword">function</span><span class="token punctuation">(</span><span class="token parameter">event</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+  <span class="token comment">// 现有的数据库版本小于 2（或不存在）</span>
+  <span class="token keyword">let</span> db <span class="token operator">=</span> openRequest<span class="token punctuation">.</span>result<span class="token punctuation">;</span>
+  <span class="token keyword">switch</span><span class="token punctuation">(</span>event<span class="token punctuation">.</span>oldVersion<span class="token punctuation">)</span> <span class="token punctuation">&#123;</span> <span class="token comment">// 现有的 db 版本</span>
+    <span class="token keyword">case</span> <span class="token number">0</span><span class="token operator">:</span>
+      <span class="token comment">// 版本 0 表示客户端没有数据库</span>
+      <span class="token comment">// 执行初始化</span>
+    <span class="token keyword">case</span> <span class="token number">1</span><span class="token operator">:</span>
+      <span class="token comment">// 客户端版本为 1</span>
+      <span class="token comment">// 更新</span>
+  <span class="token punctuation">&#125;</span>
+<span class="token punctuation">&#125;</span><span class="token punctuation">;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<p>请注意：虽然我们目前的版本是 <code>2</code>，<code>onupgradeneeded</code> 处理程序有针对版本 <code>0</code> 的代码分支（适用于初次访问，浏览器中没有数据库的用户）和针对版本 <code>1</code> 的代码分支（用于升级）。</p>
+<p>接下来，当且仅当 <code>onupgradeneeded</code> 处理程序没有错误地执行完成，<code>openRequest.onsuccess</code> 被触发，数据库才算是成功打开了。</p>
+<p>删除数据库：</p>
+<pre class="line-numbers language-javascript" data-language="javascript"><code class="language-javascript"><span class="token keyword">let</span> deleteRequest <span class="token operator">=</span> indexedDB<span class="token punctuation">.</span><span class="token function">deleteDatabase</span><span class="token punctuation">(</span>name<span class="token punctuation">)</span>
+<span class="token comment">// deleteRequest.onsuccess/onerror 追踪（tracks）结果</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre>
+
+<h3 id="并行更新问题"><a href="#并行更新问题" class="headerlink" title="并行更新问题"></a>并行更新问题</h3><p>提到版本控制，有一个相关的小问题。</p>
+<p>举个例子：</p>
+<ol>
+<li>一个用户在一个浏览器标签页中打开了数据库版本为 <code>1</code> 的我们的网站。</li>
+<li>接下来我们发布了一个更新，使得代码更新了。</li>
+<li>接下来同一个用户在另一个浏览器标签中打开了这个网站。</li>
+</ol>
+<p>这时，有一个标签页和版本为 <code>1</code> 的数据库建立了一个连接，而另一个标签页试图在其 <code>upgradeneeded</code> 处理程序中将数据库版本升级到 <code>2</code>。</p>
+<p>问题是，这两个网页是同一个站点，同一个源，共享同一个数据库。而数据库不能同时为版本 <code>1</code> 和版本 <code>2</code>。要执行版本 <code>2</code> 的更新，必须关闭对版本 <code>1</code> 的所有连接，包括第一个标签页中的那个。</p>
+<p>为了解决这一问题，<code>versionchange</code> 事件会在“过时的”数据库对象上触发。我们需要监听这个事件，关闭对旧版本数据库的连接（还应该建议访问者重新加载页面，以加载最新的代码）。</p>
+<p>如果我们不监听 <code>versionchange</code> 事件，也不去关闭旧连接，那么新的连接就不会建立。<code>openRequest</code> 对象会产生 <code>blocked</code> 事件，而不是 <code>success</code> 事件。因此第二个标签页无法正常工作。</p>
+<p>下面是能够正确处理并行升级情况的代码。它安装了 <code>onversionchange</code> 处理程序，如果当前数据库连接过时（数据库版本在其他位置被更新）并关闭连接，则会触发该处理程序。</p>
+<pre class="line-numbers language-javascript" data-language="javascript"><code class="language-javascript"><span class="token keyword">let</span> openRequest <span class="token operator">=</span> indexedDB<span class="token punctuation">.</span><span class="token function">open</span><span class="token punctuation">(</span><span class="token string">"store"</span><span class="token punctuation">,</span> <span class="token number">2</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+openRequest<span class="token punctuation">.</span>onupgradeneeded <span class="token operator">=</span> <span class="token operator">...</span><span class="token punctuation">;</span>
+openRequest<span class="token punctuation">.</span>onerror <span class="token operator">=</span> <span class="token operator">...</span><span class="token punctuation">;</span>
+
+openRequest<span class="token punctuation">.</span><span class="token function-variable function">onsuccess</span> <span class="token operator">=</span> <span class="token keyword">function</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+  <span class="token keyword">let</span> db <span class="token operator">=</span> openRequest<span class="token punctuation">.</span>result<span class="token punctuation">;</span>
+
+  db<span class="token punctuation">.</span><span class="token function-variable function">onversionchange</span> <span class="token operator">=</span> <span class="token keyword">function</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+    db<span class="token punctuation">.</span><span class="token function">close</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token function">alert</span><span class="token punctuation">(</span><span class="token string">"Database is outdated, please reload the page."</span><span class="token punctuation">)</span>
+  <span class="token punctuation">&#125;</span><span class="token punctuation">;</span>
+
+  <span class="token comment">// ……数据库已经准备好，请使用它……</span>
+<span class="token punctuation">&#125;</span><span class="token punctuation">;</span>
+
+openRequest<span class="token punctuation">.</span><span class="token function-variable function">onblocked</span> <span class="token operator">=</span> <span class="token keyword">function</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+  <span class="token comment">// 如果我们正确处理了 onversionchange 事件，这个事件就不应该触发</span>
+
+  <span class="token comment">// 这意味着还有另一个指向同一数据库的连接</span>
+  <span class="token comment">// 并且在 db.onversionchange 被触发后，该连接没有被关闭</span>
+<span class="token punctuation">&#125;</span><span class="token punctuation">;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<p>……换句话说，在这我们做两件事：</p>
+<ol>
+<li>如果当前数据库版本过时，<code>db.onversionchange</code> 监听器会通知我们并行尝试更新。</li>
+<li><code>openRequest.onblocked</code> 监听器通知我们相反的情况：在其他地方有一个与过时的版本的连接未关闭，因此无法建立新的连接。</li>
+</ol>
+<p>我们可以在 <code>db.onversionchange</code> 中更优雅地进行处理，提示访问者在连接关闭之前保存数据等。</p>
+<p>或者，另一种方式是不在 <code>db.onversionchange</code> 中关闭数据库，而是使用 <code>onblocked</code> 处理程序（在浏览器新 tab 页中）来提醒用户，告诉他新版本无法加载，直到他们关闭浏览器其他 tab 页。</p>
+<p>这种更新冲突很少发生，但我们至少应该有一些对其进行处理的程序，至少在 <code>onblocked</code> 处理程序中进行处理，以防程序默默卡死而影响用户体验。</p>
+<h2 id="3、对象库（object-store）"><a href="#3、对象库（object-store）" class="headerlink" title="3、对象库（object store）"></a>3、对象库（object store）</h2><p>要在 <code>IndexedDB</code> 中存储某些内容，我们需要一个 <strong>对象库</strong>。</p>
+<p>对象库是 IndexedDB 的核心概念，在其他数据库中对应的对象称为“表”或“集合”。它是储存数据的地方。一个数据库可能有多个存储区：一个用于存储用户数据，另一个用于商品，等等。</p>
+<p>尽管被命名为“对象库”，但也可以存储原始类型。</p>
+<p><strong>几乎可以存储任何值，包括复杂的对象。</strong></p>
+<p>IndexedDB 使用 <a target="_blank" rel="noopener" href="https://www.w3.org/TR/html53/infrastructure.html#section-structuredserializeforstorage">标准序列化算法</a> 来克隆和存储对象。类似于 <code>JSON.stringify</code>，不过功能更加强大，能够存储更多的数据类型。</p>
+<p>有一种对象不能被存储：循环引用的对象。此类对象不可序列化，也不能进行 <code>JSON.stringify</code>。</p>
+<p><strong>库中的每个值都必须有唯一的键 <code>key</code>。</strong></p>
+<p>键的类型必须为数字、日期、字符串、二进制或数组。它是唯一的标识符，所以我们可以通过键来搜索&#x2F;删除&#x2F;更新值。</p>
+<p><img src="/medias/loading.gif" data-original="https://raw.githubusercontent.com/luyaguo/pictures-guo/main/springboot/indexeddb-structure.svg" alt="indexeddb-structure"></p>
+<p>正如我们很快就会看到的，类似于 <code>localStorage</code>，我们向存储区添加值时，可以提供一个键。但当我们存储对象时，IndexedDB 允许将一个对象属性设置为键，这就更加方便了。或者，我们可以自动生成键。</p>
+<p>但我们需要先创建一个对象库。</p>
+<h3 id="创建对象库的语法"><a href="#创建对象库的语法" class="headerlink" title="创建对象库的语法"></a>创建对象库的语法</h3><pre class="line-numbers language-javascript" data-language="javascript"><code class="language-javascript">db<span class="token punctuation">.</span><span class="token function">createObjectStore</span><span class="token punctuation">(</span>name<span class="token punctuation">[</span><span class="token punctuation">,</span> keyOptions<span class="token punctuation">]</span><span class="token punctuation">)</span><span class="token punctuation">;</span><span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+
+<p>请注意，操作是同步的，不需要 <code>await</code>。</p>
+<ul>
+<li><code>name</code> 是存储区名称，例如 <code>&quot;books&quot;</code> 表示书。</li>
+<li><code>keyOptions</code> 是具有以下两个属性之一的可选对象：<ul>
+<li><code>keyPath</code> —— 对象属性的路径，IndexedDB 将以此路径作为键，例如 <code>id</code>。</li>
+<li><code>autoIncrement</code> —— 如果为 <code>true</code>，则自动生成新存储的对象的键，键是一个不断递增的数字。</li>
+</ul>
+</li>
+</ul>
+<p>如果我们不提供 <code>keyOptions</code>，那么以后需要在存储对象时，显式地提供一个键。</p>
+<p>例如，此对象库使用 <code>id</code> 属性作为键：</p>
+<pre class="line-numbers language-javascript" data-language="javascript"><code class="language-javascript">db<span class="token punctuation">.</span><span class="token function">createObjectStore</span><span class="token punctuation">(</span><span class="token string">'books'</span><span class="token punctuation">,</span> <span class="token punctuation">&#123;</span><span class="token literal-property property">keyPath</span><span class="token operator">:</span> <span class="token string">'id'</span><span class="token punctuation">&#125;</span><span class="token punctuation">)</span><span class="token punctuation">;</span><span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+
+<p><strong>在 <code>upgradeneeded</code> 处理程序中，只有在创建数据库版本时，对象库被才能被 创建&#x2F;修改。</strong></p>
+<p>这是技术上的限制。在 upgradeneedHandler 之外，可以添加&#x2F;删除&#x2F;更新数据，但是只能在版本更新期间创建&#x2F;删除&#x2F;更改对象库。</p>
+<p>要进行数据库版本升级，主要有两种方法：</p>
+<ol>
+<li>我们实现每个版本的升级功能：从 1 到 2，从 2 到 3，从 3 到 4，等等。在 <code>upgradeneeded</code> 中，可以进行版本比较（例如，老版本是 2，需要升级到 4），并针对每个中间版本（2 到 3，然后 3 到 4）逐步运行每个版本的升级。</li>
+<li>或者我们可以检查数据库：以 <code>db.objectStoreNames</code> 的形式获取现有对象库的列表。该对象是一个 <a target="_blank" rel="noopener" href="https://html.spec.whatwg.org/multipage/common-dom-interfaces.html#domstringlist">DOMStringList</a> 提供 <code>contains(name)</code> 方法来检查 name 是否存在，再根据存在和不存在的内容进行更新。</li>
+</ol>
+<p>对于小型数据库，第二种方法可能更简单。</p>
+<p>下面是第二种方法的演示:</p>
+<pre class="line-numbers language-javascript" data-language="javascript"><code class="language-javascript"><span class="token keyword">let</span> openRequest <span class="token operator">=</span> indexedDB<span class="token punctuation">.</span><span class="token function">open</span><span class="token punctuation">(</span><span class="token string">"db"</span><span class="token punctuation">,</span> <span class="token number">2</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+<span class="token comment">// 创建/升级 数据库而无需版本检查</span>
+openRequest<span class="token punctuation">.</span><span class="token function-variable function">onupgradeneeded</span> <span class="token operator">=</span> <span class="token keyword">function</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+  <span class="token keyword">let</span> db <span class="token operator">=</span> openRequest<span class="token punctuation">.</span>result<span class="token punctuation">;</span>
+  <span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token operator">!</span>db<span class="token punctuation">.</span>objectStoreNames<span class="token punctuation">.</span><span class="token function">contains</span><span class="token punctuation">(</span><span class="token string">'books'</span><span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span> <span class="token comment">// 如果没有 “books” 数据</span>
+    db<span class="token punctuation">.</span><span class="token function">createObjectStore</span><span class="token punctuation">(</span><span class="token string">'books'</span><span class="token punctuation">,</span> <span class="token punctuation">&#123;</span><span class="token literal-property property">keyPath</span><span class="token operator">:</span> <span class="token string">'id'</span><span class="token punctuation">&#125;</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// 创造它</span>
+  <span class="token punctuation">&#125;</span>
+<span class="token punctuation">&#125;</span><span class="token punctuation">;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<p>删除对象库：</p>
+<pre class="line-numbers language-javascript" data-language="javascript"><code class="language-javascript">db<span class="token punctuation">.</span><span class="token function">deleteObjectStore</span><span class="token punctuation">(</span><span class="token string">'books'</span><span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+
+<h2 id="4、事务（transaction）"><a href="#4、事务（transaction）" class="headerlink" title="4、事务（transaction）"></a>4、事务（transaction）</h2><p>术语“事务（transaction）”是通用的，许多数据库中都有用到。</p>
+<p>事务是一组操作，要么全部成功，要么全部失败。</p>
+<p>例如，当一个人买东西时，我们需要：</p>
+<ol>
+<li>从他们的账户中扣除这笔钱。</li>
+<li>将该项目添加到他们的清单中。</li>
+</ol>
+<p>如果完成了第一个操作，但是出了问题，比如停电。这时无法完成第二个操作，这非常糟糕。两件时应该要么都成功（购买完成，好！）或同时失败（这个人保留了钱，可以重新尝试）。</p>
+<p>事务可以保证同时完成。</p>
+<p><strong>所有数据操作都必须在 IndexedDB 中的事务内进行。</strong></p>
+<h3 id="启动事务"><a href="#启动事务" class="headerlink" title="启动事务"></a>启动事务</h3><pre class="line-numbers language-javascript" data-language="javascript"><code class="language-javascript">db<span class="token punctuation">.</span><span class="token function">transaction</span><span class="token punctuation">(</span>store<span class="token punctuation">[</span><span class="token punctuation">,</span> type<span class="token punctuation">]</span><span class="token punctuation">)</span><span class="token punctuation">;</span><span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+
+<ul>
+<li><p><code>store</code> 是事务要访问的库名称，例如 <code>&quot;books&quot;</code>。如果我们要访问多个库，则是库名称的数组。</p>
+</li>
+<li><pre><code>type
+<pre class="line-numbers language-none"><code class="language-none">
+   
+
+  – 事务类型，以下类型之一：
+
+  - &#96;readonly&#96; —— 只读，默认值。
+  - &#96;readwrite&#96; —— 只能读取和写入数据，而不能 创建&#x2F;删除&#x2F;更改 对象库。
+
+还有 &#96;versionchange&#96; 事务类型：这种事务可以做任何事情，但不能被手动创建。IndexedDB 在打开数据库时，会自动为 &#96;upgradeneeded&#96; 处理程序创建 &#96;versionchange&#96; 事务。这就是它为什么可以更新数据库结构、创建&#x2F;删除 对象库的原因。
+
+### 为什么会有不同类型的事务？
+
+性能是事务需要标记为 &#96;readonly&#96; 和 &#96;readwrite&#96; 的原因。
+
+许多 &#96;readonly&#96; 事务能够同时访问同一存储区，但 &#96;readwrite&#96; 事务不能。因为 &#96;readwrite&#96; 事务会“锁定”存储区进行写操作。下一个事务必须等待前一个事务完成，才能访问相同的存储区。
+
+### 操作对象库
+
+创建事务后，我们可以将项目添加到库，就像这样：
+
+&#96;&#96;&#96;javascript
+let transaction &#x3D; db.transaction(&quot;books&quot;, &quot;readwrite&quot;); &#x2F;&#x2F; (1)
+
+&#x2F;&#x2F; 获取对象库进行操作
+let books &#x3D; transaction.objectStore(&quot;books&quot;); &#x2F;&#x2F; (2)
+
+let book &#x3D; &#123;
+  id: &#39;js&#39;,
+  price: 10,
+  created: new Date()
+&#125;;
+
+let request &#x3D; books.add(book); &#x2F;&#x2F; (3)
+
+request.onsuccess &#x3D; function() &#123; &#x2F;&#x2F; (4)
+  console.log(&quot;Book added to the store&quot;, request.result);
+&#125;;
+
+request.onerror &#x3D; function() &#123;
+  console.log(&quot;Error&quot;, request.error);
+&#125;;<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+</code></pre>
+</li>
+</ul>
+<p>基本有四个步骤：</p>
+<ol>
+<li>创建一个事务，在（1）表明要访问的所有存储。</li>
+<li>使用 <code>transaction.objectStore(name)</code>，在（2）中获取存储对象。</li>
+<li>在（3）执行对对象库 <code>books.add(book)</code> 的请求。</li>
+<li>……处理请求 成功&#x2F;错误（4），还可以根据需要发出其他请求。</li>
+</ol>
+<h3 id="对象库支持两种存储值的方法"><a href="#对象库支持两种存储值的方法" class="headerlink" title="对象库支持两种存储值的方法"></a>对象库支持两种存储值的方法</h3><ul>
+<li><strong>put(value, [key])</strong> 将 <code>value</code> 添加到存储区。仅当对象库没有 <code>keyPath</code> 或 <code>autoIncrement</code> 时，才提供 <code>key</code>。如果已经存在具有相同键的值，则将替换该值。</li>
+<li><strong>add(value, [key])</strong> 与 <code>put</code> 相同，但是如果已经有一个值具有相同的键，则请求失败，并生成一个名为 <code>&quot;ConstraInterror&quot;</code> 的错误。</li>
+</ul>
+<p>与打开数据库类似，我们可以发送一个请求：<code>books.add(book)</code>，然后等待 <code>success/error</code> 事件。</p>
+<ul>
+<li><code>add</code> 的 <code>request.result</code> 是新对象的键。</li>
+<li>错误在 <code>request.error</code>（如果有的话）中。</li>
+</ul>
+<h2 id="5、事务的自动提交"><a href="#5、事务的自动提交" class="headerlink" title="5、事务的自动提交"></a>5、事务的自动提交</h2><p>在上面的示例中，我们启动了事务并发出了 <code>add</code> 请求。但正如前面提到的，一个事务可能有多个相关的请求，这些请求必须全部成功或全部失败。那么我们如何将事务标记为已完成，并不再请求呢？</p>
+<p>简短的回答是：没有。</p>
+<p>在下一个版本 3.0 规范中，可能会有一种手动方式来完成事务，但目前在 2.0 中还没有。</p>
+<p><strong>当所有事务的请求完成，并且 <a target="_blank" rel="noopener" href="https://zh.javascript.info/microtask-queue">微任务队列</a> 为空时，它将自动提交。</strong></p>
+<p>通常，我们可以假设事务在其所有请求完成时提交，并且当前代码完成。</p>
+<p>因此，在上面的示例中，不需要任何特殊调用即可完成事务。</p>
+<p>事务自动提交原则有一个重要的副作用。不能在事务中间插入 <code>fetch</code>, <code>setTimeout</code> 等异步操作。IndexedDB 不会让事务等待这些操作完成。</p>
+<p>在下面的代码中，<code>request2</code> 中的行 <code>(*)</code> 失败，因为事务已经提交，不能在其中发出任何请求:</p>
+<pre class="line-numbers language-javascript" data-language="javascript"><code class="language-javascript"><span class="token keyword">let</span> request1 <span class="token operator">=</span> books<span class="token punctuation">.</span><span class="token function">add</span><span class="token punctuation">(</span>book<span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+request1<span class="token punctuation">.</span><span class="token function-variable function">onsuccess</span> <span class="token operator">=</span> <span class="token keyword">function</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+  <span class="token function">fetch</span><span class="token punctuation">(</span><span class="token string">'/'</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">then</span><span class="token punctuation">(</span><span class="token parameter">response</span> <span class="token operator">=></span> <span class="token punctuation">&#123;</span>
+    <span class="token keyword">let</span> request2 <span class="token operator">=</span> books<span class="token punctuation">.</span><span class="token function">add</span><span class="token punctuation">(</span>anotherBook<span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// (*)</span>
+    request2<span class="token punctuation">.</span><span class="token function-variable function">onerror</span> <span class="token operator">=</span> <span class="token keyword">function</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+      console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span>request2<span class="token punctuation">.</span>error<span class="token punctuation">.</span>name<span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// TransactionInactiveError</span>
+    <span class="token punctuation">&#125;</span><span class="token punctuation">;</span>
+  <span class="token punctuation">&#125;</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">&#125;</span><span class="token punctuation">;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<p>这是因为 <code>fetch</code> 是一个异步操作，一个宏任务。事务在浏览器开始执行宏任务之前关闭。</p>
+<p>IndexedDB 规范的作者认为事务应该是短期的。主要是性能原因。</p>
+<p>值得注意的是，<code>readwrite</code> 事务将存储“锁定”以进行写入。因此，如果应用程序的一部分启动了 <code>books</code> 对象库上的 <code>readwrite</code> 操作，那么希望执行相同操作的另一部分必须等待新事务“挂起”，直到第一个事务完成。如果事务处理需要很长时间，将会导致奇怪的延迟。</p>
+<p>那么，该怎么办？</p>
+<p>在上面的示例中，我们可以在新请求 <code>(*)</code> 之前创建一个新的 <code>db.transaction</code>。</p>
+<p>如果需要在一个事务中把所有操作保持一致，更好的做法是将 IndexedDB 事务和“其他”异步内容分开。</p>
+<p>首先，执行 <code>fetch</code>，并根据需要准备数据。然后创建事务并执行所有数据库请求，然后就正常了。</p>
+<p>为了检测到成功完成的时刻，我们可以监听 <code>transaction.oncomplete</code> 事件:</p>
+<pre class="line-numbers language-javascript" data-language="javascript"><code class="language-javascript"><span class="token keyword">let</span> transaction <span class="token operator">=</span> db<span class="token punctuation">.</span><span class="token function">transaction</span><span class="token punctuation">(</span><span class="token string">"books"</span><span class="token punctuation">,</span> <span class="token string">"readwrite"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+<span class="token comment">// ……执行操作……</span>
+
+transaction<span class="token punctuation">.</span><span class="token function-variable function">oncomplete</span> <span class="token operator">=</span> <span class="token keyword">function</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+  console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span><span class="token string">"Transaction is complete"</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// 事务执行完成</span>
+<span class="token punctuation">&#125;</span><span class="token punctuation">;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<p>只有 <code>complete</code> 才能保证将事务作为一个整体保存。个别请求可能会成功，但最终的写入操作可能会出错（例如 I&#x2F;O 错误或其他错误）。</p>
+<p>要手动中止事务，请调用：</p>
+<pre class="line-numbers language-javascript" data-language="javascript"><code class="language-javascript">transaction<span class="token punctuation">.</span><span class="token function">abort</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span><span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+
+<p>取消请求里所做的所有修改，并触发 <code>transaction.onabort</code> 事件。</p>
+<h2 id="6、错误处理"><a href="#6、错误处理" class="headerlink" title="6、错误处理"></a>6、错误处理</h2><p>写入请求可能会失败。</p>
+<p>这是意料之中的事，不仅是我们可能会犯的粗心失误，还有与事务本身相关的其他原因。例如超过了存储配额。因此，必须做好请求失败的处理。</p>
+<p><strong>失败的请求将自动中止事务，并取消所有的更改。</strong></p>
+<p>在一些情况下，我们会想自己去处理失败事务（例如尝试另一个请求）并让它继续执行，而不是取消现有的更改。可以调用 <code>request.onerror</code> 处理程序，在其中调用 <code>event.preventDefault()</code> 防止事务中止。</p>
+<p>在下面的示例中，添加了一本新书，键 (<code>id</code>) 与现有的书相同。<code>store.add</code> 方法生成一个 <code>&quot;ConstraInterror&quot;</code>。可以在不取消事务的情况下进行处理：</p>
+<pre class="line-numbers language-javascript" data-language="javascript"><code class="language-javascript"><span class="token keyword">let</span> transaction <span class="token operator">=</span> db<span class="token punctuation">.</span><span class="token function">transaction</span><span class="token punctuation">(</span><span class="token string">"books"</span><span class="token punctuation">,</span> <span class="token string">"readwrite"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+<span class="token keyword">let</span> book <span class="token operator">=</span> <span class="token punctuation">&#123;</span> <span class="token literal-property property">id</span><span class="token operator">:</span> <span class="token string">'js'</span><span class="token punctuation">,</span> <span class="token literal-property property">price</span><span class="token operator">:</span> <span class="token number">10</span> <span class="token punctuation">&#125;</span><span class="token punctuation">;</span>
+
+<span class="token keyword">let</span> request <span class="token operator">=</span> transaction<span class="token punctuation">.</span><span class="token function">objectStore</span><span class="token punctuation">(</span><span class="token string">"books"</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">add</span><span class="token punctuation">(</span>book<span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+request<span class="token punctuation">.</span><span class="token function-variable function">onerror</span> <span class="token operator">=</span> <span class="token keyword">function</span><span class="token punctuation">(</span><span class="token parameter">event</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+  <span class="token comment">// 有相同 id 的对象存在时，发生 ConstraintError</span>
+  <span class="token keyword">if</span> <span class="token punctuation">(</span>request<span class="token punctuation">.</span>error<span class="token punctuation">.</span>name <span class="token operator">==</span> <span class="token string">"ConstraintError"</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+    console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span><span class="token string">"Book with such id already exists"</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// 处理错误</span>
+    event<span class="token punctuation">.</span><span class="token function">preventDefault</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// 不要中止事务</span>
+    <span class="token comment">// 这个 book 用另一个键？</span>
+  <span class="token punctuation">&#125;</span> <span class="token keyword">else</span> <span class="token punctuation">&#123;</span>
+    <span class="token comment">// 意外错误，无法处理</span>
+    <span class="token comment">// 事务将中止</span>
+  <span class="token punctuation">&#125;</span>
+<span class="token punctuation">&#125;</span><span class="token punctuation">;</span>
+
+transaction<span class="token punctuation">.</span><span class="token function-variable function">onabort</span> <span class="token operator">=</span> <span class="token keyword">function</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+  console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span><span class="token string">"Error"</span><span class="token punctuation">,</span> transaction<span class="token punctuation">.</span>error<span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">&#125;</span><span class="token punctuation">;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<h3 id="事件委托"><a href="#事件委托" class="headerlink" title="事件委托"></a>事件委托</h3><p>每个请求都需要调用 onerror&#x2F;onsuccess ？并不，可以使用事件委托来代替。</p>
+<p><strong>IndexedDB 事件冒泡：请求 → 事务 → 数据库。</strong></p>
+<p>所有事件都是 DOM 事件，有捕获和冒泡，但通常只使用冒泡阶段。</p>
+<p>因此，出于报告或其他原因，我们可以使用 <code>db.onerror</code> 处理程序捕获所有错误：</p>
+<pre class="line-numbers language-javascript" data-language="javascript"><code class="language-javascript">db<span class="token punctuation">.</span><span class="token function-variable function">onerror</span> <span class="token operator">=</span> <span class="token keyword">function</span><span class="token punctuation">(</span><span class="token parameter">event</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+  <span class="token keyword">let</span> request <span class="token operator">=</span> event<span class="token punctuation">.</span>target<span class="token punctuation">;</span> <span class="token comment">// 导致错误的请求</span>
+
+  console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span><span class="token string">"Error"</span><span class="token punctuation">,</span> request<span class="token punctuation">.</span>error<span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">&#125;</span><span class="token punctuation">;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<p>但是错误被完全处理了呢？这种情况不应该被报告。</p>
+<p>我们可以通过在 <code>request.onerror</code> 中使用 <code>event.stopPropagation()</code> 来停止冒泡，从而停止 <code>db.onerror</code> 事件。</p>
+<pre class="line-numbers language-javascript" data-language="javascript"><code class="language-javascript">request<span class="token punctuation">.</span><span class="token function-variable function">onerror</span> <span class="token operator">=</span> <span class="token keyword">function</span><span class="token punctuation">(</span><span class="token parameter">event</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+  <span class="token keyword">if</span> <span class="token punctuation">(</span>request<span class="token punctuation">.</span>error<span class="token punctuation">.</span>name <span class="token operator">==</span> <span class="token string">"ConstraintError"</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+    console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span><span class="token string">"Book with such id already exists"</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// 处理错误</span>
+    event<span class="token punctuation">.</span><span class="token function">preventDefault</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// 不要中止事务</span>
+    event<span class="token punctuation">.</span><span class="token function">stopPropagation</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// 不要让错误冒泡, 停止它的传播</span>
+  <span class="token punctuation">&#125;</span> <span class="token keyword">else</span> <span class="token punctuation">&#123;</span>
+    <span class="token comment">// 什么都不做</span>
+    <span class="token comment">// 事务将中止</span>
+    <span class="token comment">// 我们可以解决 transaction.onabort 中的错误</span>
+  <span class="token punctuation">&#125;</span>
+<span class="token punctuation">&#125;</span><span class="token punctuation">;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<h2 id="7、搜索"><a href="#7、搜索" class="headerlink" title="7、搜索"></a>7、搜索</h2><p>对象库有两种主要的搜索类型：</p>
+<ol>
+<li>通过键值或键值范围。在我们的 “books” 存储中，将是 <code>book.id</code> 的值或值的范围。</li>
+<li>通过另一个对象字段，例如 <code>book.price</code>。这需要一个额外的数据结构，名为“索引（index）”。</li>
+</ol>
+<h3 id="通过-key-搜索"><a href="#通过-key-搜索" class="headerlink" title="通过 key 搜索"></a>通过 key 搜索</h3><p>首先，让我们来处理第一种类型的搜索：按键。</p>
+<p>支持精确的键值和被称为“值范围”的搜索方法 —— <a target="_blank" rel="noopener" href="https://www.w3.org/TR/IndexedDB/#keyrange">IDBKeyRange</a> 对象，指定一个可接受的“键值范围”。</p>
+<p><code>IDBKeyRange</code> 对象是通过下列调用创建的：</p>
+<ul>
+<li><code>IDBKeyRange.lowerBound(lower, [open])</code> 表示：<code>≥lower</code>（如果 <code>open</code> 是 true，表示 <code>&gt;lower</code>）</li>
+<li><code>IDBKeyRange.upperBound(upper, [open])</code> 表示：<code>≤upper</code>（如果 <code>open</code> 是 true，表示 <code>&lt;upper</code>）</li>
+<li><code>IDBKeyRange.bound(lower, upper, [lowerOpen], [upperOpen])</code> 表示: 在 <code>lower</code> 和 <code>upper</code> 之间。如果 open 为 true，则相应的键不包括在范围中。</li>
+<li><code>IDBKeyRange.only(key)</code> —— 仅包含一个键的范围 <code>key</code>，很少使用。</li>
+</ul>
+<p>我们很快就会看到使用它们的实际示例。</p>
+<p>要进行实际的搜索，有以下方法。它们接受一个可以是精确键值或键值范围的 <code>query</code> 参数：</p>
+<ul>
+<li><code>store.get(query)</code> —— 按键或范围搜索第一个值。</li>
+<li><code>store.getAll([query], [count])</code> —— 搜索所有值。如果 <code>count</code> 给定，则按 <code>count</code> 进行限制。</li>
+<li><code>store.getKey(query)</code> —— 搜索满足查询的第一个键，通常是一个范围。</li>
+<li><code>store.getAllKeys([query], [count])</code> —— 搜索满足查询的所有键，通常是一个范围。如果 <code>count</code> 给定，则最多为 count。</li>
+<li><code>store.count([query])</code> —— 获取满足查询的键的总数，通常是一个范围。</li>
+</ul>
+<p>例如，我们存储区里有很多书。因为 <code>id</code> 字段是键，因此所有方法都可以按 <code>id</code> 进行搜索。</p>
+<p>请求示例：</p>
+<pre class="line-numbers language-javascript" data-language="javascript"><code class="language-javascript"><span class="token comment">// 获取一本书</span>
+books<span class="token punctuation">.</span><span class="token function">get</span><span class="token punctuation">(</span><span class="token string">'js'</span><span class="token punctuation">)</span>
+
+<span class="token comment">// 获取 'css' &lt;= id &lt;= 'html' 的书</span>
+books<span class="token punctuation">.</span><span class="token function">getAll</span><span class="token punctuation">(</span>IDBKeyRange<span class="token punctuation">.</span><span class="token function">bound</span><span class="token punctuation">(</span><span class="token string">'css'</span><span class="token punctuation">,</span> <span class="token string">'html'</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
+
+<span class="token comment">// 获取 id &lt; 'html' 的书</span>
+books<span class="token punctuation">.</span><span class="token function">getAll</span><span class="token punctuation">(</span>IDBKeyRange<span class="token punctuation">.</span><span class="token function">upperBound</span><span class="token punctuation">(</span><span class="token string">'html'</span><span class="token punctuation">,</span> <span class="token boolean">true</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
+
+<span class="token comment">// 获取所有书</span>
+books<span class="token punctuation">.</span><span class="token function">getAll</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
+
+<span class="token comment">// 获取所有 id > 'js' 的键</span>
+books<span class="token punctuation">.</span><span class="token function">getAllKeys</span><span class="token punctuation">(</span>IDBKeyRange<span class="token punctuation">.</span><span class="token function">lowerBound</span><span class="token punctuation">(</span><span class="token string">'js'</span><span class="token punctuation">,</span> <span class="token boolean">true</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<h3 id="对象中对值的存储始终是有序的"><a href="#对象中对值的存储始终是有序的" class="headerlink" title="对象中对值的存储始终是有序的"></a>对象中对值的存储始终是有序的</h3><p>对象内部存储的值是按键对值进行排序的。</p>
+<p>因此，请求的返回值，是按照键的顺序排列的。</p>
+<h3 id="通过使用索引的字段搜索"><a href="#通过使用索引的字段搜索" class="headerlink" title="通过使用索引的字段搜索"></a>通过使用索引的字段搜索</h3><p>要根据其他对象字段进行搜索，我们需要创建一个名为“索引（index）”的附加数据结构。</p>
+<p>索引是存储的”附加项”，用于跟踪给定的对象字段。对于该字段的每个值，它存储有该值的对象的键列表。下面会有更详细的图片。</p>
+<p>语法：</p>
+<pre class="line-numbers language-javascript" data-language="javascript"><code class="language-javascript">objectStore<span class="token punctuation">.</span><span class="token function">createIndex</span><span class="token punctuation">(</span>name<span class="token punctuation">,</span> keyPath<span class="token punctuation">,</span> <span class="token punctuation">[</span>options<span class="token punctuation">]</span><span class="token punctuation">)</span><span class="token punctuation">;</span><span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+
+<ul>
+<li><p><strong><code>name</code></strong> —— 索引名称。</p>
+</li>
+<li><p><strong><code>keyPath</code></strong> —— 索引应该跟踪的对象字段的路径（我们将根据该字段进行搜索）。</p>
+</li>
+<li><p><code>option</code></p>
+<p>—— 具有以下属性的可选对象：</p>
+<ul>
+<li><strong><code>unique</code></strong> —— 如果为true，则存储中只有一个对象在 <code>keyPath</code> 上具有给定值。如果我们尝试添加重复项，索引将生成错误。</li>
+<li><strong><code>multiEntry</code></strong> —— 只有 <code>keypath</code> 上的值是数组时才使用。这时，默认情况下，索引将默认把整个数组视为键。但是如果 <code>multiEntry</code> 为 true，那么索引将为该数组中的每个值保留一个存储对象的列表。所以数组成员成为了索引键。</li>
+</ul>
+</li>
+</ul>
+<p>在我们的示例中，是按照 <code>id</code> 键存储图书的。</p>
+<p>假设我们想通过 <code>price</code> 进行搜索。</p>
+<p>首先，我们需要创建一个索引。它像对象库一样，必须在 <code>upgradeneeded</code> 中创建完成：</p>
+<pre class="line-numbers language-javascript" data-language="javascript"><code class="language-javascript">openRequest<span class="token punctuation">.</span><span class="token function-variable function">onupgradeneeded</span> <span class="token operator">=</span> <span class="token keyword">function</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+  <span class="token comment">// 在 versionchange 事务中，我们必须在这里创建索引</span>
+  <span class="token keyword">let</span> books <span class="token operator">=</span> db<span class="token punctuation">.</span><span class="token function">createObjectStore</span><span class="token punctuation">(</span><span class="token string">'books'</span><span class="token punctuation">,</span> <span class="token punctuation">&#123;</span><span class="token literal-property property">keyPath</span><span class="token operator">:</span> <span class="token string">'id'</span><span class="token punctuation">&#125;</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token keyword">let</span> index <span class="token operator">=</span> books<span class="token punctuation">.</span><span class="token function">createIndex</span><span class="token punctuation">(</span><span class="token string">'price_idx'</span><span class="token punctuation">,</span> <span class="token string">'price'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">&#125;</span><span class="token punctuation">;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<ul>
+<li>该索引将跟踪 <code>price</code> 字段。</li>
+<li>价格不是唯一的，可能有多本书价格相同，所以我们不设置唯一 <code>unique</code> 选项。</li>
+<li>价格不是一个数组，因此不适用多入口 <code>multiEntry</code> 标志。</li>
+</ul>
+<p>假设我们的库存里有4本书。下面的图片显示了该索引 <code>index</code> 的确切内容：</p>
+<p><img src="/medias/loading.gif" data-original="https://raw.githubusercontent.com/luyaguo/pictures-guo/main/springboot/indexeddb-index.svg" alt="indexeddb-index"></p>
+<p>如上所述，每个 price 值的索引（第二个参数）保存具有该价格的键的列表。</p>
+<p>索引自动保持最新，所以我们不必关心它。</p>
+<p>现在，当我们想要搜索给定的价格时，只需将相同的搜索方法应用于索引：</p>
+<pre class="line-numbers language-javascript" data-language="javascript"><code class="language-javascript"><span class="token keyword">let</span> transaction <span class="token operator">=</span> db<span class="token punctuation">.</span><span class="token function">transaction</span><span class="token punctuation">(</span><span class="token string">"books"</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// 只读</span>
+<span class="token keyword">let</span> books <span class="token operator">=</span> transaction<span class="token punctuation">.</span><span class="token function">objectStore</span><span class="token punctuation">(</span><span class="token string">"books"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token keyword">let</span> priceIndex <span class="token operator">=</span> books<span class="token punctuation">.</span><span class="token function">index</span><span class="token punctuation">(</span><span class="token string">"price_idx"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+<span class="token keyword">let</span> request <span class="token operator">=</span> priceIndex<span class="token punctuation">.</span><span class="token function">getAll</span><span class="token punctuation">(</span><span class="token number">10</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+request<span class="token punctuation">.</span><span class="token function-variable function">onsuccess</span> <span class="token operator">=</span> <span class="token keyword">function</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+  <span class="token keyword">if</span> <span class="token punctuation">(</span>request<span class="token punctuation">.</span>result <span class="token operator">!==</span> <span class="token keyword">undefined</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+    console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span><span class="token string">"Books"</span><span class="token punctuation">,</span> request<span class="token punctuation">.</span>result<span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// 价格为 10 的书的数组</span>
+  <span class="token punctuation">&#125;</span> <span class="token keyword">else</span> <span class="token punctuation">&#123;</span>
+    console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span><span class="token string">"No such books"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token punctuation">&#125;</span>
+<span class="token punctuation">&#125;</span><span class="token punctuation">;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<p>我们还可以使用 <code>IDBKeyRange</code> 创建范围，并查找 便宜&#x2F;贵 的书：</p>
+<pre class="line-numbers language-javascript" data-language="javascript"><code class="language-javascript"><span class="token comment">// 查找价格 &lt;=5 的书籍</span>
+<span class="token keyword">let</span> request <span class="token operator">=</span> priceIndex<span class="token punctuation">.</span><span class="token function">getAll</span><span class="token punctuation">(</span>IDBKeyRange<span class="token punctuation">.</span><span class="token function">upperBound</span><span class="token punctuation">(</span><span class="token number">5</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre>
+
+<p>在我们的例子中，索引是按照被跟踪对象字段价格 <code>price</code> 进行内部排序的。所以当我们进行搜索时，搜索结果也会按照价格排序。</p>
+<h2 id="8、从存储中删除"><a href="#8、从存储中删除" class="headerlink" title="8、从存储中删除"></a>8、从存储中删除</h2><pre class="line-numbers language-none"><code class="language-none">delete&#96; 方法查找要由查询删除的值，调用格式类似于 &#96;getAll<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+
+<ul>
+<li><strong><code>delete(query)</code></strong> —— 通过查询删除匹配的值。</li>
+</ul>
+<p>例如：</p>
+<pre class="line-numbers language-javascript" data-language="javascript"><code class="language-javascript"><span class="token comment">// 删除 id='js' 的书</span>
+books<span class="token punctuation">.</span><span class="token function">delete</span><span class="token punctuation">(</span><span class="token string">'js'</span><span class="token punctuation">)</span><span class="token punctuation">;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre>
+
+<p>如果要基于价格或其他对象字段删除书。首先需要在索引中找到键，然后调用 <code>delete</code>：</p>
+<pre class="line-numbers language-javascript" data-language="javascript"><code class="language-javascript"><span class="token comment">// 找到价格 = 5 的钥匙</span>
+<span class="token keyword">let</span> request <span class="token operator">=</span> priceIndex<span class="token punctuation">.</span><span class="token function">getKey</span><span class="token punctuation">(</span><span class="token number">5</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+request<span class="token punctuation">.</span><span class="token function-variable function">onsuccess</span> <span class="token operator">=</span> <span class="token keyword">function</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+  <span class="token keyword">let</span> id <span class="token operator">=</span> request<span class="token punctuation">.</span>result<span class="token punctuation">;</span>
+  <span class="token keyword">let</span> deleteRequest <span class="token operator">=</span> books<span class="token punctuation">.</span><span class="token function">delete</span><span class="token punctuation">(</span>id<span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">&#125;</span><span class="token punctuation">;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<p>删除所有内容：</p>
+<pre class="line-numbers language-javascript" data-language="javascript"><code class="language-javascript">books<span class="token punctuation">.</span><span class="token function">clear</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// 清除存储。</span><span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+
+<h2 id="9、光标（Cursors）"><a href="#9、光标（Cursors）" class="headerlink" title="9、光标（Cursors）"></a>9、光标（Cursors）</h2><p>像 <code>getAll/getAllKeys</code> 这样的方法，会返回一个 键&#x2F;值 数组。</p>
+<p>但是一个对象库可能很大，比可用的内存还大。这时，<code>getAll</code> 就无法将所有记录作为一个数组获取。</p>
+<p>该怎么办呢？</p>
+<p>光标提供了解决这一问题的方法。</p>
+<p><strong>光标是一种特殊的对象，它在给定查询的情况下遍历对象库，一次返回一个键&#x2F;值，从而节省内存。</strong></p>
+<p>由于对象库是按键在内部排序的，因此光标按键顺序（默认为升序）遍历存储。</p>
+<p>语法：</p>
+<pre class="line-numbers language-javascript" data-language="javascript"><code class="language-javascript"><span class="token comment">// 类似于 getAll，但带有光标：</span>
+<span class="token keyword">let</span> request <span class="token operator">=</span> store<span class="token punctuation">.</span><span class="token function">openCursor</span><span class="token punctuation">(</span>query<span class="token punctuation">,</span> <span class="token punctuation">[</span>direction<span class="token punctuation">]</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+<span class="token comment">// 获取键，而不是值（例如 getAllKeys）：store.openKeyCursor</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span></span></code></pre>
+
+<ul>
+<li><p><strong><code>query</code></strong> 是一个键值或键值范围，与 <code>getAll</code> 相同。</p>
+</li>
+<li><p><code>direction</code></p>
+<p>是一个可选参数，使用顺序是：</p>
+<ul>
+<li><code>&quot;next&quot;</code> —— 默认值，光标从有最小索引的记录向上移动。</li>
+<li><code>&quot;prev&quot;</code> —— 相反的顺序：从有最大的索引的记录开始下降。</li>
+<li><code>&quot;nextunique&quot;</code>，<code>&quot;prevunique&quot;</code> —— 同上，但是跳过键相同的记录 （仅适用于索引上的光标，例如，对于价格为 5 的书，仅返回第一本）。</li>
+</ul>
+</li>
+</ul>
+<p><strong>光标对象的主要区别在于 <code>request.onSuccess</code> 多次触发：每个结果触发一次。</strong></p>
+<p>这有一个如何使用光标的例子：</p>
+<pre class="line-numbers language-javascript" data-language="javascript"><code class="language-javascript"><span class="token keyword">let</span> transaction <span class="token operator">=</span> db<span class="token punctuation">.</span><span class="token function">transaction</span><span class="token punctuation">(</span><span class="token string">"books"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token keyword">let</span> books <span class="token operator">=</span> transaction<span class="token punctuation">.</span><span class="token function">objectStore</span><span class="token punctuation">(</span><span class="token string">"books"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+<span class="token keyword">let</span> request <span class="token operator">=</span> books<span class="token punctuation">.</span><span class="token function">openCursor</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+<span class="token comment">// 为光标找到的每本书调用</span>
+request<span class="token punctuation">.</span><span class="token function-variable function">onsuccess</span> <span class="token operator">=</span> <span class="token keyword">function</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+  <span class="token keyword">let</span> cursor <span class="token operator">=</span> request<span class="token punctuation">.</span>result<span class="token punctuation">;</span>
+  <span class="token keyword">if</span> <span class="token punctuation">(</span>cursor<span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+    <span class="token keyword">let</span> key <span class="token operator">=</span> cursor<span class="token punctuation">.</span>key<span class="token punctuation">;</span> <span class="token comment">// 书的键（id字段）</span>
+    <span class="token keyword">let</span> value <span class="token operator">=</span> cursor<span class="token punctuation">.</span>value<span class="token punctuation">;</span> <span class="token comment">// 书本对象</span>
+    console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span>key<span class="token punctuation">,</span> value<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    cursor<span class="token punctuation">.</span><span class="token function">continue</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token punctuation">&#125;</span> <span class="token keyword">else</span> <span class="token punctuation">&#123;</span>
+    console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span><span class="token string">"No more books"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token punctuation">&#125;</span>
+<span class="token punctuation">&#125;</span><span class="token punctuation">;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<p>主要的光标方法有：</p>
+<ul>
+<li><code>advance(count)</code> —— 将光标向前移动 <code>count</code> 次，跳过值。</li>
+<li><code>continue([key])</code> —— 将光标移至匹配范围中的下一个值（如果给定键，紧接键之后）。</li>
+</ul>
+<p>无论是否有更多的值匹配光标 —— 调用 <code>onsuccess</code>。结果中，我们可以获得指向下一条记录的光标，或者 <code>undefined</code>。</p>
+<p>在上面的示例中，光标是为对象库创建的。</p>
+<p>也可以在索引上创建一个光标。索引是允许按对象字段进行搜索的。在索引上的光标与在对象存储上的光标完全相同 —— 它们通过一次返回一个值来节省内存。</p>
+<p>对于索引上的游标，<code>cursor.key</code> 是索引键（例如：价格），我们应该使用 <code>cursor.primaryKey</code> 属性作为对象的键：</p>
+<pre class="line-numbers language-javascript" data-language="javascript"><code class="language-javascript"><span class="token keyword">let</span> request <span class="token operator">=</span> priceIdx<span class="token punctuation">.</span><span class="token function">openCursor</span><span class="token punctuation">(</span>IDBKeyRange<span class="token punctuation">.</span><span class="token function">upperBound</span><span class="token punctuation">(</span><span class="token number">5</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+<span class="token comment">// 为每条记录调用</span>
+request<span class="token punctuation">.</span><span class="token function-variable function">onsuccess</span> <span class="token operator">=</span> <span class="token keyword">function</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+  <span class="token keyword">let</span> cursor <span class="token operator">=</span> request<span class="token punctuation">.</span>result<span class="token punctuation">;</span>
+  <span class="token keyword">if</span> <span class="token punctuation">(</span>cursor<span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+    <span class="token keyword">let</span> primaryKey <span class="token operator">=</span> cursor<span class="token punctuation">.</span>primaryKey<span class="token punctuation">;</span> <span class="token comment">// 下一个对象存储键（id 字段）</span>
+    <span class="token keyword">let</span> value <span class="token operator">=</span> cursor<span class="token punctuation">.</span>value<span class="token punctuation">;</span> <span class="token comment">// 下一个对象存储对象（book 对象）</span>
+    <span class="token keyword">let</span> key <span class="token operator">=</span> cursor<span class="token punctuation">.</span>key<span class="token punctuation">;</span> <span class="token comment">// 下一个索引键（price）</span>
+    console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span>key<span class="token punctuation">,</span> value<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    cursor<span class="token punctuation">.</span><span class="token function">continue</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token punctuation">&#125;</span> <span class="token keyword">else</span> <span class="token punctuation">&#123;</span>
+    console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span><span class="token string">"No more books"</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// 没有书了</span>
+  <span class="token punctuation">&#125;</span>
+<span class="token punctuation">&#125;</span><span class="token punctuation">;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<h2 id="10、Promise-包装器"><a href="#10、Promise-包装器" class="headerlink" title="10、Promise 包装器"></a>10、Promise 包装器</h2><p>将 <code>onsuccess/onerror</code> 添加到每个请求是一项相当麻烦的任务。我们可以通过使用事件委托（例如，在整个事务上设置处理程序）来简化我们的工作，但是 <code>async/await</code> 要方便的多。</p>
+<p>在本章，我们会进一步使用一个轻便的承诺包装器 <a target="_blank" rel="noopener" href="https://github.com/jakearchibald/idb">https://github.com/jakearchibald/idb</a> 。它使用 <a target="_blank" rel="noopener" href="https://zh.javascript.info/promisify">promisified</a> IndexedDB 方法创建全局 <code>idb</code> 对象。</p>
+<p>然后，我们可以不使用 <code>onsuccess/onerror</code>，而是这样写：</p>
+<pre class="line-numbers language-javascript" data-language="javascript"><code class="language-javascript"><span class="token keyword">let</span> db <span class="token operator">=</span> <span class="token keyword">await</span> idb<span class="token punctuation">.</span><span class="token function">openDB</span><span class="token punctuation">(</span><span class="token string">'store'</span><span class="token punctuation">,</span> <span class="token number">1</span><span class="token punctuation">,</span> <span class="token parameter">db</span> <span class="token operator">=></span> <span class="token punctuation">&#123;</span>
+  <span class="token keyword">if</span> <span class="token punctuation">(</span>db<span class="token punctuation">.</span>oldVersion <span class="token operator">==</span> <span class="token number">0</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+    <span class="token comment">// 执行初始化</span>
+    db<span class="token punctuation">.</span><span class="token function">createObjectStore</span><span class="token punctuation">(</span><span class="token string">'books'</span><span class="token punctuation">,</span> <span class="token punctuation">&#123;</span><span class="token literal-property property">keyPath</span><span class="token operator">:</span> <span class="token string">'id'</span><span class="token punctuation">&#125;</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token punctuation">&#125;</span>
+<span class="token punctuation">&#125;</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+<span class="token keyword">let</span> transaction <span class="token operator">=</span> db<span class="token punctuation">.</span><span class="token function">transaction</span><span class="token punctuation">(</span><span class="token string">'books'</span><span class="token punctuation">,</span> <span class="token string">'readwrite'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token keyword">let</span> books <span class="token operator">=</span> transaction<span class="token punctuation">.</span><span class="token function">objectStore</span><span class="token punctuation">(</span><span class="token string">'books'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+<span class="token keyword">try</span> <span class="token punctuation">&#123;</span>
+  <span class="token keyword">await</span> books<span class="token punctuation">.</span><span class="token function">add</span><span class="token punctuation">(</span><span class="token operator">...</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token keyword">await</span> books<span class="token punctuation">.</span><span class="token function">add</span><span class="token punctuation">(</span><span class="token operator">...</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+  <span class="token keyword">await</span> transaction<span class="token punctuation">.</span>complete<span class="token punctuation">;</span>
+
+  console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span><span class="token string">'jsbook saved'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">&#125;</span> <span class="token keyword">catch</span><span class="token punctuation">(</span>err<span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+  console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span><span class="token string">'error'</span><span class="token punctuation">,</span> err<span class="token punctuation">.</span>message<span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<p>现在我们有了可爱的“简单异步代码”和「try…catch」捕获的东西。</p>
+<h3 id="错误处理"><a href="#错误处理" class="headerlink" title="错误处理"></a>错误处理</h3><p>如果我们没有捕获到错误，那么程序将一直失败，直到外部最近的 <code>try..catch</code> 捕获到为止。</p>
+<p>未捕获的错误将成为 <code>window</code> 对象上的“unhandled promise rejection”事件。</p>
+<p>我们可以这样处理这种错误：</p>
+<pre class="line-numbers language-javascript" data-language="javascript"><code class="language-javascript">window<span class="token punctuation">.</span><span class="token function">addEventListener</span><span class="token punctuation">(</span><span class="token string">'unhandledrejection'</span><span class="token punctuation">,</span> <span class="token parameter">event</span> <span class="token operator">=></span> <span class="token punctuation">&#123;</span>
+  <span class="token keyword">let</span> request <span class="token operator">=</span> event<span class="token punctuation">.</span>target<span class="token punctuation">;</span> <span class="token comment">// IndexedDB 本机请求对象</span>
+  <span class="token keyword">let</span> error <span class="token operator">=</span> event<span class="token punctuation">.</span>reason<span class="token punctuation">;</span> <span class="token comment">//  未处理的错误对象，与 request.error 相同</span>
+  <span class="token comment">// ……报告错误……</span>
+<span class="token punctuation">&#125;</span><span class="token punctuation">)</span><span class="token punctuation">;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<h3 id="“非活跃事务”陷阱"><a href="#“非活跃事务”陷阱" class="headerlink" title="“非活跃事务”陷阱"></a>“非活跃事务”陷阱</h3><p>我们都知道，浏览器一旦执行完成当前的代码和 <strong>微任务</strong> 之后，事务就会自动提交。因此，如果我们在事务中间放置一个类似 <code>fetch</code> 的宏任务，事务只是会自动提交，而不会等待它执行完成。因此，下一个请求会失败。</p>
+<p>对于 promise 包装器和 <code>async/await</code>，情况是相同的。</p>
+<p>这是在事务中间进行 <code>fetch</code> 的示例：</p>
+<pre class="line-numbers language-javascript" data-language="javascript"><code class="language-javascript"><span class="token keyword">let</span> transaction <span class="token operator">=</span> db<span class="token punctuation">.</span><span class="token function">transaction</span><span class="token punctuation">(</span><span class="token string">"inventory"</span><span class="token punctuation">,</span> <span class="token string">"readwrite"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token keyword">let</span> inventory <span class="token operator">=</span> transaction<span class="token punctuation">.</span><span class="token function">objectStore</span><span class="token punctuation">(</span><span class="token string">"inventory"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+<span class="token keyword">await</span> inventory<span class="token punctuation">.</span><span class="token function">add</span><span class="token punctuation">(</span><span class="token punctuation">&#123;</span> <span class="token literal-property property">id</span><span class="token operator">:</span> <span class="token string">'js'</span><span class="token punctuation">,</span> <span class="token literal-property property">price</span><span class="token operator">:</span> <span class="token number">10</span><span class="token punctuation">,</span> <span class="token literal-property property">created</span><span class="token operator">:</span> <span class="token keyword">new</span> <span class="token class-name">Date</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">&#125;</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+<span class="token keyword">await</span> <span class="token function">fetch</span><span class="token punctuation">(</span><span class="token operator">...</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// (*)</span>
+
+<span class="token keyword">await</span> inventory<span class="token punctuation">.</span><span class="token function">add</span><span class="token punctuation">(</span><span class="token punctuation">&#123;</span> <span class="token literal-property property">id</span><span class="token operator">:</span> <span class="token string">'js'</span><span class="token punctuation">,</span> <span class="token literal-property property">price</span><span class="token operator">:</span> <span class="token number">10</span><span class="token punctuation">,</span> <span class="token literal-property property">created</span><span class="token operator">:</span> <span class="token keyword">new</span> <span class="token class-name">Date</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">&#125;</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// 错误</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<p><code>fetch</code> <code>(*)</code> 后的下一个 <code>inventory.add</code> 失败，出现“非活动事务”错误，因为这时事务已经被提交并且关闭了。</p>
+<p>解决方法与使用本机 IndexedDB 时相同：进行新事务，或者将事情分开。</p>
+<ol>
+<li>准备数据，先获取所有需要的信息。</li>
+<li>然后保存在数据库中。</li>
+</ol>
+<h3 id="获取本机对象"><a href="#获取本机对象" class="headerlink" title="获取本机对象"></a>获取本机对象</h3><p>在内部，包装器执行本机 IndexedDB 请求，并添加 <code>onerror/onsuccess</code> 方法，并返回 rejects&#x2F;resolves 结果的 promise。</p>
+<p>在大多数情况下都可以运行， 示例在这 <a target="_blank" rel="noopener" href="https://github.com/jakearchibald/idb%E3%80%82">https://github.com/jakearchibald/idb。</a></p>
+<p>极少数情况下，我们需要原始的 <code>request</code> 对象。可以将 <code>promise</code> 的 <code>promise.request</code> 属性，当作原始对象进行访问：</p>
+<pre class="line-numbers language-javascript" data-language="javascript"><code class="language-javascript"><span class="token keyword">let</span> promise <span class="token operator">=</span> books<span class="token punctuation">.</span><span class="token function">add</span><span class="token punctuation">(</span>book<span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// 获取 promise 对象(不要 await 结果)</span>
+
+<span class="token keyword">let</span> request <span class="token operator">=</span> promise<span class="token punctuation">.</span>request<span class="token punctuation">;</span> <span class="token comment">// 本地请求对象</span>
+<span class="token keyword">let</span> transaction <span class="token operator">=</span> request<span class="token punctuation">.</span>transaction<span class="token punctuation">;</span> <span class="token comment">// 本地事务对象</span>
+
+<span class="token comment">// ……做些本地的 IndexedDB 的处理……</span>
+
+<span class="token keyword">let</span> result <span class="token operator">=</span> <span class="token keyword">await</span> promise<span class="token punctuation">;</span> <span class="token comment">// 如果仍然需要</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<h2 id="11、总结"><a href="#11、总结" class="headerlink" title="11、总结"></a>11、总结</h2><p>IndexedDB 可以被认为是“localStorage on steroids”。这是一个简单的键值对数据库，功能强大到足以支持离线应用，而且用起来比较简单。</p>
+<p>最好的指南是官方文档。<a target="_blank" rel="noopener" href="https://www.w3.org/TR/IndexedDB-2/">目前的版本</a> 是2.0，但是 <a target="_blank" rel="noopener" href="https://w3c.github.io/IndexedDB/">3.0</a> 版本中的一些方法（差别不大）也得到部分支持。</p>
+<p>基本用法可以用几个短语来描述：</p>
+<ol>
+<li><p>获取一个 promise 包装器，比如 <a target="_blank" rel="noopener" href="https://github.com/jakearchibald/idb">idb</a>。</p>
+</li>
+<li><p>打开一个数据库：</p>
+<pre class="line-numbers language-none"><code class="language-none">idb.openDb(name, version, onupgradeneeded)<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+
+<ul>
+<li>在 <code>onupgradeneeded</code> 处理程序中创建对象存储和索引，或者根据需要执行版本更新。</li>
+</ul>
+</li>
+<li><p>对于请求：</p>
+<ul>
+<li>创建事务 <code>db.transaction(&#39;books&#39;)</code>（如果需要的话，设置 readwrite）。</li>
+<li>获取对象存储 <code>transaction.objectStore(&#39;books&#39;)</code>。</li>
+</ul>
+</li>
+<li><p>按键搜索，可以直接调用对象库上的方法。</p>
+<ul>
+<li>要按对象字段搜索，需要创建索引。</li>
+</ul>
+</li>
+<li><p>如果内存中容纳不下数据，请使用光标。</p>
+</li>
+</ol>
+
+                
+            </div>
+            <hr/>
+
+            
+
+
+
+            <div class="tag_share" style="display: block;">
+                <div class="post-meta__tag-list" style="display: inline-block;">
+                    
+                        <div class="article-tag">
+                            
+                                <a href="/tags/JavaScript-%E8%BF%9B%E9%98%B6/">
+                                    <span class="chip bg-color">JavaScript 进阶</span>
+                                </a>
+                            
+                        </div>
+                    
+                </div>
+                <div class="post_share" style="zoom: 80%; width: fit-content; display: inline-block; float: right; margin: -0.15rem 0;">
+                    <link rel="stylesheet" type="text/css" href="/libs/share/css/share.min.css">
+<div id="article-share">
+
+    
+    <div class="social-share" data-sites="twitter,facebook,google,qq,qzone,wechat,weibo,douban,linkedin" data-wechat-qrcode-helper="<p>微信扫一扫即可分享！</p>"></div>
+    <script src="/libs/share/js/social-share.min.js"></script>
+    
+
+    
+
+</div>
+
+                </div>
+            </div>
+            
+        </div>
+    </div>
+
+    
+
+    
+
+    
+
+    
+
+    
+        <style>
+    .valine-card {
+        margin: 1.5rem auto;
+    }
+
+    .valine-card .card-content {
+        padding: 20px 20px 5px 20px;
+    }
+
+    #vcomments textarea {
+        box-sizing: border-box;
+        background: url("/medias/bg.webp") 100% 100% no-repeat;
+    }
+
+    #vcomments p {
+        margin: 2px 2px 10px;
+        font-size: 1.05rem;
+        line-height: 1.78rem;
+    }
+
+    #vcomments blockquote p {
+        text-indent: 0.2rem;
+    }
+
+    #vcomments a {
+        padding: 0 2px;
+        color: #4cbf30;
+        font-weight: 500;
+        text-decoration: none;
+    }
+
+    #vcomments img {
+        max-width: 100%;
+        height: auto;
+        cursor: pointer;
+    }
+
+    #vcomments ol li {
+        list-style-type: decimal;
+    }
+
+    #vcomments ol,
+    ul {
+        display: block;
+        padding-left: 2em;
+        word-spacing: 0.05rem;
+    }
+
+    #vcomments ul li,
+    ol li {
+        display: list-item;
+        line-height: 1.8rem;
+        font-size: 1rem;
+    }
+
+    #vcomments ul li {
+        list-style-type: disc;
+    }
+
+    #vcomments ul ul li {
+        list-style-type: circle;
+    }
+
+    #vcomments table, th, td {
+        padding: 12px 13px;
+        border: 1px solid #dfe2e5;
+    }
+
+    #vcomments table, th, td {
+        border: 0;
+    }
+
+    table tr:nth-child(2n), thead {
+        background-color: #fafafa;
+    }
+
+    #vcomments table th {
+        background-color: #f2f2f2;
+        min-width: 80px;
+    }
+
+    #vcomments table td {
+        min-width: 80px;
+    }
+
+    #vcomments h1 {
+        font-size: 1.85rem;
+        font-weight: bold;
+        line-height: 2.2rem;
+    }
+
+    #vcomments h2 {
+        font-size: 1.65rem;
+        font-weight: bold;
+        line-height: 1.9rem;
+    }
+
+    #vcomments h3 {
+        font-size: 1.45rem;
+        font-weight: bold;
+        line-height: 1.7rem;
+    }
+
+    #vcomments h4 {
+        font-size: 1.25rem;
+        font-weight: bold;
+        line-height: 1.5rem;
+    }
+
+    #vcomments h5 {
+        font-size: 1.1rem;
+        font-weight: bold;
+        line-height: 1.4rem;
+    }
+
+    #vcomments h6 {
+        font-size: 1rem;
+        line-height: 1.3rem;
+    }
+
+    #vcomments p {
+        font-size: 1rem;
+        line-height: 1.5rem;
+    }
+
+    #vcomments hr {
+        margin: 12px 0;
+        border: 0;
+        border-top: 1px solid #ccc;
+    }
+
+    #vcomments blockquote {
+        margin: 15px 0;
+        border-left: 5px solid #42b983;
+        padding: 1rem 0.8rem 0.3rem 0.8rem;
+        color: #666;
+        background-color: rgba(66, 185, 131, .1);
+    }
+
+    #vcomments pre {
+        font-family: monospace, monospace;
+        padding: 1.2em;
+        margin: .5em 0;
+        background: #272822;
+        overflow: auto;
+        border-radius: 0.3em;
+        tab-size: 4;
+    }
+
+    #vcomments code {
+        font-family: monospace, monospace;
+        padding: 1px 3px;
+        font-size: 0.92rem;
+        color: #e96900;
+        background-color: #f8f8f8;
+        border-radius: 2px;
+    }
+
+    #vcomments pre code {
+        font-family: monospace, monospace;
+        padding: 0;
+        color: #e8eaf6;
+        background-color: #272822;
+    }
+
+    #vcomments pre[class*="language-"] {
+        padding: 1.2em;
+        margin: .5em 0;
+    }
+
+    #vcomments code[class*="language-"],
+    pre[class*="language-"] {
+        color: #e8eaf6;
+    }
+
+    #vcomments [type="checkbox"]:not(:checked), [type="checkbox"]:checked {
+        position: inherit;
+        margin-left: -1.3rem;
+        margin-right: 0.4rem;
+        margin-top: -1px;
+        vertical-align: middle;
+        left: unset;
+        visibility: visible;
+    }
+
+    #vcomments b,
+    strong {
+        font-weight: bold;
+    }
+
+    #vcomments dfn {
+        font-style: italic;
+    }
+
+    #vcomments small {
+        font-size: 85%;
+    }
+
+    #vcomments cite {
+        font-style: normal;
+    }
+
+    #vcomments mark {
+        background-color: #fcf8e3;
+        padding: .2em;
+    }
+
+    #vcomments table, th, td {
+        padding: 12px 13px;
+        border: 1px solid #dfe2e5;
+    }
+
+    table tr:nth-child(2n), thead {
+        background-color: #fafafa;
+    }
+
+    #vcomments table th {
+        background-color: #f2f2f2;
+        min-width: 80px;
+    }
+
+    #vcomments table td {
+        min-width: 80px;
+    }
+
+    #vcomments [type="checkbox"]:not(:checked), [type="checkbox"]:checked {
+        position: inherit;
+        margin-left: -1.3rem;
+        margin-right: 0.4rem;
+        margin-top: -1px;
+        vertical-align: middle;
+        left: unset;
+        visibility: visible;
+    }
+</style>
+
+<div class="card valine-card" data-aos="fade-up">
+    <div class="comment_headling" style="font-size: 20px; font-weight: 700; position: relative; padding-left: 20px; top: 15px; padding-bottom: 5px;">
+        <i class="fas fa-comments fa-fw" aria-hidden="true"></i>
+        <span>评论</span>
+    </div>
+    <div id="vcomments" class="card-content" style="display: grid">
+    </div>
+</div>
+
+<script src="/libs/valine/av-min.js"></script>
+<script src="/libs/valine/Valine.min.js"></script>
+<script>
+    new Valine({
+        el: '#vcomments',
+        appId: 'XGAJufgp6Z2bX17baB3E7enQ-gzGzoHsz',
+        appKey: 'j9yun8pjBYMNT3Gg8ehomdsf',
+        serverURLs: 'https://xgajufgp.lc-cn-n1-shared.com',
+        notify: 'false' === 'true',
+        verify: 'false' === 'true',
+        visitor: 'true' === 'true',
+        avatar: 'wavatar',
+        pageSize: '10',
+        lang: 'en',
+        placeholder: '支持markdown格式以及丰富的小表情，快来留下些记忆吧~'
+    });
+</script>
+
+<!--酷Q推送-->
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+<article id="prenext-posts" class="prev-next articles">
+    <div class="row article-row">
+        
+        <div class="article col s12 m6" data-aos="fade-up" data-aos="fade-up">
+            <div class="article-badge left-badge text-color">
+                <i class="far fa-dot-circle"></i>&nbsp;Current
+            </div>
+            <div class="card">
+                <a href="/posts/8c8cc88c.html">
+                    <div class="card-image">
+                        
+                        
+                        <img src="/medias/featureimages/14.jpg" class="responsive-img" alt="九十一、IndexedDB">
+                        
+                        <span class="card-title">九十一、IndexedDB</span>
+                    </div>
+                </a>
+                <div class="card-content article-content">
+                    <div class="summary block-with-text">
+                        
+                            
+                        
+                    </div>
+                    <div class="publish-info">
+                            <span class="publish-date">
+                                <i class="far fa-clock fa-fw icon-date"></i>2025-06-08
+                            </span>
+                        <span class="publish-author">
+                            
+                            <i class="fas fa-bookmark fa-fw icon-category"></i>
+                            
+                            <a href="/categories/JavaScript-%E8%BF%9B%E9%98%B6/" class="post-category">
+                                    JavaScript 进阶
+                                </a>
+                            
+                            
+                        </span>
+                    </div>
+                </div>
+
+                
+                <div class="card-action article-tags">
+                    
+                    <a href="/tags/JavaScript-%E8%BF%9B%E9%98%B6/">
+                        <span class="chip bg-color">JavaScript 进阶</span>
+                    </a>
+                    
+                </div>
+                
+            </div>
+        </div>
+        
+        
+        <div class="article col s12 m6" data-aos="fade-up">
+            <div class="article-badge right-badge text-color">
+                Next&nbsp;<i class="fas fa-chevron-right"></i>
+            </div>
+            <div class="card">
+                <a href="/posts/ec8ccf8c.html">
+                    <div class="card-image">
+                        
+                        
+                        <img src="/medias/featureimages/2.jpg" class="responsive-img" alt="九十、Storage">
+                        
+                        <span class="card-title">九十、Storage</span>
+                    </div>
+                </a>
+                <div class="card-content article-content">
+                    <div class="summary block-with-text">
+                        
+                            
+                        
+                    </div>
+                    <div class="publish-info">
+                            <span class="publish-date">
+                                <i class="far fa-clock fa-fw icon-date"></i>2025-06-07
+                            </span>
+                        <span class="publish-author">
+                            
+                            <i class="fas fa-bookmark fa-fw icon-category"></i>
+                            
+                            <a href="/categories/JavaScript-%E8%BF%9B%E9%98%B6/" class="post-category">
+                                    JavaScript 进阶
+                                </a>
+                            
+                            
+                        </span>
+                    </div>
+                </div>
+                
+                <div class="card-action article-tags">
+                    
+                    <a href="/tags/JavaScript-%E8%BF%9B%E9%98%B6/">
+                        <span class="chip bg-color">JavaScript 进阶</span>
+                    </a>
+                    
+                </div>
+                
+            </div>
+        </div>
+        
+    </div>
+</article>
+
+</div>
+
+
+<script>
+    $('#articleContent').on('copy', function (e) {
+        // IE8 or earlier browser is 'undefined'
+        if (typeof window.getSelection === 'undefined') return;
+
+        var selection = window.getSelection();
+        // if the selection is short let's not annoy our users.
+        if (('' + selection).length < Number.parseInt('120')) {
+            return;
+        }
+
+        // create a div outside of the visible area and fill it with the selected text.
+        var bodyElement = document.getElementsByTagName('body')[0];
+        var newdiv = document.createElement('div');
+        newdiv.style.position = 'absolute';
+        newdiv.style.left = '-99999px';
+        bodyElement.appendChild(newdiv);
+        newdiv.appendChild(selection.getRangeAt(0).cloneContents());
+
+        // we need a <pre> tag workaround.
+        // otherwise the text inside "pre" loses all the line breaks!
+        if (selection.getRangeAt(0).commonAncestorContainer.nodeName === 'PRE' || selection.getRangeAt(0).commonAncestorContainer.nodeName === 'CODE') {
+            newdiv.innerHTML = "<pre>" + newdiv.innerHTML + "</pre>";
+        }
+
+        var url = document.location.href;
+        newdiv.innerHTML += '<br />'
+            + 'From: 向阳<br />'
+            + 'Author: 向阳<br />'
+            + 'Link: <a href="' + url + '">' + url + '</a><br />'
+            + '本文章著作权归作者所有，任何形式的转载都请注明出处。';
+
+        selection.selectAllChildren(newdiv);
+        window.setTimeout(function () {bodyElement.removeChild(newdiv);}, 200);
+    });
+</script>
+
+
+<!-- 代码块功能依赖 -->
+<script type="text/javascript" src="/libs/codeBlock/codeBlockFuction.js"></script>
+
+
+  <!-- 是否加载使用自带的 prismjs. -->
+  <script type="text/javascript" src="/libs/prism/prism.min.js"></script>
+
+
+<!-- 代码语言 -->
+
+<script type="text/javascript" src="/libs/codeBlock/codeLang.js"></script>
+
+
+<!-- 代码块复制 -->
+
+<script type="text/javascript" src="/libs/codeBlock/codeCopy.js"></script>
+
+
+<!-- 代码块收缩 -->
+
+<script type="text/javascript" src="/libs/codeBlock/codeShrink.js"></script>
+
+
+
+    </div>
+    <div id="toc-aside" class="expanded col l3 hide-on-med-and-down">
+        <div class="toc-widget card" style="background-color: white;">
+            <div class="toc-title"><i class="far fa-list-alt"></i>&nbsp;&nbsp;TOC</div>
+            <div id="toc-content"></div>
+        </div>
+    </div>
+</div>
+
+<!-- TOC 悬浮按钮. -->
+
+<div id="floating-toc-btn" class="hide-on-med-and-down">
+    <a class="btn-floating btn-large bg-color">
+        <i class="fas fa-list-ul"></i>
+    </a>
+</div>
+
+
+<script src="/libs/tocbot/tocbot.min.js"></script>
+<script>
+    $(function () {
+        tocbot.init({
+            tocSelector: '#toc-content',
+            contentSelector: '#articleContent',
+            headingsOffset: -($(window).height() * 0.4 - 45),
+            collapseDepth: Number('0'),
+            headingSelector: 'h2, h3, h4'
+        });
+
+        // Set scroll toc fixed.
+        let tocHeight = parseInt($(window).height() * 0.4 - 64);
+        let $tocWidget = $('.toc-widget');
+        $(window).scroll(function () {
+            let scroll = $(window).scrollTop();
+            /* add post toc fixed. */
+            if (scroll > tocHeight) {
+                $tocWidget.addClass('toc-fixed');
+            } else {
+                $tocWidget.removeClass('toc-fixed');
+            }
+        });
+
+        
+        /* 修复文章卡片 div 的宽度. */
+        let fixPostCardWidth = function (srcId, targetId) {
+            let srcDiv = $('#' + srcId);
+            if (srcDiv.length === 0) {
+                return;
+            }
+
+            let w = srcDiv.width();
+            if (w >= 450) {
+                w = w + 21;
+            } else if (w >= 350 && w < 450) {
+                w = w + 18;
+            } else if (w >= 300 && w < 350) {
+                w = w + 16;
+            } else {
+                w = w + 14;
+            }
+            $('#' + targetId).width(w);
+        };
+
+        // 切换TOC目录展开收缩的相关操作.
+        const expandedClass = 'expanded';
+        let $tocAside = $('#toc-aside');
+        let $mainContent = $('#main-content');
+        $('#floating-toc-btn .btn-floating').click(function () {
+            if ($tocAside.hasClass(expandedClass)) {
+                $tocAside.removeClass(expandedClass).hide();
+                $mainContent.removeClass('l9');
+            } else {
+                $tocAside.addClass(expandedClass).show();
+                $mainContent.addClass('l9');
+            }
+            fixPostCardWidth('artDetail', 'prenext-posts');
+        });
+        
+    });
+</script>
+
+    
+
+</main>
+
+
+
+
+    <footer class="page-footer bg-color">
+    
+        <link rel="stylesheet" href="/libs/aplayer/APlayer.min.css">
+<style>
+    .aplayer .aplayer-lrc p {
+        
+        display: none;
+        
+        font-size: 12px;
+        font-weight: 700;
+        line-height: 16px !important;
+    }
+
+    .aplayer .aplayer-lrc p.aplayer-lrc-current {
+        
+        display: none;
+        
+        font-size: 15px;
+        color: #42b983;
+    }
+
+    
+    .aplayer.aplayer-fixed.aplayer-narrow .aplayer-body {
+        left: -66px !important;
+    }
+
+    .aplayer.aplayer-fixed.aplayer-narrow .aplayer-body:hover {
+        left: 0px !important;
+    }
+
+    
+</style>
+<div class="">
+    
+    <div class="row">
+        <meting-js class="col l8 offset-l2 m10 offset-m1 s12"
+                   server="netease"
+                   type="playlist"
+                   id="8428618004"
+                   fixed='true'
+                   autoplay='false'
+                   theme='#42b983'
+                   loop='all'
+                   order='random'
+                   preload='auto'
+                   volume='0.7'
+                   list-folded='true'
+        >
+        </meting-js>
+    </div>
+</div>
+
+<script src="/libs/aplayer/APlayer.min.js"></script>
+<script src="/libs/aplayer/Meting.min.js"></script>
+
+    
+
+    <div class="container row center-align"
+         style="margin-bottom: 15px !important;">
+        <div class="col s12 m8 l8 copy-right">
+            Copyright&nbsp;&copy;
+            
+                <span id="year">2024-2025</span>
+            
+            <a href="/about" target="_blank">向阳</a>
+            
+            <br>
+            
+                &nbsp;<i class="fas fa-chart-area"></i>&nbsp;Total Words:&nbsp;<span
+                        class="white-color">1296.6k</span>
+            
+            
+            
+                
+            
+            
+                <span id="busuanzi_container_site_pv">
+                &nbsp;|&nbsp;<i class="far fa-eye"></i>&nbsp;Total visits:&nbsp;
+                    <span id="busuanzi_value_site_pv" class="white-color"></span>
+            </span>
+            
+            
+                <span id="busuanzi_container_site_uv">
+                &nbsp;|&nbsp;<i class="fas fa-users"></i>&nbsp;Total visitors:&nbsp;
+                    <span id="busuanzi_value_site_uv" class="white-color"></span>
+            </span>
+            
+            <br>
+
+            <a style="margin-inline:5px" target="_blank" href="https://hexo.io"><img src="https://img.shields.io/badge/Frame-Hexo-blue?style=flat&logo=hexo" title="基于Hexo框架"></a>
+            <a style="margin-inline:5px" target="_blank" href="https://github.com/blinkfox/hexo-theme-matery"><img src="https://img.shields.io/badge/Theme-Matery-7138b6?style=flat&logo=MEGA" title="Themes Matery"></a>
+            <a style="margin-inline:5px" target="_blank" href="https://cloudflare.com"><img src="https://img.shields.io/badge/Hosted-Cloudflare-brightgreen?style=flat&logo=Cloudflare" title="基于Cloudflare Pages托管部署"></a>
+            <a style="margin-inline:5px" target="_blank" href="https://github.com"><img src="https://img.shields.io/badge/Source-Github-67e1fb?style=flat&logo=GitHub" title="静态文件托管于GitHub"></a>
+            <br>
+
+            <!-- 运行天数提醒. -->
+            
+                <span id="sitetime"> Loading ...</span>
+                <script>
+                    var calcSiteTime = function () {
+                        var seconds = 1000;
+                        var minutes = seconds * 60;
+                        var hours = minutes * 60;
+                        var days = hours * 24;
+                        var years = days * 365;
+                        var today = new Date();
+                        var startYear = "2024";
+                        var startMonth = "5";
+                        var startDate = "20";
+                        var startHour = "0";
+                        var startMinute = "0";
+                        var startSecond = "0";
+                        var todayYear = today.getFullYear();
+                        var todayMonth = today.getMonth() + 1;
+                        var todayDate = today.getDate();
+                        var todayHour = today.getHours();
+                        var todayMinute = today.getMinutes();
+                        var todaySecond = today.getSeconds();
+                        var t1 = Date.UTC(startYear, startMonth, startDate, startHour, startMinute, startSecond);
+                        var t2 = Date.UTC(todayYear, todayMonth, todayDate, todayHour, todayMinute, todaySecond);
+                        var diff = t2 - t1;
+                        var diffYears = Math.floor(diff / years);
+                        var diffDays = Math.floor((diff / days) - diffYears * 365);
+
+                        // 区分是否有年份.
+                        var language = 'en';
+                        if (startYear === String(todayYear)) {
+                            document.getElementById("year").innerHTML = todayYear;
+                            var daysTip = 'This site has been running for ' + diffDays + ' days';
+                            if (language === 'zh-CN') {
+                                daysTip = '本站已运行 ' + diffDays + ' 天';
+                            } else if (language === 'zh-HK') {
+                                daysTip = '本站已運行 ' + diffDays + ' 天';
+                            }
+                            document.getElementById("sitetime").innerHTML = daysTip;
+                        } else {
+                            document.getElementById("year").innerHTML = startYear + " - " + todayYear;
+                            var yearsAndDaysTip = 'This site has been running for ' + diffYears + ' years and '
+                                + diffDays + ' days';
+                            if (language === 'zh-CN') {
+                                yearsAndDaysTip = '本站已运行 ' + diffYears + ' 年 ' + diffDays + ' 天';
+                            } else if (language === 'zh-HK') {
+                                yearsAndDaysTip = '本站已運行 ' + diffYears + ' 年 ' + diffDays + ' 天';
+                            }
+                            document.getElementById("sitetime").innerHTML = yearsAndDaysTip;
+                        }
+                    }
+
+                    calcSiteTime();
+                </script>
+            
+            <br>
+            
+        </div>
+        <div class="col s12 m4 l4 social-link social-statis">
+    <a href="https://github.com/luyaguo" class="tooltipped" target="_blank" data-tooltip="访问我的GitHub" data-position="top" data-delay="50">
+        <i class="fab fa-github"></i>
+    </a>
+
+
+
+    <a href="mailto:luyaguo839@gmail.com" class="tooltipped" target="_blank" data-tooltip="邮件联系我" data-position="top" data-delay="50">
+        <i class="fas fa-envelope-open"></i>
+    </a>
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <a href="/atom.xml" class="tooltipped" target="_blank" data-tooltip="RSS 订阅" data-position="top" data-delay="50">
+        <i class="fas fa-rss"></i>
+    </a>
+
+</div>
+    </div>
+</footer>
+
+<div class="progress-bar"></div>
+
+
+    <!-- 搜索遮罩框 -->
+<div id="searchModal" class="modal">
+    <div class="modal-content">
+        <div class="search-header">
+            <span class="title"><i class="fas fa-search"></i>&nbsp;&nbsp;Search</span>
+            <input type="search" id="searchInput" name="s" placeholder="Please enter a search keyword"
+                   class="search-input">
+        </div>
+        <div id="searchResult"></div>
+    </div>
+</div>
+
+<script type="text/javascript">
+$(function () {
+    var searchFunc = function (path, search_id, content_id) {
+        'use strict';
+        $.ajax({
+            url: path,
+            dataType: "xml",
+            success: function (xmlResponse) {
+                // get the contents from search data
+                var datas = $("entry", xmlResponse).map(function () {
+                    return {
+                        title: $("title", this).text(),
+                        content: $("content", this).text(),
+                        url: $("url", this).text()
+                    };
+                }).get();
+                var $input = document.getElementById(search_id);
+                var $resultContent = document.getElementById(content_id);
+                $input.addEventListener('input', function () {
+                    var str = '<ul class=\"search-result-list\">';
+                    var keywords = this.value.trim().toLowerCase().split(/[\s\-]+/);
+                    $resultContent.innerHTML = "";
+                    if (this.value.trim().length <= 0) {
+                        return;
+                    }
+                    // perform local searching
+                    datas.forEach(function (data) {
+                        var isMatch = true;
+                        var data_title = data.title.trim().toLowerCase();
+                        var data_content = data.content.trim().replace(/<[^>]+>/g, "").toLowerCase();
+                        var data_url = data.url;
+                        data_url = data_url.indexOf('/') === 0 ? data.url : '/' + data_url;
+                        var index_title = -1;
+                        var index_content = -1;
+                        var first_occur = -1;
+                        // only match artiles with not empty titles and contents
+                        if (data_title !== '' && data_content !== '') {
+                            keywords.forEach(function (keyword, i) {
+                                index_title = data_title.indexOf(keyword);
+                                index_content = data_content.indexOf(keyword);
+                                if (index_title < 0 && index_content < 0) {
+                                    isMatch = false;
+                                } else {
+                                    if (index_content < 0) {
+                                        index_content = 0;
+                                    }
+                                    if (i === 0) {
+                                        first_occur = index_content;
+                                    }
+                                }
+                            });
+                        }
+                        // show search results
+                        if (isMatch) {
+                            str += "<li><a href='" + data_url + "' class='search-result-title'>" + data_title + "</a>";
+                            var content = data.content.trim().replace(/<[^>]+>/g, "");
+                            if (first_occur >= 0) {
+                                // cut out 100 characters
+                                var start = first_occur - 20;
+                                var end = first_occur + 80;
+                                if (start < 0) {
+                                    start = 0;
+                                }
+                                if (start === 0) {
+                                    end = 100;
+                                }
+                                if (end > content.length) {
+                                    end = content.length;
+                                }
+                                var match_content = content.substr(start, end);
+                                // highlight all keywords
+                                keywords.forEach(function (keyword) {
+                                    var regS = new RegExp(keyword, "gi");
+                                    match_content = match_content.replace(regS, "<em class=\"search-keyword\">" + keyword + "</em>");
+                                });
+
+                                str += "<p class=\"search-result\">" + match_content + "...</p>"
+                            }
+                            str += "</li>";
+                        }
+                    });
+                    str += "</ul>";
+                    $resultContent.innerHTML = str;
+                });
+            }
+        });
+    };
+
+    searchFunc('/search.xml', 'searchInput', 'searchResult');
+});
+</script>
+
+    <!-- 白天和黑夜主题 -->
+<div class="stars-con">
+    <div id="stars"></div>
+    <div id="stars2"></div>
+    <div id="stars3"></div>  
+</div>
+
+<script>
+    function switchNightMode() {
+        $('<div class="Cuteen_DarkSky"><div class="Cuteen_DarkPlanet"></div></div>').appendTo($('body')),
+        setTimeout(function () {
+            $('body').hasClass('DarkMode') 
+            ? ($('body').removeClass('DarkMode'), localStorage.setItem('isDark', '0'), $('#sum-moon-icon').removeClass("fa-sun").addClass('fa-moon')) 
+            : ($('body').addClass('DarkMode'), localStorage.setItem('isDark', '1'), $('#sum-moon-icon').addClass("fa-sun").removeClass('fa-moon')),
+            
+            setTimeout(function () {
+            $('.Cuteen_DarkSky').fadeOut(1e3, function () {
+                $(this).remove()
+            })
+            }, 2e3)
+        })
+    }
+</script>
+
+    <!-- 回到顶部按钮 -->
+<div id="backTop" class="top-scroll">
+    <a class="btn-floating btn-large waves-effect waves-light" href="#!">
+        <i class="fas fa-arrow-up"></i>
+    </a>
+</div>
+
+
+    <script src="/libs/materialize/materialize.min.js"></script>
+    <script src="/libs/masonry/masonry.pkgd.min.js"></script>
+    <script src="/libs/aos/aos.js"></script>
+    <script src="/libs/scrollprogress/scrollProgress.min.js"></script>
+    <script src="/libs/lightGallery/js/lightgallery-all.min.js"></script>
+    <script src="/js/matery.js"></script>
+
+    
+
+    
+    
+    
+
+    <!-- 雪花特效 -->
+    
+
+    <!-- 鼠标星星特效 -->
+     
+        <script type="text/javascript">
+            // 只在桌面版网页启用特效
+            var windowWidth = $(window).width();
+            if (windowWidth > 768) {
+                document.write('<script type="text/javascript" src="/libs/others/star.js"><\/script>');
+            }
+        </script>
+    
+
+     
+        <script src="https://ssl.captcha.qq.com/TCaptcha.js"></script>
+        <script src="/libs/others/TencentCaptcha.js"></script>
+        <button id="TencentCaptcha" data-appid="xxxxxxxxxx" data-cbfn="callback" type="button" hidden></button>
+    
+
+    <!-- Baidu Analytics -->
+
+    <!-- Baidu Push -->
+
+<script>
+    (function () {
+        var bp = document.createElement('script');
+        var curProtocol = window.location.protocol.split(':')[0];
+        if (curProtocol === 'https') {
+            bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+        } else {
+            bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+        }
+        var s = document.getElementsByTagName("script")[0];
+        s.parentNode.insertBefore(bp, s);
+    })();
+</script>
+
+    
+    <script src="/libs/others/clicklove.js" async="async"></script>
+    
+    
+    <script async src="/libs/others/busuanzi.pure.mini.js"></script>
+    
+
+    
+
+    
+
+    <!--腾讯兔小巢-->
+    
+    
+
+    
+
+    
+
+    
+    <script src="/libs/instantpage/instantpage.js" type="module"></script>
+    
+
+    <!-- 冒泡 -->
+    
+
+    <!--全屏-->
+    <script src="/js/fullscreen.js" type="module"></script>
+
+        <style>
+            [bg-lazy] {
+                background-image: none !important;
+                background-color: #eee !important;
+            }
+        </style>
+        <script>
+            window.imageLazyLoadSetting = {
+                isSPA: false,
+                preloadRatio: 1,
+                processImages: null,
+            };
+        </script><script>window.addEventListener("load",function(){var t=/\.(gif|jpg|jpeg|tiff|png)$/i,r=/^data:image\/[a-z\d\-\.\+]+;base64,/;Array.prototype.slice.call(document.querySelectorAll("img[data-original]")).forEach(function(a){var e=a.parentNode;"A"===e.tagName&&(t.test(e.href)||r.test(e.href))&&(e.href=a.dataset.original)})});</script><script>!function(r){r.imageLazyLoadSetting.processImages=t;var a=r.imageLazyLoadSetting.isSPA,n=r.imageLazyLoadSetting.preloadRatio||1,d=o();function o(){var t=Array.prototype.slice.call(document.querySelectorAll("img[data-original]")),e=Array.prototype.slice.call(document.querySelectorAll("[bg-lazy]"));return t.concat(e)}function t(t){(a||t)&&(d=o());for(var e,i=0;i<d.length;i++)0<=(e=(e=d[i]).getBoundingClientRect()).bottom&&0<=e.left&&e.top<=(r.innerHeight*n||document.documentElement.clientHeight*n)&&function(){var t,e,a,n,o=d[i];e=function(){d=d.filter(function(t){return o!==t}),r.imageLazyLoadSetting.onImageLoaded&&r.imageLazyLoadSetting.onImageLoaded(o)},(t=o).dataset.loaded||(t.hasAttribute("bg-lazy")?(t.removeAttribute("bg-lazy"),e&&e()):(a=new Image,n=t.getAttribute("data-original"),a.onload=function(){t.src=n,t.removeAttribute("data-original"),t.setAttribute("data-loaded",!0),e&&e()},a.onerror=function(){t.removeAttribute("data-original"),t.setAttribute("data-loaded",!1),t.src=n},t.src!==n&&(a.src=n)))}()}function e(){clearTimeout(t.tId),t.tId=setTimeout(t,500)}t(),document.addEventListener("scroll",e),r.addEventListener("resize",e),r.addEventListener("orientationchange",e)}(this);</script></body>
+
+</html>
