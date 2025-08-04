@@ -530,7 +530,7 @@
         <div class="card-content article-card-content">
             <div id="articleContent">
                 <h1 id="第九章-性能分析工具的使用"><a href="#第九章-性能分析工具的使用" class="headerlink" title="第九章 性能分析工具的使用"></a>第九章 性能分析工具的使用</h1><h2 id="1-数据库服务器的优化步骤"><a href="#1-数据库服务器的优化步骤" class="headerlink" title="1. 数据库服务器的优化步骤"></a>1. 数据库服务器的优化步骤</h2><p>​	当我们遇到数据库调优问题的时候，该如何思考呢？这里把思考的流程整理成下面这张图。 整个流程划分成了 <strong>观察（Show status） 和 行动（Action）</strong> 两个部分。字母 S 的部分代表观察（会使用相应的分析工具），字母 A 代表的部分是行动（对应分析可以采取的行动）。</p>
-<p><img src="/medias/loading.gif" data-original="C:/Users/guo/Desktop/积累/Mysql/高级/image-improve/image-20220325175937136.png" alt="image-20220325175937136"></p>
+<p><img src="/medias/loading.gif" data-original="https://raw.githubusercontent.com/luyaguo/pictures-guo/main/mysql/202508042311004.png" alt="image-20220325175937136"></p>
 <p>我们可以通过观察了解数据库整体的运行状态，通过性能分析工具可以让我们了解执行慢的SQL都有哪些，查看具体的SQL执行计划，甚至是SQL执行中的每一步的成本代价，这样才能定位问题所在，找到了问题，再采取相应的行动。</p>
 <p><strong>详细解释一下这张图:</strong></p>
 <p>首先在S1部分，我们需要观察服务器的状态是否存在周期性的波动。如果<code>存在周期性波动</code>，有可能是周期性节点的原因，比如双十一、促销活动等。这样的话，我们可以通过A1这一步骤解决，也就是加缓存，或者更改缓存失效策略。</p>
@@ -540,7 +540,7 @@
 <p>如果A2和A3都不能解决问题，我们需要考虑数据库自身的SQL查询性能是否已经达到了瓶颈，如果确认没有达到性能瓶颈，就需要重新检查，重复以上的步骤。如果已经达到了<code>性能瓶颈</code>，进入A4阶段，需要考虑<code>增加服务器</code>，采用读写分离的架构，或者考虑对数据库进行<code>分库分表</code>，比如垂直分库、垂直分表和水平分表等。</p>
 <p>以上就是数据库调优的流程思路。如果我们发现执行SQL时存在不规则延迟或卡顿的时候，就可以采用分析工具帮我们定位有问题的SQL，这三种分析工具你可以理解是SQL调优的三个步骤:<code>慢查询、</code> <code>EXPLAIN</code>和 <code>SHOWPROFILING</code>。</p>
 <p>小结：</p>
-<p><img src="/medias/loading.gif" data-original="C:/Users/guo/Desktop/积累/Mysql/高级/image-improve/image-20220626212500129.png" alt="image-20220626212500129"></p>
+<p><img src="/medias/loading.gif" data-original="https://raw.githubusercontent.com/luyaguo/pictures-guo/main/mysql/202508042311384.png" alt="image-20220626212500129"></p>
 <h2 id="2-查看系统性能参数"><a href="#2-查看系统性能参数" class="headerlink" title="2. 查看系统性能参数"></a>2. 查看系统性能参数</h2><p>在MySQL中，可以使用 SHOW STATUS 语句查询一些MySQL数据库服务器的 性能参数 、 执行频率 。 SHOW STATUS语句语法如下：</p>
 <pre class="line-numbers language-sql" data-language="sql"><code class="language-sql"><span class="token keyword">SHOW</span> <span class="token punctuation">[</span><span class="token keyword">GLOBAL</span><span class="token operator">|</span><span class="token keyword">SESSION</span><span class="token punctuation">]</span> <span class="token keyword">STATUS</span> <span class="token operator">LIKE</span> <span class="token string">'参数'</span><span class="token punctuation">;</span><span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
 
@@ -629,13 +629,13 @@ mysql &gt; set global slow_query_log&#x3D;&#39;ON&#39;;<span aria-hidden="true" 
 <p>查看下慢查询日志是否开启，以及慢查询日志文件的位置：</p>
 <pre class="line-numbers language-mysql" data-language="mysql"><code class="language-mysql">show variables like &#96;%slow_query_log%&#96;;<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
 
-<p><img src="/medias/loading.gif" data-original="C:/Users/guo/Desktop/积累/Mysql/高级/image-improve/image-20220626213015395.png" alt="image-20220626213015395"></p>
+<p><img src="/medias/loading.gif" data-original="https://raw.githubusercontent.com/luyaguo/pictures-guo/main/mysql/202508042311443.png" alt="image-20220626213015395"></p>
 <p>你能看到这时慢查询分析已经开启，同时文件保存在 &#x2F;var&#x2F;lib&#x2F;mysql&#x2F;atguigu02-slow.log 文件 中。</p>
 <p><strong>2.</strong> <strong>修改long_query_time阈值</strong></p>
 <p>接下来我们来看下慢查询的时间阈值设置，使用如下命令：</p>
 <pre class="line-numbers language-mysql" data-language="mysql"><code class="language-mysql">mysql &gt; show variables like &#39;%long_query_time%&#39;;<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
 
-<p><img src="/medias/loading.gif" data-original="C:/Users/guo/Desktop/积累/Mysql/高级/image-improve/image-20220626213119709.png" alt="image-20220626213119709"></p>
+<p><img src="/medias/loading.gif" data-original="https://raw.githubusercontent.com/luyaguo/pictures-guo/main/mysql/202508042311464.png" alt="image-20220626213119709"></p>
 <p>这里如果我们想把时间缩短，比如设置为 1 秒，可以这样设置：</p>
 <pre class="line-numbers language-mysql" data-language="mysql"><code class="language-mysql">#测试发现：设置global的方式对当前session的long_query_time失效。对新连接的客户端有效。所以可以一并 执行下述语句 
 mysql &gt; set global long_query_time &#x3D; 1; 
@@ -644,7 +644,7 @@ mysql&gt; show global variables like &#39;%long_query_time%&#39;;
 mysql&gt; set long_query_time&#x3D;1; 
 mysql&gt; show variables like &#39;%long_query_time%&#39;;<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
 
-<p><img src="/medias/loading.gif" data-original="C:/Users/guo/Desktop/积累/Mysql/高级/image-improve/image-20220626213128733.png" alt="image-20220626213128733"></p>
+<p><img src="/medias/loading.gif" data-original="https://raw.githubusercontent.com/luyaguo/pictures-guo/main/mysql/202508042311458.png" alt="image-20220626213128733"></p>
 <p><strong>补充:配置文件中一并设置参数</strong></p>
 <p>如下的方式相较于前面的命令行方式，可以看作是永久设置的方式。</p>
 <p>修改<code>my.cnf</code> 文件，<code>[mysqld]下</code>增加或修改参数<code>long_query_time</code>、<code>slow_query_log</code>和<code>slow_query_log_file</code>后，然后重启MySQL服务器。|</p>
@@ -788,7 +788,7 @@ mysql<span class="token operator">></span> <span class="token keyword">SELECT</s
 <p>查看mysqldumpslow的帮助信息</p>
 <pre class="line-numbers language-sql" data-language="sql"><code class="language-sql">mysqldumpslow <span class="token comment">--help</span><span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
 
-<p><img src="/medias/loading.gif" data-original="C:/Users/guo/Desktop/积累/Mysql/高级/image-improve/image-20220626213836181.png" alt="image-20220626213836181"></p>
+<p><img src="/medias/loading.gif" data-original="https://raw.githubusercontent.com/luyaguo/pictures-guo/main/mysql/202508042312878.png" alt="image-20220626213836181"></p>
 <p>mysqldumpslow 命令的具体参数如下：</p>
 <ul>
 <li>-a: 不将数字抽象成N，字符串抽象成S</li>
@@ -894,7 +894,7 @@ mysqladmin -uroot -p flush-logs slow
 <span class="token operator">+</span><span class="token comment">---------------+-------+</span>
 <span class="token number">1</span> <span class="token keyword">row</span> <span class="token operator">in</span> <span class="token keyword">set</span> <span class="token punctuation">(</span><span class="token number">0.34</span> sec<span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
 
-<p><img src="/medias/loading.gif" data-original="C:/Users/guo/Desktop/积累/Mysql/高级/image-improve/image-20220626214507730.png" alt="image-20220626214507730"></p>
+<p><img src="/medias/loading.gif" data-original="https://raw.githubusercontent.com/luyaguo/pictures-guo/main/mysql/202508042312526.png" alt="image-20220626214507730"></p>
 <p>通过设置 profiling&#x3D;’ON’ 来开启 show profile：</p>
 <pre class="line-numbers language-sql" data-language="sql"><code class="language-sql">mysql <span class="token operator">></span> <span class="token keyword">set</span> profiling <span class="token operator">=</span> <span class="token string">'ON'</span><span class="token punctuation">;</span>
 Query OK<span class="token punctuation">,</span> <span class="token number">0</span> <span class="token keyword">rows</span> affected<span class="token punctuation">,</span> <span class="token number">1</span> warning <span class="token punctuation">(</span><span class="token number">0.06</span> sec<span class="token punctuation">)</span>
@@ -907,7 +907,7 @@ mysql<span class="token operator">></span> <span class="token keyword">show</spa
 <span class="token operator">+</span><span class="token comment">---------------+-------+</span>
 <span class="token number">1</span> <span class="token keyword">row</span> <span class="token operator">in</span> <span class="token keyword">set</span> <span class="token punctuation">(</span><span class="token number">0.13</span> sec<span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
 
-<p><img src="/medias/loading.gif" data-original="C:/Users/guo/Desktop/积累/Mysql/高级/image-improve/image-20220626214517313.png" alt="image-20220626214517313"></p>
+<p><img src="/medias/loading.gif" data-original="https://raw.githubusercontent.com/luyaguo/pictures-guo/main/mysql/202508042312424.png" alt="image-20220626214517313"></p>
 <p>然后执行相关的查询语句。接着看下当前会话都有哪些 profiles，使用下面这条命令：</p>
 <pre class="line-numbers language-sql" data-language="sql"><code class="language-sql">mysql <span class="token operator">></span> <span class="token keyword">show</span> profiles<span class="token punctuation">;</span>
 <span class="token operator">+</span><span class="token comment">----------+------------+-------------------------------------+</span>
@@ -918,7 +918,7 @@ mysql<span class="token operator">></span> <span class="token keyword">show</spa
 <span class="token operator">+</span><span class="token comment">----------+------------+-------------------------------------+</span>
 <span class="token number">2</span> <span class="token keyword">rows</span> <span class="token operator">in</span> <span class="token keyword">set</span><span class="token punctuation">,</span> <span class="token number">1</span> warning <span class="token punctuation">(</span><span class="token number">0.01</span> sec<span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
 
-<p><img src="/medias/loading.gif" data-original="C:/Users/guo/Desktop/积累/Mysql/高级/image-improve/image-20220626214526595.png" alt="image-20220626214526595"></p>
+<p><img src="/medias/loading.gif" data-original="https://raw.githubusercontent.com/luyaguo/pictures-guo/main/mysql/202508042312039.png" alt="image-20220626214526595"></p>
 <p>你能看到当前会话一共有 2 个查询。如果我们想要查看最近一次查询的开销，可以使用：</p>
 <pre class="line-numbers language-sql" data-language="sql"><code class="language-sql">mysql <span class="token operator">></span> <span class="token keyword">show</span> profiles<span class="token punctuation">;</span>
 <span class="token operator">+</span><span class="token comment">--------------------------------+----------+</span>
@@ -944,7 +944,7 @@ mysql<span class="token operator">></span> <span class="token keyword">show</spa
 <span class="token operator">+</span><span class="token comment">--------------------------------+----------+</span>
 <span class="token number">17</span> <span class="token keyword">rows</span> <span class="token operator">in</span> <span class="token keyword">set</span><span class="token punctuation">,</span> <span class="token number">1</span> warning <span class="token punctuation">(</span><span class="token number">0.04</span> sec<span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
 
-<p><img src="/medias/loading.gif" data-original="C:/Users/guo/Desktop/积累/Mysql/高级/image-improve/image-20220626214538109.png" alt="image-20220626214538109"></p>
+<p><img src="/medias/loading.gif" data-original="https://raw.githubusercontent.com/luyaguo/pictures-guo/main/mysql/202508042312806.png" alt="image-20220626214538109"></p>
 <p>我们也可以查看指定的Query lD的开销，比如<code>show profile for query 2</code>查询结果是一样的。在SHOWPROFILE中我们可以查看不同部分的开销，比如cpu、block.io等:</p>
 <pre class="line-numbers language-sql" data-language="sql"><code class="language-sql">mysql<span class="token operator">></span> <span class="token keyword">show</span> profile cpu<span class="token punctuation">,</span>block io <span class="token keyword">for</span> query <span class="token number">2</span><span class="token punctuation">;</span>
 <span class="token operator">+</span><span class="token comment">------------------------------+--------+----------+------------+-------------+</span>
@@ -970,7 +970,7 @@ mysql<span class="token operator">></span> <span class="token keyword">show</spa
 <span class="token operator">+</span><span class="token comment">------------------------------+--------+----------+------------+-------------+</span>
 <span class="token number">17</span> <span class="token keyword">rows</span> <span class="token operator">in</span> <span class="token keyword">set</span><span class="token punctuation">,</span> <span class="token number">1</span> warning <span class="token punctuation">(</span><span class="token number">0.01</span> sec<span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
 
-<p><img src="/medias/loading.gif" data-original="C:/Users/guo/Desktop/积累/Mysql/高级/image-improve/image-20220626214549597.png" alt="image-20220626214549597"></p>
+<p><img src="/medias/loading.gif" data-original="https://raw.githubusercontent.com/luyaguo/pictures-guo/main/mysql/202508042312609.png" alt="image-20220626214549597"></p>
 <blockquote>
 <p>如果是executing比较长就可能是代码哪里没写好，使用explain 继续查询问题</p>
 </blockquote>
@@ -1011,12 +1011,12 @@ mysql<span class="token operator">></span> <span class="token keyword">show</spa
 <li><a target="_blank" rel="noopener" href="https://dev.mysql.com/doc/refman/5.7/en/explain-output.html">https://dev.mysql.com/doc/refman/5.7/en/explain-output.html</a> </li>
 <li><a target="_blank" rel="noopener" href="https://dev.mysql.com/doc/refman/8.0/en/explain-output.html">https://dev.mysql.com/doc/refman/8.0/en/explain-output.html</a></li>
 </ul>
-<p><img src="/medias/loading.gif" data-original="C:/Users/guo/Desktop/积累/Mysql/高级/image-improve/image-20220325194823764.png" alt="image-20220325194823764"></p>
+<p><img src="/medias/loading.gif" data-original="https://raw.githubusercontent.com/luyaguo/pictures-guo/main/mysql/202508042313964.png" alt="image-20220325194823764"></p>
 <h4 id="版本情况"><a href="#版本情况" class="headerlink" title="版本情况"></a>版本情况</h4><ul>
 <li>MySQL 5.6.3以前只能 <strong>EXPLAIN SELECT</strong> ；MYSQL 5.6.3以后就可以 <strong>EXPLAIN SELECT，UPDATE， DELETE</strong> </li>
 <li>在5.7以前的版本中，想要显示 <strong>partitions</strong> 需要使用 <strong>explain partitions</strong> 命令；想要显示 <strong>filtered</strong> 需要使用 <strong>explain extended</strong> 命令。在5.7版本后，默认explain直接显示partitions和 filtered中的信息。</li>
 </ul>
-<p><img src="/medias/loading.gif" data-original="C:/Users/guo/Desktop/积累/Mysql/高级/image-improve/image-20220627212034037.png" alt="image-20220627212034037"></p>
+<p><img src="/medias/loading.gif" data-original="https://raw.githubusercontent.com/luyaguo/pictures-guo/main/mysql/202508042313774.png" alt="image-20220627212034037"></p>
 <h3 id="4-2-基本语法"><a href="#4-2-基本语法" class="headerlink" title="4.2 基本语法"></a>4.2 基本语法</h3><p>EXPLAIN 或 DESCRIBE语句的语法形式如下：</p>
 <pre class="line-numbers language-mysql" data-language="mysql"><code class="language-mysql">EXPLAIN SELECT select_options 
 #或者
@@ -1025,7 +1025,7 @@ DESCRIBE SELECT select_options<span aria-hidden="true" class="line-numbers-rows"
 <p>如果我们想看看某个查询的执行计划的话，可以在具体的查询语句前边加一个 EXPLAIN ，就像这样：</p>
 <pre class="line-numbers language-sql" data-language="sql"><code class="language-sql">mysql<span class="token operator">></span> <span class="token keyword">EXPLAIN</span> <span class="token keyword">SELECT</span> <span class="token number">1</span><span class="token punctuation">;</span><span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
 
-<p><img src="/medias/loading.gif" data-original="C:/Users/guo/Desktop/积累/Mysql/高级/image-improve/image-20220326113218648.png" alt="image-20220326113218648"></p>
+<p><img src="/medias/loading.gif" data-original="https://raw.githubusercontent.com/luyaguo/pictures-guo/main/mysql/202508042313565.png" alt="image-20220326113218648"></p>
 <p><strong>EXPLAIN</strong> 语句输出的各个列的作用如下：</p>
 <table>
 <thead>
@@ -1221,30 +1221,30 @@ EXPLAIN SELECT * FROM s1 INNER JOIN s2;
 <p>正常来说一个select 一个id ，也有例外的可能，查询优化器做了优化</p>
 <pre class="line-numbers language-sql" data-language="sql"><code class="language-sql">mysql<span class="token operator">></span> <span class="token keyword">EXPLAIN</span> <span class="token keyword">SELECT</span> <span class="token operator">*</span> <span class="token keyword">FROM</span> s1 <span class="token keyword">WHERE</span> key1 <span class="token operator">=</span> <span class="token string">'a'</span><span class="token punctuation">;</span><span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
 
-<p><img src="/medias/loading.gif" data-original="C:/Users/guo/Desktop/积累/Mysql/高级/image-improve/image-20220627213138745.png" alt="image-20220627213138745"></p>
+<p><img src="/medias/loading.gif" data-original="https://raw.githubusercontent.com/luyaguo/pictures-guo/main/mysql/202508042309753.png" alt="image-20220627213138745"></p>
 <pre class="line-numbers language-sql" data-language="sql"><code class="language-sql">mysql<span class="token operator">></span> <span class="token keyword">EXPLAIN</span> <span class="token keyword">SELECT</span> <span class="token operator">*</span> <span class="token keyword">FROM</span> s1 <span class="token keyword">INNER</span> <span class="token keyword">JOIN</span> s2<span class="token punctuation">;</span><span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
 
-<p><img src="/medias/loading.gif" data-original="C:/Users/guo/Desktop/积累/Mysql/高级/image-improve/image-20220627213210469.png" alt="image-20220627213210469"></p>
+<p><img src="/medias/loading.gif" data-original="https://raw.githubusercontent.com/luyaguo/pictures-guo/main/mysql/202508042309141.png" alt="image-20220627213210469"></p>
 <pre class="line-numbers language-sql" data-language="sql"><code class="language-sql">mysql<span class="token operator">></span> <span class="token keyword">EXPLAIN</span> <span class="token keyword">SELECT</span> <span class="token operator">*</span> <span class="token keyword">FROM</span> s1 <span class="token keyword">WHERE</span> key1 <span class="token operator">IN</span> <span class="token punctuation">(</span><span class="token keyword">SELECT</span> key1 <span class="token keyword">FROM</span> s2<span class="token punctuation">)</span> <span class="token operator">OR</span> key3 <span class="token operator">=</span> <span class="token string">'a'</span><span class="token punctuation">;</span><span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
 
-<p><img src="/medias/loading.gif" data-original="C:/Users/guo/Desktop/积累/Mysql/高级/image-improve/image-20220627213219601.png" alt="image-20220627213219601"></p>
+<p><img src="/medias/loading.gif" data-original="https://raw.githubusercontent.com/luyaguo/pictures-guo/main/mysql/202508042309140.png" alt="image-20220627213219601"></p>
 <p>查询优化器优化</p>
 <pre class="line-numbers language-sql" data-language="sql"><code class="language-sql"><span class="token comment">-- 查询优化器可能对涉及子查询的查询语句进行重写,转变为多表查询的操作</span>
 mysql<span class="token operator">></span> <span class="token keyword">EXPLAIN</span> <span class="token keyword">SELECT</span> <span class="token operator">*</span> <span class="token keyword">FROM</span> s1 <span class="token keyword">WHERE</span> key1 <span class="token operator">IN</span> <span class="token punctuation">(</span><span class="token keyword">SELECT</span> key2 <span class="token keyword">FROM</span> s2 <span class="token keyword">WHERE</span> common_field <span class="token operator">=</span> <span class="token string">'a'</span><span class="token punctuation">)</span><span class="token punctuation">;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre>
 
 <p>运行结果： id 只有一个，原因是查询优化器做了优化</p>
-<p><img src="/medias/loading.gif" data-original="C:/Users/guo/Desktop/积累/Mysql/高级/image-improve/image-20220627213229504.png" alt="image-20220627213229504"></p>
+<p><img src="/medias/loading.gif" data-original="https://raw.githubusercontent.com/luyaguo/pictures-guo/main/mysql/202508042309574.png" alt="image-20220627213229504"></p>
 <p> <strong>Union去重</strong></p>
 <p>原本想的1个select 一个 id , 预计两个。</p>
 <pre class="line-numbers language-sql" data-language="sql"><code class="language-sql"><span class="token comment"># Union去重</span>
 <span class="token comment"># union 去重，union all 不去重</span>
 mysql<span class="token operator">></span> <span class="token keyword">EXPLAIN</span> <span class="token keyword">SELECT</span> <span class="token operator">*</span> <span class="token keyword">FROM</span> s1 <span class="token keyword">UNION</span> <span class="token keyword">SELECT</span> <span class="token operator">*</span> <span class="token keyword">FROM</span> s2<span class="token punctuation">;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span></span></code></pre>
 
-<p><img src="/medias/loading.gif" data-original="C:/Users/guo/Desktop/积累/Mysql/高级/image-improve/image-20220627213237487.png" alt="image-20220627213237487"></p>
+<p><img src="/medias/loading.gif" data-original="https://raw.githubusercontent.com/luyaguo/pictures-guo/main/mysql/202508042309275.png" alt="image-20220627213237487"></p>
 <pre class="line-numbers language-sql" data-language="sql"><code class="language-sql"><span class="token comment">-- union all 不去重  所以不需要放在临时表里面</span>
 mysql<span class="token operator">></span> <span class="token keyword">EXPLAIN</span> <span class="token keyword">SELECT</span> <span class="token operator">*</span> <span class="token keyword">FROM</span> s1 <span class="token keyword">UNION</span> <span class="token keyword">ALL</span> <span class="token keyword">SELECT</span> <span class="token operator">*</span> <span class="token keyword">FROM</span> s2<span class="token punctuation">;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre>
 
-<p><img src="/medias/loading.gif" data-original="C:/Users/guo/Desktop/积累/Mysql/高级/image-improve/image-20220627213245459.png" alt="image-20220627213245459"></p>
+<p><img src="/medias/loading.gif" data-original="https://raw.githubusercontent.com/luyaguo/pictures-guo/main/mysql/202508042308933.png" alt="image-20220627213245459"></p>
 <p>&#x3D;&#x3D;小结:&#x3D;&#x3D;</p>
 <ul>
 <li><strong>id如果相同，可以认为是一组，从上往下顺序执行</strong></li>
@@ -1312,12 +1312,12 @@ mysql<span class="token operator">></span> <span class="token keyword">EXPLAIN</
 <pre class="line-numbers language-sql" data-language="sql"><code class="language-sql"><span class="token comment"># 查询语句中不包含`UNION`或者子查询的查询都算作是`SIMPLE`类型</span>
 mysql<span class="token operator">></span> <span class="token keyword">EXPLAIN</span> <span class="token keyword">SELECT</span> <span class="token operator">*</span> <span class="token keyword">FROM</span> s1<span class="token punctuation">;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre>
 
-<p><img src="/medias/loading.gif" data-original="C:/Users/guo/Desktop/积累/Mysql/高级/image-improve/image-20220627213937489.png" alt="image-20220627213937489"></p>
+<p><img src="/medias/loading.gif" data-original="https://raw.githubusercontent.com/luyaguo/pictures-guo/main/mysql/202508042308699.png" alt="image-20220627213937489"></p>
 <p>当然，连接查询也算是 SIMPLE 类型，比如：</p>
 <pre class="line-numbers language-sql" data-language="sql"><code class="language-sql"><span class="token comment">#连接查询也算是`SIMPLE`类型</span>
 mysql<span class="token operator">></span> <span class="token keyword">EXPLAIN</span> <span class="token keyword">SELECT</span> <span class="token operator">*</span> <span class="token keyword">FROM</span> s1 <span class="token keyword">INNER</span> <span class="token keyword">JOIN</span> s2<span class="token punctuation">;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre>
 
-<p><img src="/medias/loading.gif" data-original="C:/Users/guo/Desktop/积累/Mysql/高级/image-improve/image-20220627213945595.png" alt="image-20220627213945595"></p>
+<p><img src="/medias/loading.gif" data-original="https://raw.githubusercontent.com/luyaguo/pictures-guo/main/mysql/202508042308559.png" alt="image-20220627213945595"></p>
 <ul>
 <li><p><code>PRIMARY</code> 与 <code>UNION</code>与 <code>UNION RESULT</code></p>
 <ul>
@@ -1335,10 +1335,10 @@ mysql<span class="token operator">></span> <span class="token keyword">EXPLAIN</
 <p>测试sql:</p>
 <pre class="line-numbers language-sql" data-language="sql"><code class="language-sql">mysql<span class="token operator">></span> <span class="token keyword">EXPLAIN</span> <span class="token keyword">SELECT</span> <span class="token operator">*</span> <span class="token keyword">FROM</span> s1 <span class="token keyword">UNION</span> <span class="token keyword">SELECT</span> <span class="token operator">*</span> <span class="token keyword">FROM</span> s2<span class="token punctuation">;</span><span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
 
-<p><img src="/medias/loading.gif" data-original="C:/Users/guo/Desktop/积累/Mysql/高级/image-improve/image-20220627213954665.png" alt="image-20220627213954665"></p>
+<p><img src="/medias/loading.gif" data-original="https://raw.githubusercontent.com/luyaguo/pictures-guo/main/mysql/202508042308269.png" alt="image-20220627213954665"></p>
 <pre class="line-numbers language-sql" data-language="sql"><code class="language-sql"><span class="token keyword">EXPLAIN</span> <span class="token keyword">SELECT</span> <span class="token operator">*</span> <span class="token keyword">FROM</span> s1 <span class="token keyword">UNION</span> <span class="token keyword">ALL</span> <span class="token keyword">SELECT</span> <span class="token operator">*</span> <span class="token keyword">FROM</span> s2<span class="token punctuation">;</span><span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
 
-<p><img src="/medias/loading.gif" data-original="C:/Users/guo/Desktop/积累/Mysql/高级/image-improve/image-20220326125627303.png" alt="image-20220326125627303"></p>
+<p><img src="/medias/loading.gif" data-original="https://raw.githubusercontent.com/luyaguo/pictures-guo/main/mysql/202508042308113.png" alt="image-20220326125627303"></p>
 <ul>
 <li>SUBQUERY</li>
 </ul>
@@ -1348,7 +1348,7 @@ mysql<span class="token operator">></span> <span class="token keyword">EXPLAIN</
  #该子查询的第一个&#96;SELECT&#96;关键字代表的那个查询的&#96;select_type&#96;就是&#96;SUBQUERY&#96;
 mysql&gt; EXPLAIN SELECT * FROM s1 WHERE key1 IN (SELECT key1 FROM s2) OR key3 &#x3D; &#39;a&#39;;<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span></span></code></pre>
 
-<p><img src="/medias/loading.gif" data-original="C:/Users/guo/Desktop/积累/Mysql/高级/image-improve/image-20220627214002669.png" alt="image-20220627214002669"></p>
+<p><img src="/medias/loading.gif" data-original="https://raw.githubusercontent.com/luyaguo/pictures-guo/main/mysql/202508042315599.png" alt="image-20220627214002669"></p>
 <ul>
 <li>DEPENDENT SUBQUERY</li>
 </ul>
@@ -1357,7 +1357,7 @@ mysql&gt; EXPLAIN SELECT * FROM s1 WHERE key1 IN (SELECT key1 FROM s2) OR key3 &
 mysql&gt; EXPLAIN SELECT * FROM s1 WHERE key1 IN (SELECT key1 FROM s2 WHERE s1.key2 &#x3D; s2.key2) OR key3 &#x3D; &#39;a&#39;;
  #注意的是，select_type为&#96;DEPENDENT SUBQUERY&#96;的查询可能会被执行多次。<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span></span></code></pre>
 
-<p><img src="/medias/loading.gif" data-original="C:/Users/guo/Desktop/积累/Mysql/高级/image-improve/image-20220627214010225.png" alt="image-20220627214010225"></p>
+<p><img src="/medias/loading.gif" data-original="https://raw.githubusercontent.com/luyaguo/pictures-guo/main/mysql/202508042307614.png" alt="image-20220627214010225"></p>
 <ul>
 <li>DEPENDENT UNION</li>
 </ul>
@@ -1367,7 +1367,7 @@ mysql&gt; EXPLAIN SELECT * FROM s1 WHERE key1 IN (SELECT key1 FROM s2 WHERE key1
 &#39;a&#39; UNION SELECT key1 FROM s1 WHERE key1 &#x3D; &#39;b&#39;);
  # 这里优化器会重构成exist<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span></span></code></pre>
 
-<p><img src="/medias/loading.gif" data-original="C:/Users/guo/Desktop/积累/Mysql/高级/image-improve/image-20220627214017493.png" alt="image-20220627214017493"></p>
+<p><img src="/medias/loading.gif" data-original="https://raw.githubusercontent.com/luyaguo/pictures-guo/main/mysql/202508042307764.png" alt="image-20220627214017493"></p>
 <ul>
 <li>DERIVED</li>
 </ul>
@@ -1375,7 +1375,7 @@ mysql&gt; EXPLAIN SELECT * FROM s1 WHERE key1 IN (SELECT key1 FROM s2 WHERE key1
 <pre class="line-numbers language-sql" data-language="sql"><code class="language-sql"><span class="token comment">-- 对于包含`派生表`的查询，该派生表对应的子查询的`select_type`就是`DERIVED`</span>
 mysql<span class="token operator">></span> <span class="token keyword">EXPLAIN</span> <span class="token keyword">SELECT</span> <span class="token operator">*</span> <span class="token keyword">FROM</span> <span class="token punctuation">(</span><span class="token keyword">SELECT</span> key1<span class="token punctuation">,</span> <span class="token function">count</span><span class="token punctuation">(</span><span class="token operator">*</span><span class="token punctuation">)</span> <span class="token keyword">as</span> c <span class="token keyword">FROM</span> s1 <span class="token keyword">GROUP</span> <span class="token keyword">BY</span> key1<span class="token punctuation">)</span> <span class="token keyword">AS</span> derived_s1 <span class="token keyword">where</span> c <span class="token operator">></span> <span class="token number">1</span><span class="token punctuation">;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre>
 
-<p><img src="/medias/loading.gif" data-original="C:/Users/guo/Desktop/积累/Mysql/高级/image-improve/image-20220627214023607.png" alt="image-20220627214023607"></p>
+<p><img src="/medias/loading.gif" data-original="https://raw.githubusercontent.com/luyaguo/pictures-guo/main/mysql/202508042307092.png" alt="image-20220627214023607"></p>
 <ul>
 <li>MATERIALIZED</li>
 </ul>
@@ -1384,7 +1384,7 @@ mysql<span class="token operator">></span> <span class="token keyword">EXPLAIN</
 mysql<span class="token operator">></span> <span class="token keyword">EXPLAIN</span> <span class="token keyword">SELECT</span> <span class="token operator">*</span> <span class="token keyword">FROM</span> s1 <span class="token keyword">WHERE</span> key1 <span class="token operator">IN</span> <span class="token punctuation">(</span><span class="token keyword">SELECT</span> key1 <span class="token keyword">FROM</span> s2<span class="token punctuation">)</span><span class="token punctuation">;</span>
 <span class="token comment">-- 子查询被转为了物化表 </span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span></span></code></pre>
 
-<p><img src="/medias/loading.gif" data-original="C:/Users/guo/Desktop/积累/Mysql/高级/image-improve/image-20220627214031396.png" alt="image-20220627214031396"></p>
+<p><img src="/medias/loading.gif" data-original="https://raw.githubusercontent.com/luyaguo/pictures-guo/main/mysql/202508042307236.png" alt="image-20220627214031396"></p>
 <blockquote>
 <p>不理解： 为啥上面的子查询，没有雾化</p>
 <pre class="line-numbers language-mysql" data-language="mysql"><code class="language-mysql">EXPLAIN SELECT * FROM s1 WHERE key1 IN (SELECT key1 FROM s2) OR key3 &#x3D; &#39;a&#39;;
@@ -1412,11 +1412,11 @@ mysql<span class="token operator">></span> <span class="token keyword">EXPLAIN</
   <span class="token keyword">PARTITION</span> p1 <span class="token keyword">VALUES</span> less than MAXVALUE
 <span class="token punctuation">)</span><span class="token punctuation">;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
 
-<p><img src="/medias/loading.gif" data-original="C:/Users/guo/Desktop/积累/Mysql/高级/image-improve/image-20220627214241368.png" alt="image-20220627214241368"></p>
+<p><img src="/medias/loading.gif" data-original="https://raw.githubusercontent.com/luyaguo/pictures-guo/main/mysql/202508042307004.png" alt="image-20220627214241368"></p>
 <pre class="line-numbers language-sql" data-language="sql"><code class="language-sql"><span class="token keyword">DESC</span> <span class="token keyword">SELECT</span> <span class="token operator">*</span> <span class="token keyword">FROM</span> user_partitions <span class="token keyword">WHERE</span> id<span class="token operator">></span><span class="token number">200</span><span class="token punctuation">;</span><span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
 
 <p>查询id大于200（200&gt;100，p1分区）的记录，查看执行计划，partitions是p1，符合我们的分区规则</p>
-<p><img src="/medias/loading.gif" data-original="C:/Users/guo/Desktop/积累/Mysql/高级/image-improve/image-20220627214249432.png" alt="image-20220627214249432"></p>
+<p><img src="/medias/loading.gif" data-original="https://raw.githubusercontent.com/luyaguo/pictures-guo/main/mysql/202508042307851.png" alt="image-20220627214249432"></p>
 <h4 id="5-type（重点）"><a href="#5-type（重点）" class="headerlink" title="5. type（重点）"></a>5. type（重点）</h4><p>执行计划的一条记录就代表着MySQL对某个表的<code>执行查询时的访问方法</code>，又称”访问类型”，其中的<code>type</code>列就表明了这个访问方法是啥，是较为重要的一个指标。比如，看到<code>type</code>列的值是<code>ref</code>，表明MySQL即将使用<code>ref</code>访问方法来执行对<code>s1</code>表的查询。</p>
 <p>完整的访问方法如下： system ， const ， eq_ref ， ref ， fulltext ， ref_or_null ， index_merge ， unique_subquery ， index_subquery ， range ， index ， ALL 。</p>
 <p>我们详细解释一下：</p>
@@ -1440,7 +1440,7 @@ Query OK<span class="token punctuation">,</span> <span class="token number">1</s
 <span class="token operator">+</span><span class="token comment">----+-------------+-------+------------+--------+</span>
 <span class="token number">1</span> <span class="token keyword">row</span> <span class="token operator">in</span> <span class="token keyword">set</span><span class="token punctuation">,</span> <span class="token number">1</span> warning <span class="token punctuation">(</span><span class="token number">0.00</span> sec<span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
 
-<p><img src="/medias/loading.gif" data-original="C:/Users/guo/Desktop/积累/Mysql/高级/image-improve/image-20220627214832831.png" alt="image-20220627214832831"></p>
+<p><img src="/medias/loading.gif" data-original="https://raw.githubusercontent.com/luyaguo/pictures-guo/main/mysql/202508042307613.png" alt="image-20220627214832831"></p>
 <blockquote>
 <p> 这里如果是 innodb 会变成ALL ， 因为innodb系统不会存条数字段。。MyISAM会存储这么一个字段</p>
 </blockquote>
@@ -1451,7 +1451,7 @@ Query OK<span class="token punctuation">,</span> <span class="token number">1</s
 mysql<span class="token operator">></span> <span class="token keyword">EXPLAIN</span> <span class="token keyword">SELECT</span> <span class="token operator">*</span> <span class="token keyword">FROM</span> s1 <span class="token keyword">WHERE</span> id <span class="token operator">=</span> <span class="token number">10005</span><span class="token punctuation">;</span>
 mysql<span class="token operator">></span> <span class="token keyword">EXPLAIN</span> <span class="token keyword">SELECT</span> <span class="token operator">*</span> <span class="token keyword">FROM</span> s1 <span class="token keyword">WHERE</span> key2 <span class="token operator">=</span> <span class="token string">'10066'</span><span class="token punctuation">;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span></span></code></pre>
 
-<p><img src="/medias/loading.gif" data-original="C:/Users/guo/Desktop/积累/Mysql/高级/image-improve/image-20220627215113504.png" alt="image-20220627215113504"></p>
+<p><img src="/medias/loading.gif" data-original="https://raw.githubusercontent.com/luyaguo/pictures-guo/main/mysql/202508042307569.png" alt="image-20220627215113504"></p>
 <ul>
 <li>eq_ref</li>
 </ul>
@@ -1465,7 +1465,7 @@ mysql<span class="token operator">></span> <span class="token keyword">EXPLAIN</
 <span class="token operator">+</span><span class="token comment">----+------------+------+--------+---------+---------+------------------+------+</span>
 <span class="token number">2</span> <span class="token keyword">rows</span> <span class="token operator">in</span> <span class="token keyword">set</span><span class="token punctuation">,</span> <span class="token number">1</span> warning <span class="token punctuation">(</span><span class="token number">0.00</span> sec<span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
 
-<p><img src="/medias/loading.gif" data-original="C:/Users/guo/Desktop/积累/Mysql/高级/image-improve/image-20220627215124732.png" alt="image-20220627215124732"></p>
+<p><img src="/medias/loading.gif" data-original="https://raw.githubusercontent.com/luyaguo/pictures-guo/main/mysql/202508042307984.png" alt="image-20220627215124732"></p>
 <p>从执行计划的结果中可以看出，MySQL打算将s2作为驱动表，s1作为被驱动表，重点关注s1的访问方法是 <strong>eq_ref</strong> ，表明在访问s1表的时候可以 <strong>通过主键的等值匹配</strong> 来进行访问。</p>
 <ul>
 <li>ref</li>
@@ -1479,7 +1479,7 @@ mysql<span class="token operator">></span> <span class="token keyword">EXPLAIN</
 <span class="token operator">+</span><span class="token comment">----+-------+------+---------------+----------+---------+</span>
 <span class="token number">1</span> <span class="token keyword">row</span> <span class="token operator">in</span> <span class="token keyword">set</span><span class="token punctuation">,</span> <span class="token number">1</span> warning <span class="token punctuation">(</span><span class="token number">0.00</span> sec<span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
 
-<p><img src="/medias/loading.gif" data-original="C:/Users/guo/Desktop/积累/Mysql/高级/image-improve/image-20220627215132877.png" alt="image-20220627215132877"></p>
+<p><img src="/medias/loading.gif" data-original="https://raw.githubusercontent.com/luyaguo/pictures-guo/main/mysql/202508042307218.png" alt="image-20220627215132877"></p>
 <blockquote>
 <p>tips: 类型相同才可以走索引</p>
 <pre class="line-numbers language-mysql" data-language="mysql"><code class="language-mysql">EXPLAIN SELECT * FROM s1 WHERE key2 &#x3D; 10066;
@@ -1496,7 +1496,7 @@ mysql<span class="token operator">></span> <span class="token keyword">EXPLAIN</
 <pre class="line-numbers language-sql" data-language="sql"><code class="language-sql"><span class="token comment">-- 当对普通二级索引进行等值匹配查询，该索引列的值也可以是`NULL`值时，那么对该表的访问方法就可能是`ref_or_null`</span>
 mysql<span class="token operator">></span> <span class="token keyword">EXPLAIN</span> <span class="token keyword">SELECT</span> <span class="token operator">*</span> <span class="token keyword">FROM</span> s1 <span class="token keyword">WHERE</span> key1 <span class="token operator">=</span> <span class="token string">'a'</span> <span class="token operator">OR</span> key1 <span class="token operator">IS</span> <span class="token boolean">NULL</span><span class="token punctuation">;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre>
 
-<p><img src="/medias/loading.gif" data-original="C:/Users/guo/Desktop/积累/Mysql/高级/image-improve/image-20220627215140744.png" alt="image-20220627215140744"></p>
+<p><img src="/medias/loading.gif" data-original="https://raw.githubusercontent.com/luyaguo/pictures-guo/main/mysql/202508042306867.png" alt="image-20220627215140744"></p>
 <ul>
 <li>index_merge</li>
 </ul>
@@ -1509,7 +1509,7 @@ mysql<span class="token operator">></span> <span class="token keyword">EXPLAIN</
 <span class="token operator">+</span><span class="token comment">---+-------+------------+-------------------+--------+-------------------------------+</span>
 <span class="token number">1</span> <span class="token keyword">row</span> <span class="token operator">in</span> <span class="token keyword">set</span><span class="token punctuation">,</span> <span class="token number">1</span> warning <span class="token punctuation">(</span><span class="token number">0.01</span> sec<span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
 
-<p><img src="/medias/loading.gif" data-original="C:/Users/guo/Desktop/积累/Mysql/高级/image-improve/image-20220627215149045.png" alt="image-20220627215149045"></p>
+<p><img src="/medias/loading.gif" data-original="https://raw.githubusercontent.com/luyaguo/pictures-guo/main/mysql/202508042306840.png" alt="image-20220627215149045"></p>
 <p>从执行计划的 type 列的值是 index_merge 就可以看出，MySQL 打算使用索引合并的方式来执行 对 s1 表的查询。</p>
 <ul>
 <li>unique_subquery</li>
@@ -1518,32 +1518,32 @@ mysql<span class="token operator">></span> <span class="token keyword">EXPLAIN</
 mysql<span class="token operator">></span> <span class="token keyword">EXPLAIN</span> <span class="token keyword">SELECT</span> <span class="token operator">*</span> <span class="token keyword">FROM</span> s1 <span class="token keyword">WHERE</span> key2 <span class="token operator">IN</span> <span class="token punctuation">(</span><span class="token keyword">SELECT</span> id <span class="token keyword">FROM</span> s2 <span class="token keyword">where</span> s1<span class="token punctuation">.</span>key1 <span class="token operator">=</span>
 s2<span class="token punctuation">.</span>key1<span class="token punctuation">)</span> <span class="token operator">OR</span> key3 <span class="token operator">=</span> <span class="token string">'a'</span><span class="token punctuation">;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span></span></code></pre>
 
-<p><img src="/medias/loading.gif" data-original="C:/Users/guo/Desktop/积累/Mysql/高级/image-improve/image-20220627215204388.png" alt="image-20220627215204388"></p>
+<p><img src="/medias/loading.gif" data-original="https://raw.githubusercontent.com/luyaguo/pictures-guo/main/mysql/202508042306243.png" alt="image-20220627215204388"></p>
 <ul>
 <li>index_subquery</li>
 </ul>
 <pre class="line-numbers language-sql" data-language="sql"><code class="language-sql">mysql<span class="token operator">></span> <span class="token keyword">EXPLAIN</span> <span class="token keyword">SELECT</span> <span class="token operator">*</span> <span class="token keyword">FROM</span> s1 <span class="token keyword">WHERE</span> common_field <span class="token operator">IN</span> <span class="token punctuation">(</span><span class="token keyword">SELECT</span> key3 <span class="token keyword">FROM</span> s2 <span class="token keyword">where</span>
 s1<span class="token punctuation">.</span>key1 <span class="token operator">=</span> s2<span class="token punctuation">.</span>key1<span class="token punctuation">)</span> <span class="token operator">OR</span> key3 <span class="token operator">=</span> <span class="token string">'a'</span><span class="token punctuation">;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre>
 
-<p><img src="/medias/loading.gif" data-original="C:/Users/guo/Desktop/积累/Mysql/高级/image-improve/image-20220627215211755.png" alt="image-20220627215211755"></p>
+<p><img src="/medias/loading.gif" data-original="https://raw.githubusercontent.com/luyaguo/pictures-guo/main/mysql/202508042306665.png" alt="image-20220627215211755"></p>
 <ul>
 <li>range</li>
 </ul>
 <pre class="line-numbers language-sql" data-language="sql"><code class="language-sql"><span class="token comment">-- 如果使用索引获取某些`范围区间`的记录，那么就可能使用到`range`访问方法</span>
 mysql<span class="token operator">></span> <span class="token keyword">EXPLAIN</span> <span class="token keyword">SELECT</span> <span class="token operator">*</span> <span class="token keyword">FROM</span> s1 <span class="token keyword">WHERE</span> key1 <span class="token operator">IN</span> <span class="token punctuation">(</span><span class="token string">'a'</span><span class="token punctuation">,</span> <span class="token string">'b'</span><span class="token punctuation">,</span> <span class="token string">'c'</span><span class="token punctuation">)</span><span class="token punctuation">;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre>
 
-<p><img src="/medias/loading.gif" data-original="C:/Users/guo/Desktop/积累/Mysql/高级/image-improve/image-20220627215218073.png" alt="image-20220627215218073"></p>
+<p><img src="/medias/loading.gif" data-original="https://raw.githubusercontent.com/luyaguo/pictures-guo/main/mysql/202508042306744.png" alt="image-20220627215218073"></p>
 <p>或者：</p>
 <pre class="line-numbers language-sql" data-language="sql"><code class="language-sql">mysql<span class="token operator">></span> <span class="token keyword">EXPLAIN</span> <span class="token keyword">SELECT</span> <span class="token operator">*</span> <span class="token keyword">FROM</span> s1 <span class="token keyword">WHERE</span> key1 <span class="token operator">></span> <span class="token string">'a'</span> <span class="token operator">AND</span> key1 <span class="token operator">&lt;</span> <span class="token string">'b'</span><span class="token punctuation">;</span><span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
 
-<p><img src="/medias/loading.gif" data-original="C:/Users/guo/Desktop/积累/Mysql/高级/image-improve/image-20220627215224995.png" alt="image-20220627215224995"></p>
+<p><img src="/medias/loading.gif" data-original="https://raw.githubusercontent.com/luyaguo/pictures-guo/main/mysql/202508042306340.png" alt="image-20220627215224995"></p>
 <ul>
 <li>index</li>
 </ul>
 <pre class="line-numbers language-sql" data-language="sql"><code class="language-sql"><span class="token comment">-- 当我们可以使用索引覆盖，但需要扫描全部的索引记录时，该表的访问方法就是`index`</span>
 mysql<span class="token operator">></span> <span class="token keyword">EXPLAIN</span> <span class="token keyword">SELECT</span> key_part2 <span class="token keyword">FROM</span> s1 <span class="token keyword">WHERE</span> key_part3 <span class="token operator">=</span> <span class="token string">'a'</span><span class="token punctuation">;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre>
 
-<p><img src="/medias/loading.gif" data-original="C:/Users/guo/Desktop/积累/Mysql/高级/image-improve/image-20220627215234804.png" alt="image-20220627215234804"></p>
+<p><img src="/medias/loading.gif" data-original="https://raw.githubusercontent.com/luyaguo/pictures-guo/main/mysql/202508042306377.png" alt="image-20220627215234804"></p>
 <blockquote>
 <p>索引覆盖，<code>INDEX idx_key_part(key_part1, key_part2, key_part3）</code> 这3个构成一个复合索引 key_part3 在复合索引里面，，查询的字段也在索引里面，干脆就直接遍历索引查出数据</p>
 <p>思考： 好处，索引存的数据少，数据少页就少，这样可以减少io。</p>
@@ -1553,7 +1553,7 @@ mysql<span class="token operator">></span> <span class="token keyword">EXPLAIN</
 </ul>
 <pre class="line-numbers language-sql" data-language="sql"><code class="language-sql">mysql<span class="token operator">></span> <span class="token keyword">EXPLAIN</span> <span class="token keyword">SELECT</span> <span class="token operator">*</span> <span class="token keyword">FROM</span> s1<span class="token punctuation">;</span><span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
 
-<p><img src="/medias/loading.gif" data-original="C:/Users/guo/Desktop/积累/Mysql/高级/image-improve/image-20220627215347325.png" alt="image-20220627215347325"></p>
+<p><img src="/medias/loading.gif" data-original="https://raw.githubusercontent.com/luyaguo/pictures-guo/main/mysql/202508042306193.png" alt="image-20220627215347325"></p>
 <p>一般来说，这些访问方法中除了<code>All</code>这个访问方法外，其余的访问方法都能用到索引，除了<code>index_merge</code>访问方法外，其余的访问方法都最多只能用到一个索引。</p>
 <p>&#x3D;&#x3D;小结：&#x3D;&#x3D;</p>
 <p><strong>结果值从最好到最坏依次是：</strong> </p>
@@ -1564,7 +1564,7 @@ mysql<span class="token operator">></span> <span class="token keyword">EXPLAIN</
 <h4 id="6-possible-keys和key"><a href="#6-possible-keys和key" class="headerlink" title="6. possible_keys和key"></a>6. possible_keys和key</h4><p>在EXPLAIN语句输出的执行计划中， <code>possible_keys</code>列表示在某个查询语句中，对某个表执行<code>单表查询时可能用</code>到的索引有哪些。一般查询涉及到的字段上若存在索引，则该索引将被列出，但不一定被查询使用。<code>key</code>列表示<code>实际用到</code>的索引有哪些，如果为NULL，则没有使用索引。比方说下边这个查询:</p>
 <pre class="line-numbers language-sql" data-language="sql"><code class="language-sql">mysql<span class="token operator">></span> <span class="token keyword">EXPLAIN</span> <span class="token keyword">SELECT</span> <span class="token operator">*</span> <span class="token keyword">FROM</span> s1 <span class="token keyword">WHERE</span> key1 <span class="token operator">></span> <span class="token string">'z'</span> <span class="token operator">AND</span> key3 <span class="token operator">=</span> <span class="token string">'a'</span><span class="token punctuation">;</span><span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
 
-<p><img src="/medias/loading.gif" data-original="C:/Users/guo/Desktop/积累/Mysql/高级/image-improve/image-20220627215546287.png" alt="image-20220627215546287"></p>
+<p><img src="/medias/loading.gif" data-original="https://raw.githubusercontent.com/luyaguo/pictures-guo/main/mysql/202508042306212.png" alt="image-20220627215546287"></p>
 <p>上述执行计划的possible_keys列的值是<code>idx_key1,idx_key3</code>，表示该查询可能使用到<code>idx_key1</code> , <code>idx_key3</code>两个索引，然后key列的值是<code>idx_key3</code>，表示经过查询优化器计算使用不同索引的成本后，最后决定使用<code>idx_key3</code></p>
 <blockquote>
 <p>索引只能用一个。所以他要选一个出来用。查看上面 <code>index_merge  </code>  or 的话  会走索引合并。</p>
@@ -1580,25 +1580,25 @@ mysql<span class="token operator">></span> <span class="token keyword">EXPLAIN</
 <pre class="line-numbers language-sql" data-language="sql"><code class="language-sql">mysql<span class="token operator">></span> <span class="token keyword">EXPLAIN</span> <span class="token keyword">SELECT</span> <span class="token operator">*</span> <span class="token keyword">FROM</span> s1 <span class="token keyword">WHERE</span> id <span class="token operator">=</span> <span class="token number">10005</span><span class="token punctuation">;</span>
 <span class="token comment">--结果key_len =4</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre>
 
-<p><img src="/medias/loading.gif" data-original="C:/Users/guo/Desktop/积累/Mysql/高级/image-improve/image-20220627215731627.png" alt="image-20220627215731627"></p>
+<p><img src="/medias/loading.gif" data-original="https://raw.githubusercontent.com/luyaguo/pictures-guo/main/mysql/202508042306202.png" alt="image-20220627215731627"></p>
 <pre class="line-numbers language-sql" data-language="sql"><code class="language-sql">mysql<span class="token operator">></span> <span class="token keyword">EXPLAIN</span> <span class="token keyword">SELECT</span> <span class="token operator">*</span> <span class="token keyword">FROM</span> s1 <span class="token keyword">WHERE</span> key2 <span class="token operator">=</span> <span class="token number">10126</span><span class="token punctuation">;</span>
 <span class="token comment">--结果key_len = 5</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre>
 
-<p><img src="/medias/loading.gif" data-original="C:/Users/guo/Desktop/积累/Mysql/高级/image-improve/image-20220627215739802.png" alt="image-20220627215739802"></p>
+<p><img src="/medias/loading.gif" data-original="https://raw.githubusercontent.com/luyaguo/pictures-guo/main/mysql/202508042306432.png" alt="image-20220627215739802"></p>
 <p>key2 是int 类型 unique 索引。。因为还可能有一个null值，所以 null占一个字段。4+1 &#x3D; 5</p>
 <pre class="line-numbers language-sql" data-language="sql"><code class="language-sql">mysql<span class="token operator">></span> <span class="token keyword">EXPLAIN</span> <span class="token keyword">SELECT</span> <span class="token operator">*</span> <span class="token keyword">FROM</span> s1 <span class="token keyword">WHERE</span> key1 <span class="token operator">=</span> <span class="token string">'a'</span><span class="token punctuation">;</span>
 <span class="token comment">--结果key_len = 303 </span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre>
 
-<p><img src="/medias/loading.gif" data-original="C:/Users/guo/Desktop/积累/Mysql/高级/image-improve/image-20220627215748849.png" alt="image-20220627215748849"></p>
+<p><img src="/medias/loading.gif" data-original="https://raw.githubusercontent.com/luyaguo/pictures-guo/main/mysql/202508042306121.png" alt="image-20220627215748849"></p>
 <p>原因： <code>idx_key_part(key_part1, key_part2, key_part3）</code> 是3个100的字段合起来的。每一个字段可以为空，所以是101*3 &#x3D; 303</p>
 <pre class="line-numbers language-sql" data-language="sql"><code class="language-sql">mysql<span class="token operator">></span> <span class="token keyword">EXPLAIN</span> <span class="token keyword">SELECT</span> <span class="token operator">*</span> <span class="token keyword">FROM</span> s1 <span class="token keyword">WHERE</span> key_part1 <span class="token operator">=</span> <span class="token string">'a'</span><span class="token punctuation">;</span>
 <span class="token comment">-- key_len是303</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre>
 
-<p><img src="/medias/loading.gif" data-original="C:/Users/guo/Desktop/积累/Mysql/高级/image-improve/image-20220627215756158.png" alt="image-20220627215756158"></p>
+<p><img src="/medias/loading.gif" data-original="https://raw.githubusercontent.com/luyaguo/pictures-guo/main/mysql/202508042305012.png" alt="image-20220627215756158"></p>
 <pre class="line-numbers language-sql" data-language="sql"><code class="language-sql">mysql<span class="token operator">></span> <span class="token keyword">EXPLAIN</span> <span class="token keyword">SELECT</span> <span class="token operator">*</span> <span class="token keyword">FROM</span> s1 <span class="token keyword">WHERE</span> key_part1 <span class="token operator">=</span> <span class="token string">'a'</span> <span class="token operator">AND</span> key_part2 <span class="token operator">=</span> <span class="token string">'b'</span><span class="token punctuation">;</span>
 <span class="token comment">-- 结果key_606</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre>
 
-<p><img src="/medias/loading.gif" data-original="C:/Users/guo/Desktop/积累/Mysql/高级/image-improve/image-20220627215806087.png" alt="image-20220627215806087"></p>
+<p><img src="/medias/loading.gif" data-original="https://raw.githubusercontent.com/luyaguo/pictures-guo/main/mysql/202508042305260.png" alt="image-20220627215806087"></p>
 <p><strong>这里命中了两次联合索引，精度更高，效果更好</strong></p>
 <p><strong>练习：</strong></p>
 <p><strong>key_len的长度计算公式：</strong></p>
@@ -1615,15 +1615,15 @@ char(10)固定字段且不允许NULL &#x3D; 10 * ( character set：utf8&#x3D;3,g
 <h4 id="8-ref"><a href="#8-ref" class="headerlink" title="8. ref"></a>8. ref</h4><p>当使用索引列等值查询时，与索引列进行等值匹配的对象信息。比如只是一个常数或者是某个列。</p>
 <pre class="line-numbers language-sql" data-language="sql"><code class="language-sql">mysql<span class="token operator">></span> <span class="token keyword">EXPLAIN</span> <span class="token keyword">SELECT</span> <span class="token operator">*</span> <span class="token keyword">FROM</span> s1 <span class="token keyword">WHERE</span> key1 <span class="token operator">=</span> <span class="token string">'a'</span><span class="token punctuation">;</span><span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
 
-<p><img src="/medias/loading.gif" data-original="C:/Users/guo/Desktop/积累/Mysql/高级/image-improve/image-20220627215926733.png" alt="image-20220627215926733"></p>
+<p><img src="/medias/loading.gif" data-original="https://raw.githubusercontent.com/luyaguo/pictures-guo/main/mysql/202508042305401.png" alt="image-20220627215926733"></p>
 <p>类型是type &#x3D;ref，与const（常量）比较</p>
 <pre class="line-numbers language-sql" data-language="sql"><code class="language-sql">mysql<span class="token operator">></span> <span class="token keyword">EXPLAIN</span> <span class="token keyword">SELECT</span> <span class="token operator">*</span> <span class="token keyword">FROM</span> s1 <span class="token keyword">INNER</span> <span class="token keyword">JOIN</span> s2 <span class="token keyword">ON</span> s1<span class="token punctuation">.</span>id <span class="token operator">=</span> s2<span class="token punctuation">.</span>id<span class="token punctuation">;</span><span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
 
-<p><img src="/medias/loading.gif" data-original="C:/Users/guo/Desktop/积累/Mysql/高级/image-improve/image-20220627215933368.png" alt="image-20220627215933368"></p>
+<p><img src="/medias/loading.gif" data-original="https://raw.githubusercontent.com/luyaguo/pictures-guo/main/mysql/202508042305501.png" alt="image-20220627215933368"></p>
 <p>类型是type &#x3D;eq_ref ， 与 atguigudb1.s1.id   比较</p>
 <pre class="line-numbers language-sql" data-language="sql"><code class="language-sql">mysql<span class="token operator">></span> <span class="token keyword">EXPLAIN</span> <span class="token keyword">SELECT</span> <span class="token operator">*</span> <span class="token keyword">FROM</span> s1 <span class="token keyword">INNER</span> <span class="token keyword">JOIN</span> s2 <span class="token keyword">ON</span> s2<span class="token punctuation">.</span>key1 <span class="token operator">=</span> UPPER<span class="token punctuation">(</span>s1<span class="token punctuation">.</span>key1<span class="token punctuation">)</span><span class="token punctuation">;</span><span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
 
-<p><img src="/medias/loading.gif" data-original="C:/Users/guo/Desktop/积累/Mysql/高级/image-improve/image-20220627215941303.png" alt="image-20220627215941303"></p>
+<p><img src="/medias/loading.gif" data-original="https://raw.githubusercontent.com/luyaguo/pictures-guo/main/mysql/202508042305609.png" alt="image-20220627215941303"></p>
 <p>与一个方法比较<code>func</code></p>
 <h4 id="9-rows（重点）"><a href="#9-rows（重点）" class="headerlink" title="9. rows（重点）"></a><strong>9. rows（重点）</strong></h4><p>rows：预估的需要读取的记录条数</p>
 <ul>
@@ -1632,7 +1632,7 @@ char(10)固定字段且不允许NULL &#x3D; 10 * ( character set：utf8&#x3D;3,g
 </ul>
 <pre class="line-numbers language-sql" data-language="sql"><code class="language-sql">mysql<span class="token operator">></span> <span class="token keyword">EXPLAIN</span> <span class="token keyword">SELECT</span> <span class="token operator">*</span> <span class="token keyword">FROM</span> s1 <span class="token keyword">WHERE</span> key1 <span class="token operator">></span> <span class="token string">'z'</span><span class="token punctuation">;</span><span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
 
-<p><img src="/medias/loading.gif" data-original="C:/Users/guo/Desktop/积累/Mysql/高级/image-improve/image-20220627220006829.png" alt="image-20220627220006829"></p>
+<p><img src="/medias/loading.gif" data-original="https://raw.githubusercontent.com/luyaguo/pictures-guo/main/mysql/202508042305600.png" alt="image-20220627220006829"></p>
 <p>rows 值越小，代表，数据越有可能在一个页里面，这样io就会更小</p>
 <h4 id="10-filtered"><a href="#10-filtered" class="headerlink" title="10. filtered"></a>10. filtered</h4><p><strong>越大越好</strong></p>
 <p>filtered 的值指返回结果的行占需要读到的行(rows 列的值)的百分比。</p>
@@ -1642,14 +1642,14 @@ char(10)固定字段且不允许NULL &#x3D; 10 * ( character set：utf8&#x3D;3,g
 <p> 如果使用的是索引执行的单表扫描，那么计算时需要估计出满足除使用到对应索引的搜索条件外的其他搜索条件的记录有多少条。</p>
 <pre class="line-numbers language-sql" data-language="sql"><code class="language-sql">mysql<span class="token operator">></span> <span class="token keyword">EXPLAIN</span> <span class="token keyword">SELECT</span> <span class="token operator">*</span> <span class="token keyword">FROM</span> s1 <span class="token keyword">WHERE</span> key1 <span class="token operator">></span> <span class="token string">'z'</span> <span class="token operator">AND</span> common_field <span class="token operator">=</span> <span class="token string">'a'</span><span class="token punctuation">;</span><span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
 
-<p><img src="/medias/loading.gif" data-original="C:/Users/guo/Desktop/积累/Mysql/高级/image-improve/image-20220627220053813.png" alt="image-20220627220053813"></p>
-<p><img src="/medias/loading.gif" data-original="/../../../../../../image-improve/image-20220326170537304.png" alt="image-20220326170537304"></p>
+<p><img src="/medias/loading.gif" data-original="https://raw.githubusercontent.com/luyaguo/pictures-guo/main/mysql/202508042304691.png" alt="image-20220627220053813"></p>
+<p><img src="/medias/loading.gif" data-original="https://raw.githubusercontent.com/luyaguo/pictures-guo/main/mysql/202508042304498.png" alt="image-20220326170537304"></p>
 <p><strong>对于单表查询来说，这个filtered列的值没什么意义</strong>，我们<code>更关注在连接查询中驱动表对应的执行计划记录的filtered值</code>，它决定了被驱动表要执行的次数(即：rows * filtered)</p>
 <pre class="line-numbers language-sql" data-language="sql"><code class="language-sql">mysql<span class="token operator">></span> <span class="token keyword">EXPLAIN</span> <span class="token keyword">SELECT</span> <span class="token operator">*</span> <span class="token keyword">FROM</span> s1 <span class="token keyword">INNER</span> <span class="token keyword">JOIN</span> s2 <span class="token keyword">ON</span> s1<span class="token punctuation">.</span>key1 <span class="token operator">=</span> s2<span class="token punctuation">.</span>key1 <span class="token keyword">WHERE</span>
 s1<span class="token punctuation">.</span>common_field <span class="token operator">=</span> <span class="token string">'a'</span><span class="token punctuation">;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre>
 
-<p><img src="/medias/loading.gif" data-original="C:/Users/guo/Desktop/积累/Mysql/高级/image-improve/image-20220627220101523.png" alt="image-20220627220101523"></p>
-<p><img src="/medias/loading.gif" data-original="C:/Users/guo/Desktop/积累/Mysql/高级/image-improve/image-20220326171219278.png" alt="image-20220326171219278"></p>
+<p><img src="/medias/loading.gif" data-original="https://raw.githubusercontent.com/luyaguo/pictures-guo/main/mysql/202508042304705.png" alt="image-20220627220101523"></p>
+<p><img src="/medias/loading.gif" data-original="https://raw.githubusercontent.com/luyaguo/pictures-guo/main/mysql/202508042304073.png" alt="image-20220326171219278"></p>
 <h4 id="11-Extra"><a href="#11-Extra" class="headerlink" title="11. Extra"></a>11. Extra</h4><p>顾名思义，<code>Extra</code>列是用来说明一些额外信息的，包含不适合在其他列中显示但十分重要的额外信息。我们可以通过这些额外信息来<code>更准确的理解MySQL到底将如何执行给定的查询语句</code>。MySQL提供的额外信息有好几十个，一下捡重点介绍</p>
 <ul>
 <li><p><code>No tables used</code> </p>
@@ -1658,27 +1658,27 @@ s1<span class="token punctuation">.</span>common_field <span class="token operat
 </ul>
 <pre class="line-numbers language-sql" data-language="sql"><code class="language-sql">mysql<span class="token operator">></span> <span class="token keyword">EXPLAIN</span> <span class="token keyword">SELECT</span> <span class="token number">1</span><span class="token punctuation">;</span><span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
 
-<p><img src="/medias/loading.gif" data-original="C:/Users/guo/Desktop/积累/Mysql/高级/image-improve/image-20220627220401934.png" alt="image-20220627220401934"></p>
+<p><img src="/medias/loading.gif" data-original="https://raw.githubusercontent.com/luyaguo/pictures-guo/main/mysql/202508042304329.png" alt="image-20220627220401934"></p>
 <ul>
 <li>Impossible WHERE</li>
 </ul>
 <p>查询语句的<code>WHERE</code>子句永远为<code>FALSE</code>时将会提示该额外信息</p>
 <pre class="line-numbers language-sql" data-language="sql"><code class="language-sql">mysql<span class="token operator">></span> <span class="token keyword">EXPLAIN</span> <span class="token keyword">SELECT</span> <span class="token operator">*</span> <span class="token keyword">FROM</span> s1 <span class="token keyword">WHERE</span> <span class="token number">1</span> <span class="token operator">!=</span> <span class="token number">1</span><span class="token punctuation">;</span><span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
 
-<p><img src="/medias/loading.gif" data-original="C:/Users/guo/Desktop/积累/Mysql/高级/image-improve/image-20220627220427481.png" alt="image-20220627220427481"></p>
+<p><img src="/medias/loading.gif" data-original="https://raw.githubusercontent.com/luyaguo/pictures-guo/main/mysql/202508042304704.png" alt="image-20220627220427481"></p>
 <ul>
 <li>Using where</li>
 </ul>
 <p>当我们使用全表扫描来执行对某个表的查询，并且该语句的<code>WHERE</code>子句中有针对该表的搜索条件时，在<code>Extra</code>列中会提示上述额外信息。</p>
 <pre class="line-numbers language-sql" data-language="sql"><code class="language-sql">mysql<span class="token operator">></span> <span class="token keyword">EXPLAIN</span> <span class="token keyword">SELECT</span> <span class="token operator">*</span> <span class="token keyword">FROM</span> s1 <span class="token keyword">WHERE</span> common_field <span class="token operator">=</span> <span class="token string">'a'</span><span class="token punctuation">;</span><span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
 
-<p><img src="/medias/loading.gif" data-original="C:/Users/guo/Desktop/积累/Mysql/高级/image-improve/image-20220627220440853.png" alt="image-20220627220440853"></p>
+<p><img src="/medias/loading.gif" data-original="https://raw.githubusercontent.com/luyaguo/pictures-guo/main/mysql/202508042304465.png" alt="image-20220627220440853"></p>
 <p>当条件除了索引，还有其他条件，也会是这个提示</p>
 <pre class="line-numbers language-sql" data-language="sql"><code class="language-sql"><span class="token comment">-- 当使用索引访问来执行对某个表的查询，并且该语句的`WHERE`子句中有除了该索引包含的列之外的其他搜索条件时，在`Extra`列中也会提示上述额外信息。</span>
 mysql<span class="token operator">></span>  <span class="token keyword">explain</span> <span class="token keyword">SELECT</span> <span class="token operator">*</span> <span class="token keyword">FROM</span> s1 <span class="token keyword">WHERE</span> key1 <span class="token operator">=</span> <span class="token string">'fUhcQU'</span> <span class="token operator">and</span>  common_field <span class="token operator">=</span> <span class="token string">'uDHCOnalcF'</span><span class="token punctuation">;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre>
 
-<p><img src="/medias/loading.gif" data-original="C:/Users/guo/Desktop/积累/Mysql/高级/image-improve/image-20220627220453356.png" alt="image-20220627220453356"></p>
-<p><img src="/medias/loading.gif" data-original="C:/Users/guo/Desktop/积累/Mysql/高级/image-improve/image-20220326172802426.png" alt="image-20220326172802426"></p>
+<p><img src="/medias/loading.gif" data-original="https://raw.githubusercontent.com/luyaguo/pictures-guo/main/mysql/202508042304392.png" alt="image-20220627220453356"></p>
+<p><img src="/medias/loading.gif" data-original="https://raw.githubusercontent.com/luyaguo/pictures-guo/main/mysql/202508042304261.png" alt="image-20220326172802426"></p>
 <ul>
 <li>No matching min&#x2F;max row</li>
 </ul>
@@ -1686,11 +1686,11 @@ mysql<span class="token operator">></span>  <span class="token keyword">explain<
 <pre class="line-numbers language-sql" data-language="sql"><code class="language-sql"><span class="token comment">-- 数据库不存在 QLjKYOx</span>
 mysql<span class="token operator">></span> <span class="token keyword">EXPLAIN</span> <span class="token keyword">SELECT</span> <span class="token function">MIN</span><span class="token punctuation">(</span>key1<span class="token punctuation">)</span> <span class="token keyword">FROM</span> s1 <span class="token keyword">WHERE</span> key1 <span class="token operator">=</span> <span class="token string">'QLjKYOx'</span><span class="token punctuation">;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre>
 
-<p><img src="/medias/loading.gif" data-original="C:/Users/guo/Desktop/积累/Mysql/高级/image-improve/image-20220627220503205.png" alt="image-20220627220503205"></p>
+<p><img src="/medias/loading.gif" data-original="https://raw.githubusercontent.com/luyaguo/pictures-guo/main/mysql/202508042303002.png" alt="image-20220627220503205"></p>
 <pre class="line-numbers language-mysql" data-language="mysql"><code class="language-mysql"># 数据库存在 QLjKYO
 EXPLAIN SELECT MIN(key1) FROM s1 WHERE key1 &#x3D; &#39;QLjKYO&#39;;<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre>
 
-<p><img src="/medias/loading.gif" data-original="C:/Users/guo/Desktop/积累/Mysql/高级/image-improve/image-20220326173338273.png" alt="image-20220326173338273"></p>
+<p><img src="/medias/loading.gif" data-original="https://raw.githubusercontent.com/luyaguo/pictures-guo/main/mysql/202508042303850.png" alt="image-20220326173338273"></p>
 <ul>
 <li>Using index</li>
 </ul>
@@ -1698,7 +1698,7 @@ EXPLAIN SELECT MIN(key1) FROM s1 WHERE key1 &#x3D; &#39;QLjKYO&#39;;<span aria-h
 <p>比方说下边这个查询中只需要用到<code>idx_key1</code>而不需要回表操作：</p>
 <pre class="line-numbers language-sql" data-language="sql"><code class="language-sql">mysql<span class="token operator">></span> <span class="token keyword">EXPLAIN</span> <span class="token keyword">SELECT</span> key1 <span class="token keyword">FROM</span> s1 <span class="token keyword">WHERE</span> key1 <span class="token operator">=</span> <span class="token string">'a'</span><span class="token punctuation">;</span><span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
 
-<p><img src="/medias/loading.gif" data-original="C:/Users/guo/Desktop/积累/Mysql/高级/image-improve/image-20220627220512245.png" alt="image-20220627220512245"></p>
+<p><img src="/medias/loading.gif" data-original="https://raw.githubusercontent.com/luyaguo/pictures-guo/main/mysql/202508042303432.png" alt="image-20220627220512245"></p>
 <ul>
 <li>Using index condition</li>
 </ul>
@@ -1707,7 +1707,7 @@ EXPLAIN SELECT MIN(key1) FROM s1 WHERE key1 &#x3D; &#39;QLjKYO&#39;;<span aria-h
 
 <pre class="line-numbers language-sql" data-language="sql"><code class="language-sql">mysql<span class="token operator">></span> <span class="token keyword">EXPLAIN</span> <span class="token keyword">SELECT</span> <span class="token operator">*</span> <span class="token keyword">FROM</span> s1 <span class="token keyword">WHERE</span> key1 <span class="token operator">></span> <span class="token string">'z'</span> <span class="token operator">AND</span> key1 <span class="token operator">LIKE</span> <span class="token string">'%b'</span><span class="token punctuation">;</span><span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
 
-<p><img src="/medias/loading.gif" data-original="C:/Users/guo/Desktop/积累/Mysql/高级/image-improve/image-20220627220525790.png" alt="image-20220627220525790"></p>
+<p><img src="/medias/loading.gif" data-original="https://raw.githubusercontent.com/luyaguo/pictures-guo/main/mysql/202508042303977.png" alt="image-20220627220525790"></p>
 <blockquote>
 <p>步骤1. 这里key1 &gt; ‘z’ 走了索引，查出了266条数据。。。</p>
 <p>步骤2.  key1 LIKE ‘%b’; 这个条件依然是 key1 索引，，，所以接下来只要在遍历这378个索引。哪些符合 ‘%a’</p>
@@ -1738,8 +1738,8 @@ EXPLAIN SELECT MIN(key1) FROM s1 WHERE key1 &#x3D; &#39;QLjKYO&#39;;<span aria-h
 <pre class="line-numbers language-sql" data-language="sql"><code class="language-sql">mysql<span class="token operator">></span> <span class="token keyword">EXPLAIN</span> <span class="token keyword">SELECT</span> <span class="token operator">*</span> <span class="token keyword">FROM</span> s1 <span class="token keyword">INNER</span> <span class="token keyword">JOIN</span> s2 <span class="token keyword">ON</span> s1<span class="token punctuation">.</span>common_field <span class="token operator">=</span>
 s2<span class="token punctuation">.</span>common_field<span class="token punctuation">;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre>
 
-<p><img src="/medias/loading.gif" data-original="C:/Users/guo/Desktop/积累/Mysql/高级/image-improve/image-20220627220538142.png" alt="image-20220627220538142"></p>
-<p><img src="/medias/loading.gif" data-original="C:/Users/guo/Desktop/积累/Mysql/高级/image-improve/image-20220326173721122.png" alt="image-20220326173721122"></p>
+<p><img src="/medias/loading.gif" data-original="https://raw.githubusercontent.com/luyaguo/pictures-guo/main/mysql/202508042302130.png" alt="image-20220627220538142"></p>
+<p><img src="/medias/loading.gif" data-original="https://raw.githubusercontent.com/luyaguo/pictures-guo/main/mysql/202508042302386.png" alt="image-20220326173721122"></p>
 <ul>
 <li>Not exists</li>
 </ul>
@@ -1748,7 +1748,7 @@ s2<span class="token punctuation">.</span>common_field<span class="token punctua
 
 <span class="token comment">-- 都表关联了，，关联字段怎么会等于 is null</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span></span></code></pre>
 
-<p><img src="/medias/loading.gif" data-original="C:/Users/guo/Desktop/积累/Mysql/高级/image-improve/image-20220627220547464.png" alt="image-20220627220547464"></p>
+<p><img src="/medias/loading.gif" data-original="https://raw.githubusercontent.com/luyaguo/pictures-guo/main/mysql/202508042302280.png" alt="image-20220627220547464"></p>
 <ul>
 <li>Using intersect(…) 、 Using union(…) 和 Using sort_union(…)<ul>
 <li><p>如果执行计划的<code>Extra</code>列出现了<code>Using intersect(...)</code>提示，说明准备使用<code>Intersect</code>索引</p>
@@ -1764,39 +1764,39 @@ s2<span class="token punctuation">.</span>common_field<span class="token punctua
 </ul>
 <pre class="line-numbers language-sql" data-language="sql"><code class="language-sql">mysql<span class="token operator">></span> <span class="token keyword">EXPLAIN</span> <span class="token keyword">SELECT</span> <span class="token operator">*</span> <span class="token keyword">FROM</span> s1 <span class="token keyword">WHERE</span> key1 <span class="token operator">=</span> <span class="token string">'a'</span> <span class="token operator">OR</span> key3 <span class="token operator">=</span> <span class="token string">'a'</span><span class="token punctuation">;</span><span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
 
-<p><img src="/medias/loading.gif" data-original="C:/Users/guo/Desktop/积累/Mysql/高级/image-improve/image-20220627220556148.png" alt="image-20220627220556148"></p>
+<p><img src="/medias/loading.gif" data-original="https://raw.githubusercontent.com/luyaguo/pictures-guo/main/mysql/202508042302826.png" alt="image-20220627220556148"></p>
 <ul>
 <li>Zero limit</li>
 </ul>
 <pre class="line-numbers language-sql" data-language="sql"><code class="language-sql">mysql<span class="token operator">></span> <span class="token keyword">EXPLAIN</span> <span class="token keyword">SELECT</span> <span class="token operator">*</span> <span class="token keyword">FROM</span> s1 <span class="token keyword">LIMIT</span> <span class="token number">0</span><span class="token punctuation">;</span><span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
 
-<p><img src="/medias/loading.gif" data-original="C:/Users/guo/Desktop/积累/Mysql/高级/image-improve/image-20220627220605578.png" alt="image-20220627220605578"></p>
+<p><img src="/medias/loading.gif" data-original="https://raw.githubusercontent.com/luyaguo/pictures-guo/main/mysql/202508042302228.png" alt="image-20220627220605578"></p>
 <ul>
 <li>Using filesort</li>
 </ul>
 <p>有一些情况下对结果集中的记录进行排序是可以使用到索引的，比如下边这个查询:</p>
 <pre class="line-numbers language-sql" data-language="sql"><code class="language-sql">mysql<span class="token operator">></span> <span class="token keyword">EXPLAIN</span> <span class="token keyword">SELECT</span> <span class="token operator">*</span> <span class="token keyword">FROM</span> s1 <span class="token keyword">ORDER</span> <span class="token keyword">BY</span> key1 <span class="token keyword">LIMIT</span> <span class="token number">10</span><span class="token punctuation">;</span><span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
 
-<p><img src="/medias/loading.gif" data-original="C:/Users/guo/Desktop/积累/Mysql/高级/image-improve/image-20220627220613757.png" alt="image-20220627220613757"></p>
+<p><img src="/medias/loading.gif" data-original="https://raw.githubusercontent.com/luyaguo/pictures-guo/main/mysql/202508042302395.png" alt="image-20220627220613757"></p>
 <p>这个查询语句可以利用<code>idx_key1</code>索引直接取出key1列的10条记录，然后再进行回表操作就好了。但是很多情况下排序操作无法使用到索引，只能在内存中(记录较少的时候）或者磁盘中(记录较多的时候）进行排序，MySQL把这种在内存中或者磁盘上进行排序的方式统称为文件排序（英文名: <code>filesort</code>)。如果某个查询需要使用文件排序的方式执行查询，就会在执行计划的Extra列中显示<code>Using filesort</code>提示</p>
 <pre class="line-numbers language-sql" data-language="sql"><code class="language-sql">mysql<span class="token operator">></span> <span class="token keyword">EXPLAIN</span> <span class="token keyword">SELECT</span> <span class="token operator">*</span> <span class="token keyword">FROM</span> s1 <span class="token keyword">ORDER</span> <span class="token keyword">BY</span> common_field <span class="token keyword">LIMIT</span> <span class="token number">10</span><span class="token punctuation">;</span><span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
 
-<p><img src="/medias/loading.gif" data-original="C:/Users/guo/Desktop/积累/Mysql/高级/image-improve/image-20220627220650071.png" alt="image-20220627220650071"></p>
+<p><img src="/medias/loading.gif" data-original="https://raw.githubusercontent.com/luyaguo/pictures-guo/main/mysql/202508042302273.png" alt="image-20220627220650071"></p>
 <ul>
 <li>Using temporary</li>
 </ul>
 <p>在许多查询的执行过程中，MySQL可能会借助临时表来完成一些功能，比如去重、排序之类的，比如我们在执行许多包含<code>DISTINCT</code>、<code>GROUP BY</code>、<code>UNION</code>等子句的查询过程中，如果不能有效利用索引来完成查询，MySQL很有可能寻求通过建立内部的临时表来执行查询。如果查询中使用到了内部的临时表，在执行计划的<code>Extra</code>列将会显示<code>Using temporary</code>提示</p>
 <pre class="line-numbers language-sql" data-language="sql"><code class="language-sql">mysql<span class="token operator">></span> <span class="token keyword">EXPLAIN</span> <span class="token keyword">SELECT</span> <span class="token keyword">DISTINCT</span> common_field <span class="token keyword">FROM</span> s1<span class="token punctuation">;</span><span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
 
-<p><img src="/medias/loading.gif" data-original="C:/Users/guo/Desktop/积累/Mysql/高级/image-improve/image-20220627220658933.png" alt="image-20220627220658933"></p>
+<p><img src="/medias/loading.gif" data-original="https://raw.githubusercontent.com/luyaguo/pictures-guo/main/mysql/202508042301223.png" alt="image-20220627220658933"></p>
 <p>再比如：</p>
 <pre class="line-numbers language-sql" data-language="sql"><code class="language-sql">mysql<span class="token operator">></span> <span class="token keyword">EXPLAIN</span> <span class="token keyword">SELECT</span> common_field<span class="token punctuation">,</span> <span class="token function">COUNT</span><span class="token punctuation">(</span><span class="token operator">*</span><span class="token punctuation">)</span> <span class="token keyword">AS</span> amount <span class="token keyword">FROM</span> s1 <span class="token keyword">GROUP</span> <span class="token keyword">BY</span> common_field<span class="token punctuation">;</span><span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
 
-<p><img src="/medias/loading.gif" data-original="C:/Users/guo/Desktop/积累/Mysql/高级/image-improve/image-20220627220707387.png" alt="image-20220627220707387"></p>
+<p><img src="/medias/loading.gif" data-original="https://raw.githubusercontent.com/luyaguo/pictures-guo/main/mysql/202508042301130.png" alt="image-20220627220707387"></p>
 <pre class="line-numbers language-sql" data-language="sql"><code class="language-sql"><span class="token comment">-- 执行计划中出现`Using temporary`并不是一个好的征兆，因为建立与维护临时表要付出很大成本的，所以我们`最好能使用索引来替代掉使用临时表`。比如：扫描指定的索引idx_key1即可</span>
 mysql<span class="token operator">></span> <span class="token keyword">EXPLAIN</span> <span class="token keyword">SELECT</span> key1<span class="token punctuation">,</span> <span class="token function">COUNT</span><span class="token punctuation">(</span><span class="token operator">*</span><span class="token punctuation">)</span> <span class="token keyword">AS</span> amount <span class="token keyword">FROM</span> s1 <span class="token keyword">GROUP</span> <span class="token keyword">BY</span> key1<span class="token punctuation">;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre>
 
-<p><img src="/medias/loading.gif" data-original="C:/Users/guo/Desktop/积累/Mysql/高级/image-improve/image-20220627220715485.png" alt="image-20220627220715485"></p>
+<p><img src="/medias/loading.gif" data-original="https://raw.githubusercontent.com/luyaguo/pictures-guo/main/mysql/202508042301426.png" alt="image-20220627220715485"></p>
 <p>从 <strong>Extra</strong> 的 <strong>Using index</strong> 的提示里我们可以看出，上述查询只需要扫描 <strong>idx_key1</strong> 索引就可以搞定了，不再需要临时表了。</p>
 <ul>
 <li>其它</li>
@@ -1811,7 +1811,7 @@ mysql<span class="token operator">></span> <span class="token keyword">EXPLAIN</
 <h4 id="1-传统格式"><a href="#1-传统格式" class="headerlink" title="1. 传统格式"></a>1. 传统格式</h4><p>传统格式简单明了，输出是一个表格形式，概要说明查询计划。</p>
 <pre class="line-numbers language-sql" data-language="sql"><code class="language-sql">mysql<span class="token operator">></span> <span class="token keyword">EXPLAIN</span> <span class="token keyword">SELECT</span> s1<span class="token punctuation">.</span>key1<span class="token punctuation">,</span> s2<span class="token punctuation">.</span>key1 <span class="token keyword">FROM</span> s1 <span class="token keyword">LEFT</span> <span class="token keyword">JOIN</span> s2 <span class="token keyword">ON</span> s1<span class="token punctuation">.</span>key1 <span class="token operator">=</span> s2<span class="token punctuation">.</span>key1 <span class="token keyword">WHERE</span> s2<span class="token punctuation">.</span>common_field <span class="token operator">IS</span> <span class="token operator">NOT</span> <span class="token boolean">NULL</span><span class="token punctuation">;</span><span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
 
-<p><img src="/medias/loading.gif" data-original="C:/Users/guo/Desktop/积累/Mysql/高级/image-improve/image-20220627221646714.png" alt="image-20220627221646714"></p>
+<p><img src="/medias/loading.gif" data-original="https://raw.githubusercontent.com/luyaguo/pictures-guo/main/mysql/202508042301362.png" alt="image-20220627221646714"></p>
 <h4 id="2-JSON格式"><a href="#2-JSON格式" class="headerlink" title="2. JSON格式"></a>2. JSON格式</h4><p>第1种格式中介绍的<code>EXPLAIN</code>语句输出中缺少了一个衡量执行计划好坏的重要属性——<code>成本</code>。而JSON格式是四种格式里面输出信息<code>最详尽的格式</code>，里面包含了执行的成本信息。</p>
 <ul>
 <li>JSON格式：在EXPLAIN单词和真正的查询语句中间加上<code>FORMAT=JSON</code>。用于查看执行成本<code>cost_info</code></li>
@@ -1821,7 +1821,7 @@ mysql<span class="token operator">></span> <span class="token keyword">EXPLAIN</
 <ul>
 <li>EXPLAIN的Column与JSON的对应关系:(来源于MySQL 5.7文档)</li>
 </ul>
-<p><img src="/medias/loading.gif" data-original="C:/Users/guo/Desktop/积累/Mysql/高级/image-improve/image-20220326184629857.png" alt="image-20220326184629857"></p>
+<p><img src="/medias/loading.gif" data-original="https://raw.githubusercontent.com/luyaguo/pictures-guo/main/mysql/202508042300050.png" alt="image-20220326184629857"></p>
 <p>这样我们就可以得到一个json格式的执行计划，里面包含该计划花费的成本，比如这样:</p>
 <pre class="line-numbers language-mysql" data-language="mysql"><code class="language-mysql">mysql&gt; EXPLAIN FORMAT&#x3D;JSON SELECT * FROM s1 INNER JOIN s2 ON s1.key1 &#x3D; s2.key2 WHERE s1.common_field &#x3D; &#39;a&#39; \G
 *************************** 1. row ***************************
@@ -1905,7 +1905,7 @@ EXPLAIN: &#123;
 
 
 
-<p><img src="/medias/loading.gif" data-original="C:/Users/guo/Desktop/积累/Mysql/高级/image-improve/image-20220326185603021.png" alt="image-20220326185603021"></p>
+<p><img src="/medias/loading.gif" data-original="https://raw.githubusercontent.com/luyaguo/pictures-guo/main/mysql/202508042300987.png" alt="image-20220326185603021"></p>
 <p>我们使用 # 后边跟随注释的形式为大家解释了 EXPLAIN FORMAT&#x3D;JSON 语句的输出内容，但是大家可能有疑问 “cost_info” 里边的成本看着怪怪的，它们是怎么计算出来的？先看 s1 表的 “cost_info” 部 分：</p>
 <pre class="line-numbers language-json" data-language="json"><code class="language-json"><span class="token property">"cost_info"</span><span class="token operator">:</span> <span class="token punctuation">&#123;</span>
   <span class="token property">"read_cost"</span><span class="token operator">:</span> <span class="token string">"1840.84"</span><span class="token punctuation">,</span>
@@ -1958,12 +1958,12 @@ condition: <span class="token punctuation">(</span>cast<span class="token punctu
 
 
 <h4 id="4-可视化输出"><a href="#4-可视化输出" class="headerlink" title="4. 可视化输出"></a>4. 可视化输出</h4><p>​	可视化输出，可以通过MySQL Workbench可视化查看MySQL的执行计划。通过点击Workbench的放大镜图标，即可生成可视化的查询计划。 </p>
-<p><img src="/medias/loading.gif" data-original="C:/Users/guo/Desktop/积累/Mysql/高级/image-improve/image-20220326190931718.png" alt="image-20220326190931718"></p>
-<p><img src="/medias/loading.gif" data-original="C:/Users/guo/Desktop/积累/Mysql/高级/image-improve/image-20220326191114795.png" alt="image-20220326191114795"></p>
+<p><img src="/medias/loading.gif" data-original="https://raw.githubusercontent.com/luyaguo/pictures-guo/main/mysql/202508042300698.png" alt="image-20220326190931718"></p>
+<p><img src="/medias/loading.gif" data-original="https://raw.githubusercontent.com/luyaguo/pictures-guo/main/mysql/202508042300407.png" alt="image-20220326191114795"></p>
 <p>​	上图按从左到右的连接顺序显示表。红色框表示 <strong>全表扫描</strong> ，而绿色框表示使用 <strong>索引查找</strong> 。对于每个表， 显示使用的索引。还要注意的是，每个表格的框上方是每个表访问所发现的行数的估计值以及访问该表 的成本。</p>
 <h3 id="5-2-SHOW-WARNINGS的使用"><a href="#5-2-SHOW-WARNINGS的使用" class="headerlink" title="5.2 SHOW WARNINGS的使用"></a><strong>5.2 SHOW WARNINGS的使用</strong></h3><pre class="line-numbers language-mysql" data-language="mysql"><code class="language-mysql">mysql&gt; EXPLAIN SELECT s1.key1, s2.key1 FROM s1 LEFT JOIN s2 ON s1.key1 &#x3D; s2.key1 WHERE s2.common_field IS NOT NULL;<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
 
-<p><img src="/medias/loading.gif" data-original="C:/Users/guo/Desktop/积累/Mysql/高级/image-improve/image-20220627222050982.png" alt="image-20220627222050982"></p>
+<p><img src="/medias/loading.gif" data-original="https://raw.githubusercontent.com/luyaguo/pictures-guo/main/mysql/202508042259911.png" alt="image-20220627222050982"></p>
 <p>使用完explain 后紧接着使用 <code>SHOW WARNINGS \G</code></p>
 <pre class="line-numbers language-sql" data-language="sql"><code class="language-sql">mysql<span class="token operator">></span> <span class="token keyword">SHOW</span> <span class="token keyword">WARNINGS</span>\G
 <span class="token operator">*</span><span class="token operator">*</span><span class="token operator">*</span><span class="token operator">*</span><span class="token operator">*</span><span class="token operator">*</span><span class="token operator">*</span><span class="token operator">*</span><span class="token operator">*</span><span class="token operator">*</span><span class="token operator">*</span><span class="token operator">*</span><span class="token operator">*</span><span class="token operator">*</span><span class="token operator">*</span><span class="token operator">*</span><span class="token operator">*</span><span class="token operator">*</span><span class="token operator">*</span><span class="token operator">*</span><span class="token operator">*</span><span class="token operator">*</span><span class="token operator">*</span><span class="token operator">*</span><span class="token operator">*</span><span class="token operator">*</span><span class="token operator">*</span> <span class="token number">1.</span> <span class="token keyword">row</span> <span class="token operator">*</span><span class="token operator">*</span><span class="token operator">*</span><span class="token operator">*</span><span class="token operator">*</span><span class="token operator">*</span><span class="token operator">*</span><span class="token operator">*</span><span class="token operator">*</span><span class="token operator">*</span><span class="token operator">*</span><span class="token operator">*</span><span class="token operator">*</span><span class="token operator">*</span><span class="token operator">*</span><span class="token operator">*</span><span class="token operator">*</span><span class="token operator">*</span><span class="token operator">*</span><span class="token operator">*</span><span class="token operator">*</span><span class="token operator">*</span><span class="token operator">*</span><span class="token operator">*</span><span class="token operator">*</span><span class="token operator">*</span><span class="token operator">*</span>
@@ -2273,7 +2273,7 @@ select * from sys.innodb_lock_waits;<span aria-hidden="true" class="line-numbers
 <p>风险提示:</p>
 <p>通过sys库去查询时，MySQL会消耗大量资源去收集相关信息，严重的可能会导致业务请求被阻塞，从而引起故障。建议生产上<code>不要频繁</code>的去查询sys或者performance_schema、information_schema来完成监控、巡检等工作。</p>
 </blockquote>
-<h1 id=""><a href="#" class="headerlink" title=""></a></h1>
+
                 
             </div>
             <hr/>
