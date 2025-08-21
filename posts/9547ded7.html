@@ -1,0 +1,2129 @@
+<!DOCTYPE HTML>
+<html lang="en">
+
+
+<head>
+    <meta charset="utf-8">
+    <meta name="keywords" content="六、生成器模式, 向阳">
+    <meta name="description" content="六、生成器模式亦称： 建造者模式、Builder
+
+一、意图生成器模式是一种创建型设计模式， 使你能够分步骤创建复杂对象。 该模式允许你使用相同的创建代码生成不同类型和形式的对象。
+
+二、问题假设有这样一个复杂对象， 在对其进行构造时需要对">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <meta name="renderer" content="webkit|ie-stand|ie-comp">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="format-detection" content="telephone=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="referrer" content="no-referrer-when-downgrade">
+    <!-- Global site tag (gtag.js) - Google Analytics -->
+
+
+    <title>六、生成器模式 | 向阳</title>
+    <link rel="icon" type="image/png" href="/favicon.png">
+    
+
+
+    <!-- bg-cover style     -->
+
+
+
+<link rel="stylesheet" type="text/css" href="/libs/awesome/css/all.min.css">
+<link rel="stylesheet" type="text/css" href="/libs/materialize/materialize.min.css">
+<link rel="stylesheet" type="text/css" href="/libs/aos/aos.css">
+<link rel="stylesheet" type="text/css" href="/libs/animate/animate.min.css">
+<link rel="stylesheet" type="text/css" href="/libs/lightGallery/css/lightgallery.min.css">
+<link rel="stylesheet" type="text/css" href="/css/matery.css">
+<link rel="stylesheet" type="text/css" href="/css/my.css">
+<link rel="stylesheet" type="text/css" href="/css/dark.css" media="none" onload="if(media!='all')media='all'">
+
+
+
+
+    <link rel="stylesheet" href="/libs/tocbot/tocbot.css">
+    <link rel="stylesheet" href="/css/post.css">
+
+
+
+
+    
+
+
+
+    <script src="/libs/jquery/jquery-3.6.0.min.js"></script>
+
+<meta name="generator" content="Hexo 7.2.0"></head>
+
+<!-- 预加载动画 -->
+
+    <style type="text/css" lang="css">
+    #loading-container{
+        position: fixed;
+        top: 0;
+        left: 0;
+        min-height: 100vh;
+        width: 100vw;
+        z-index: 9999;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        background: #2c3561;
+        text-align: center;
+        /* loader页面消失采用渐隐的方式*/
+        -webkit-transition: opacity 1s ease;
+        -moz-transition: opacity 1s ease;
+        -o-transition: opacity 1s ease;
+        transition: opacity 1s ease;
+    }
+    .loading-image{
+        width: 120px;
+        height: 50px;
+        transform: translate(-50%);
+    }
+
+    .loading-image div:nth-child(2) {
+        -webkit-animation: pacman-balls 1s linear 0s infinite;
+        animation: pacman-balls 1s linear 0s infinite
+    }
+
+    .loading-image div:nth-child(3) {
+        -webkit-animation: pacman-balls 1s linear .33s infinite;
+        animation: pacman-balls 1s linear .33s infinite
+    }
+
+    .loading-image div:nth-child(4) {
+        -webkit-animation: pacman-balls 1s linear .66s infinite;
+        animation: pacman-balls 1s linear .66s infinite
+    }
+
+    .loading-image div:nth-child(5) {
+        -webkit-animation: pacman-balls 1s linear .99s infinite;
+        animation: pacman-balls 1s linear .99s infinite
+    }
+
+    .loading-image div:first-of-type {
+        width: 0;
+        height: 0;
+        border: 25px solid #49b1f5;
+        border-right-color: transparent;
+        border-radius: 25px;
+        -webkit-animation: rotate_pacman_half_up .5s 0s infinite;
+        animation: rotate_pacman_half_up .5s 0s infinite;
+    }
+    .loading-image div:nth-child(2) {
+        width: 0;
+        height: 0;
+        border: 25px solid #49b1f5;
+        border-right-color: transparent;
+        border-radius: 25px;
+        -webkit-animation: rotate_pacman_half_down .5s 0s infinite;
+        animation: rotate_pacman_half_down .5s 0s infinite;
+        margin-top: -50px;
+    }
+    @-webkit-keyframes rotate_pacman_half_up {0% {transform: rotate(270deg)}50% {transform: rotate(1turn)}to {transform: rotate(270deg)}}
+
+    @keyframes rotate_pacman_half_up {0% {transform: rotate(270deg)}50% {transform: rotate(1turn)}to {transform: rotate(270deg)}}
+
+    @-webkit-keyframes rotate_pacman_half_down {0% {transform: rotate(90deg)}50% {transform: rotate(0deg)}to {transform: rotate(90deg)}}
+
+    @keyframes rotate_pacman_half_down {0% {transform: rotate(90deg)}50% {transform: rotate(0deg)}to {transform: rotate(90deg)}}
+
+    @-webkit-keyframes pacman-balls {75% {opacity: .7}to {transform: translate(-100px, -6.25px)}}
+
+    @keyframes pacman-balls {75% {opacity: .7}to {transform: translate(-100px, -6.25px)}}
+
+
+    .loading-image div:nth-child(3),
+    .loading-image div:nth-child(4),
+    .loading-image div:nth-child(5),
+    .loading-image div:nth-child(6){
+        background-color: #49b1f5;
+        width: 15px;
+        height: 15px;
+        border-radius: 100%;
+        margin: 2px;
+        width: 10px;
+        height: 10px;
+        position: absolute;
+        transform: translateY(-6.25px);
+        top: 25px;
+        left: 100px;
+    }
+    .loading-text{
+        margin-bottom: 20vh;
+        text-align: center;
+        color: #f8c471;
+        font-size: 2rem;
+        box-sizing: border-box;
+        padding: 0 10px;
+        text-shadow: 0 2px 10px rgba(0,0,0,0.2);
+    }
+    @media only screen and (max-width: 500px) {
+        .loading-text{
+            font-size: 1.5rem;
+        }
+    }
+    .fadeout {
+        opacity: 0;
+        filter: alpha(opacity=0);
+    }
+    /* logo出现动画 */
+    @-webkit-keyframes fadeInDown{0%{opacity:0;-webkit-transform:translate3d(0,-100%,0);transform:translate3d(0,-100%,0)}100%{opacity:1;-webkit-transform:none;transform:none}}
+    @keyframes fadeInDown{0%{opacity:0;-webkit-transform:translate3d(0,-100%,0);}}
+</style>
+<script>
+    (function () {
+        const loaded = function(){
+            setTimeout(function(){
+                const loader = document.getElementById("loading-container");
+                loader.className="fadeout" ;//使用渐隐的方法淡出loading page
+                // document.getElementById("body-wrap").style.display="flex";
+                setTimeout(function(){
+                    loader.style.display="none";
+                },2500);
+            },800);//强制显示loading page 0.8s
+        };
+        loaded();
+    })()
+</script>
+
+<body>
+    <!--动态背景-->
+    <div id="bg"><canvas></canvas><canvas></canvas><canvas></canvas></div>
+    <script src="/js/canva_moving_effect.js"></script>
+
+    
+        <div id="loading-container">
+            <p class="loading-text">客官坐会儿，请稍等片刻. . . </p>
+            <div class="loading-image">
+                <div></div>
+                <div></div>
+                <div></div>
+                <div></div>
+                <div></div>
+            </div>
+        </div>
+    
+
+    <header class="navbar-fixed">
+    <nav id="headNav" class="bg-color nav-transparent">
+        <div id="navContainer" class="nav-wrapper">
+            <div class="brand-logo">
+                <a href="/" class="waves-effect waves-light">
+                    <div>&nbsp;
+                        
+                            <img src="/medias/logo2.png" class="logo-img" alt="LOGO">
+                        
+                        <span class="logo-span">向阳</span>
+                    </div>
+                </a>
+            </div>
+            
+
+<a href="#" data-target="mobile-nav" class="sidenav-trigger button-collapse"><i class="fas fa-bars"></i></a>
+<ul class="right nav-menu">
+  
+  <li class="hide-on-med-and-down nav-item">
+    
+    <a href="/" class="waves-effect waves-light">
+      
+      <i class="fas fa-home" style="zoom: 0.6;"></i>
+      
+      <span>Index</span>
+    </a>
+    
+  </li>
+  
+  <li class="hide-on-med-and-down nav-item">
+    
+    <a href="/tags" class="waves-effect waves-light">
+      
+      <i class="fas fa-tags" style="zoom: 0.6;"></i>
+      
+      <span>Tags</span>
+    </a>
+    
+  </li>
+  
+  <li class="hide-on-med-and-down nav-item">
+    
+    <a href="/categories" class="waves-effect waves-light">
+      
+      <i class="fas fa-bookmark" style="zoom: 0.6;"></i>
+      
+      <span>Categories</span>
+    </a>
+    
+  </li>
+  
+  <li class="hide-on-med-and-down nav-item">
+    
+    <a href="/archives" class="waves-effect waves-light">
+      
+      <i class="fas fa-archive" style="zoom: 0.6;"></i>
+      
+      <span>Archives</span>
+    </a>
+    
+  </li>
+  
+  <li class="hide-on-med-and-down nav-item">
+    
+    <a href="/about" class="waves-effect waves-light">
+      
+      <i class="fas fa-user-circle" style="zoom: 0.6;"></i>
+      
+      <span>About</span>
+    </a>
+    
+  </li>
+  
+  <li class="hide-on-med-and-down nav-item">
+    
+    <a href="/contact" class="waves-effect waves-light">
+      
+      <i class="fas fa-comments" style="zoom: 0.6;"></i>
+      
+      <span>Contact</span>
+    </a>
+    
+  </li>
+  
+  <li class="hide-on-med-and-down nav-item">
+    
+    <a href="/friends" class="waves-effect waves-light">
+      
+      <i class="fas fa-address-book" style="zoom: 0.6;"></i>
+      
+      <span>Friends</span>
+    </a>
+    
+  </li>
+  
+  <li>
+    <a href="#searchModal" class="modal-trigger waves-effect waves-light">
+      <i id="searchIcon" class="fas fa-search" title="Search" style="zoom: 0.95;"></i>
+    </a>
+  </li>
+
+  <!-- 全屏 -->
+<!--   <li id="fullscreen_li" class="fullscreen"> -->
+<!--     <a href="javascript:void(0);" class="modal-trigger waves-effect waves-light"> -->
+<!--       <i id="fullscreen" class="fas fa-expand-arrows-alt" title="全屏" style="zoom: 0.85;"></i> -->
+<!--     </a> -->
+<!--   </li> -->
+
+  <!-- 主题背景 -->
+  <li>
+    <a href="javascript:;" class="modal-trigger waves-effect waves-light" onclick="switchNightMode()" title="深色/浅色模式" >
+      <i id="sum-moon-icon" class="fas fa-sun" style="zoom: 0.85;"></i>
+    </a>
+  </li>
+  &nbsp;
+</ul>
+
+
+<div id="mobile-nav" class="side-nav sidenav">
+
+    <div class="mobile-head bg-color">
+        
+        <img src="/medias/logo2.png" class="logo-img circle responsive-img">
+        
+        <div class="logo-name">向阳</div>
+        <div class="logo-desc">
+            
+            Never give up and never give in...
+            
+        </div>
+    </div>
+
+    <ul class="menu-list mobile-menu-list">
+        
+        <li class="m-nav-item">
+	  
+		<a href="/" class="waves-effect waves-light">
+			
+			    <i class="fa-fw fas fa-home"></i>
+			
+			Index
+		</a>
+          
+        </li>
+        
+        <li class="m-nav-item">
+	  
+		<a href="/tags" class="waves-effect waves-light">
+			
+			    <i class="fa-fw fas fa-tags"></i>
+			
+			Tags
+		</a>
+          
+        </li>
+        
+        <li class="m-nav-item">
+	  
+		<a href="/categories" class="waves-effect waves-light">
+			
+			    <i class="fa-fw fas fa-bookmark"></i>
+			
+			Categories
+		</a>
+          
+        </li>
+        
+        <li class="m-nav-item">
+	  
+		<a href="/archives" class="waves-effect waves-light">
+			
+			    <i class="fa-fw fas fa-archive"></i>
+			
+			Archives
+		</a>
+          
+        </li>
+        
+        <li class="m-nav-item">
+	  
+		<a href="/about" class="waves-effect waves-light">
+			
+			    <i class="fa-fw fas fa-user-circle"></i>
+			
+			About
+		</a>
+          
+        </li>
+        
+        <li class="m-nav-item">
+	  
+		<a href="/contact" class="waves-effect waves-light">
+			
+			    <i class="fa-fw fas fa-comments"></i>
+			
+			Contact
+		</a>
+          
+        </li>
+        
+        <li class="m-nav-item">
+	  
+		<a href="/friends" class="waves-effect waves-light">
+			
+			    <i class="fa-fw fas fa-address-book"></i>
+			
+			Friends
+		</a>
+          
+        </li>
+        
+        
+    </ul>
+</div>
+
+
+        </div>
+
+        
+    </nav>
+
+</header>
+
+    
+
+
+
+<div class="bg-cover pd-header post-cover" style="background-image: url('/medias/featureimages/15.jpg')">
+    <div class="container" style="right: 0px;left: 0px;">
+        <div class="row">
+            <div class="col s12 m12 l12">
+                <div class="brand">
+                    <h1 class="description center-align post-title">六、生成器模式</h1>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+<main class="post-container content">
+
+    
+    <div class="row">
+    <div id="main-content" class="col s12 m12 l9">
+        <!-- 文章内容详情 -->
+<div id="artDetail">
+    <div class="card">
+        <div class="card-content article-info">
+            <div class="row tag-cate">
+                <div class="col s7">
+                    
+                    <div class="article-tag">
+                        
+                            <a href="/tags/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/">
+                                <span class="chip bg-color">设计模式</span>
+                            </a>
+                        
+                    </div>
+                    
+                </div>
+                <div class="col s5 right-align">
+                    
+                    <div class="post-cate">
+                        <i class="fas fa-bookmark fa-fw icon-category"></i>
+                        
+                            <a href="/categories/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/" class="post-category">
+                                设计模式
+                            </a>
+                        
+                    </div>
+                    
+                </div>
+            </div>
+
+            <div class="post-info">
+                
+                <div class="post-date info-break-policy">
+                    <i class="far fa-calendar-minus fa-fw"></i>Publish Date:&nbsp;&nbsp;
+                    2024-06-25
+                </div>
+                
+
+                
+
+                
+                <div class="info-break-policy">
+                    <i class="far fa-file-word fa-fw"></i>Word Count:&nbsp;&nbsp;
+                    5.9k
+                </div>
+                
+
+                
+                <div class="info-break-policy">
+                    <i class="far fa-clock fa-fw"></i>Read Times:&nbsp;&nbsp;
+                    23 Min
+                </div>
+                
+
+                
+                    <div id="busuanzi_container_page_pv" class="info-break-policy">
+                        <i class="far fa-eye fa-fw"></i>Read Count:&nbsp;&nbsp;
+                        <span id="busuanzi_value_page_pv"></span>
+                    </div>
+				
+            </div>
+        </div>
+        <hr class="clearfix">
+
+        
+        <!-- 是否加载使用自带的 prismjs. -->
+        <link rel="stylesheet" href="/libs/prism/prism.min.css">
+        
+
+        
+        <!-- 代码块折行 -->
+        <style type="text/css">
+            code[class*="language-"], pre[class*="language-"] { white-space: pre-wrap !important; }
+        </style>
+        
+
+        <div class="card-content article-card-content">
+            <div id="articleContent">
+                <h1 id="六、生成器模式"><a href="#六、生成器模式" class="headerlink" title="六、生成器模式"></a>六、生成器模式</h1><p>亦称： 建造者模式、Builder</p>
+<p><img src="/medias/loading.gif" data-original="https://raw.githubusercontent.com/luyaguo/pictures-guo/main/design-patterns/202408272138053.png" alt="image-20221107114816711"></p>
+<h2 id="一、意图"><a href="#一、意图" class="headerlink" title="一、意图"></a>一、意图</h2><p><strong>生成器模式</strong>是一种创建型设计模式， 使你能够分步骤创建复杂对象。 该模式允许你使用相同的创建代码生成不同类型和形式的对象。</p>
+<p><img src="/medias/loading.gif" data-original="https://raw.githubusercontent.com/luyaguo/pictures-guo/main/design-patterns/202408272138902.png" alt="生成器设计模式"></p>
+<h2 id="二、问题"><a href="#二、问题" class="headerlink" title="二、问题"></a>二、问题</h2><p>假设有这样一个复杂对象， 在对其进行构造时需要对诸多成员变量和嵌套对象进行繁复的初始化工作。 这些初始化代码通常深藏于一个包含众多参数且让人基本看不懂的构造函数中； 甚至还有更糟糕的情况， 那就是这些代码散落在客户端代码的多个位置。</p>
+<p><img src="/medias/loading.gif" data-original="https://raw.githubusercontent.com/luyaguo/pictures-guo/main/design-patterns/202408272138248.png" alt="大量子类会带来新的问题"></p>
+<p>如果为每种可能的对象都创建一个子类， 这可能会导致程序变得过于复杂。</p>
+<p>例如， 我们来思考如何创建一个 <code>房屋</code>House对象。 建造一栋简单的房屋， 首先你需要建造四面墙和地板， 安装房门和一套窗户， 然后再建造一个屋顶。 但是如果你想要一栋更宽敞更明亮的房屋， 还要有院子和其他设施 （例如暖气、 排水和供电设备）， 那又该怎么办呢？</p>
+<p>最简单的方法是扩展 <code>房屋</code>基类， 然后创建一系列涵盖所有参数组合的子类。 但最终你将面对相当数量的子类。 任何新增的参数 （例如门廊类型） 都会让这个层次结构更加复杂。</p>
+<p>另一种方法则无需生成子类。 你可以在 <code>房屋</code>基类中创建一个包括所有可能参数的超级构造函数， 并用它来控制房屋对象。 这种方法确实可以避免生成子类， 但它却会造成另外一个问题。</p>
+<p><img src="/medias/loading.gif" data-original="https://raw.githubusercontent.com/luyaguo/pictures-guo/main/design-patterns/202408272138316.png" alt="可伸缩的构造函数"></p>
+<p>拥有大量输入参数的构造函数也有缺陷： 这些参数也不是每次都要全部用上的。</p>
+<p>通常情况下， 绝大部分的参数都没有使用， 这使得<a target="_blank" rel="noopener" href="https://refactoringguru.cn/smells/long-parameter-list">对于构造函数的调用十分不简洁</a>。 例如， 只有很少的房子有游泳池， 因此与游泳池相关的参数十之八九是毫无用处的。</p>
+<h2 id="三、解决方案"><a href="#三、解决方案" class="headerlink" title="三、解决方案"></a>三、解决方案</h2><p>生成器模式建议将对象构造代码从产品类中抽取出来， 并将其放在一个名为 <strong>生成器</strong> 的独立对象中。</p>
+<p><img src="/medias/loading.gif" data-original="https://raw.githubusercontent.com/luyaguo/pictures-guo/main/design-patterns/202408272138936.png" alt="应用生成器模式"></p>
+<p><strong>生成器模式让你能够分步骤创建复杂对象。 生成器不允许其他对象访问正在创建中的产品。</strong></p>
+<p><strong>该模式会将对象构造过程划分为一组步骤</strong>， 比如 <code>build­Walls</code>创建墙壁和 <code>build­Door</code>创建房门创建房门等。 每次创建对象时， 你都需要通过生成器对象执行一系列步骤。 重点在于你无需调用所有步骤， 而只需调用创建特定对象配置所需的那些步骤即可。</p>
+<p>当你需要创建不同形式的产品时， 其中的一些构造步骤可能需要不同的实现。 例如， 木屋的房门可能需要使用木头制造， 而城堡的房门则必须使用石头制造。</p>
+<p>在这种情况下， <strong>你可以创建多个不同的生成器， 用不同方式实现一组相同的创建步骤。 然后你就可以在创建过程中使用这些生成器 （例如按顺序调用多个构造步骤） 来生成不同类型的对象。</strong></p>
+<p><img src="/medias/loading.gif" data-original="https://raw.githubusercontent.com/luyaguo/pictures-guo/main/design-patterns/202408272138281.png" alt="img"></p>
+<p><strong>不同生成器以不同方式执行相同的任务。</strong></p>
+<p>例如， 假设第一个建造者使用木头和玻璃制造房屋， 第二个建造者使用石头和钢铁， 而第三个建造者使用黄金和钻石。 在调用同一组步骤后， 第一个建造者会给你一栋普通房屋， 第二个会给你一座小城堡， 而第三个则会给你一座宫殿。 但是， 只有在调用构造步骤的客户端代码可以通过通用接口与建造者进行交互时， 这样的调用才能返回需要的房屋。</p>
+<h4 id="主管"><a href="#主管" class="headerlink" title="主管"></a>主管</h4><p>你可以进一步将用于创建产品的一系列生成器步骤调用抽取成为单独的 <strong>主管</strong> 类。 <strong>主管类可定义创建步骤的执行顺序， 而生成器则提供这些步骤的实现。</strong></p>
+<p><img src="/medias/loading.gif" data-original="https://raw.githubusercontent.com/luyaguo/pictures-guo/main/design-patterns/202408272138380.png" alt="img"></p>
+<p><strong>主管知道需要哪些创建步骤才能获得可正常使用的产品。</strong></p>
+<p>严格来说， 你的程序中并不一定需要主管类。 客户端代码可直接以特定顺序调用创建步骤。 不过， 主管类中非常适合放入各种例行构造流程， 以便在程序中反复使用。</p>
+<p>此外， 对于客户端代码来说， 主管类完全隐藏了产品构造细节。 客户端只需要将一个生成器与主管类关联， 然后使用主管类来构造产品， 就能从生成器处获得构造结果了。</p>
+<h2 id="四、结构"><a href="#四、结构" class="headerlink" title="四、结构"></a>四、结构</h2><p><img src="/medias/loading.gif" data-original="https://raw.githubusercontent.com/luyaguo/pictures-guo/main/design-patterns/202408272139424.png" alt="生成器设计模式结构"></p>
+<ol>
+<li><strong>生成器</strong> （Builder） 接口声明在所有类型生成器中通用的产品构造步骤。</li>
+<li><strong>具体生成器</strong> （Con­crete Builders） 提供构造过程的不同实现。 具体生成器也可以构造不遵循通用接口的产品。</li>
+<li><strong>产品</strong> （Prod­ucts） 是最终生成的对象。 由不同生成器构造的产品无需属于同一类层次结构或接口。</li>
+<li><strong>主管</strong> （Direc­tor） 类定义调用构造步骤的顺序， 这样你就可以创建和复用特定的产品配置。</li>
+<li><strong>客户端</strong> （Client） 必须将某个生成器对象与主管类关联。 <strong>一般情况下， 你只需通过主管类构造函数的参数进行一次性关联即可。 此后主管类就能使用生成器对象完成后续所有的构造任务。</strong> 但在客户端将生成器对象传递给主管类制造方法时还有另一种方式。 在这种情况下， 你在使用主管类生产产品时每次都可以使用不同的生成器。</li>
+</ol>
+<h2 id="五、伪代码"><a href="#五、伪代码" class="headerlink" title="五、伪代码"></a>五、伪代码</h2><p>下面关于<strong>生成器</strong>模式的例子演示了你可以如何复用相同的对象构造代码来生成不同类型的产品——例如汽车 （Car）——及其相应的使用手册 （Man­u­al）。</p>
+<p><img src="/medias/loading.gif" data-original="https://raw.githubusercontent.com/luyaguo/pictures-guo/main/design-patterns/202408272139095.png" alt="生成器模式结构示例"></p>
+<p>分步骤制造汽车并制作对应型号用户使用手册的示例</p>
+<p>汽车是一个复杂对象， 有数百种不同的制造方法。 我们没有在 <code>汽车</code>类中塞入一个巨型构造函数， 而是将汽车组装代码抽取到单独的汽车生成器类中。 该类中有一组方法可用来配置汽车的各种部件。</p>
+<p>如果客户端代码需要组装一辆与众不同、 精心调教的汽车， 它可以直接调用生成器。 或者， 客户端可以将组装工作委托给主管类， 因为主管类知道如何使用生成器制造最受欢迎的几种型号汽车。</p>
+<p>你或许会感到吃惊， 但确实每辆汽车都需要一本使用手册 （说真的， 谁会去读它们呢？）。 使用手册会介绍汽车的每一项功能， 因此不同型号的汽车， 其使用手册内容也不一样。 因此， 你可以复用现有流程来制造实际的汽车及其对应的手册。 <strong>当然， 编写手册和制造汽车不是一回事， 所以我们需要另外一个生成器对象来专门编写使用手册。</strong> 该类与其制造汽车的兄弟类都实现了相同的制造方法， 但是其功能不是制造汽车部件， 而是描述每个部件。 将这些生成器传递给相同的主管对象， 我们就能够生成一辆汽车或是一本使用手册了。</p>
+<p>最后一个部分是获取结果对象。 尽管金属汽车和纸质手册存在关联， 但它们却是完全不同的东西。 我们无法在主管类和具体产品类不发生耦合的情况下， 在主管类中提供获取结果对象的方法。 因此， 我们只能通过负责制造过程的生成器来获取结果对象。</p>
+<pre class="line-numbers language-java" data-language="java"><code class="language-java"><span class="token comment">// 只有当产品较为复杂且需要详细配置时，使用生成器模式才有意义。下面的两个</span>
+<span class="token comment">// 产品尽管没有同样的接口，但却相互关联。</span>
+<span class="token keyword">class</span> <span class="token class-name">Car</span> is
+    <span class="token comment">// 一辆汽车可能配备有 GPS 设备、行车电脑和几个座位。不同型号的汽车（</span>
+    <span class="token comment">// 运动型轿车、SUV 和敞篷车）可能会安装或启用不同的功能。</span>
+
+<span class="token keyword">class</span> <span class="token class-name">Manual</span> is
+    <span class="token comment">// 用户使用手册应该根据汽车配置进行编制，并介绍汽车的所有功能。</span>
+
+
+<span class="token comment">// 生成器接口声明了创建产品对象不同部件的方法。</span>
+<span class="token keyword">interface</span> <span class="token class-name">Builder</span> is
+    method <span class="token function">reset</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
+    method <span class="token function">setSeats</span><span class="token punctuation">(</span>……<span class="token punctuation">)</span>
+    method <span class="token function">setEngine</span><span class="token punctuation">(</span>……<span class="token punctuation">)</span>
+    method <span class="token function">setTripComputer</span><span class="token punctuation">(</span>……<span class="token punctuation">)</span>
+    method <span class="token function">setGPS</span><span class="token punctuation">(</span>……<span class="token punctuation">)</span>
+
+<span class="token comment">// 具体生成器类将遵循生成器接口并提供生成步骤的具体实现。你的程序中可能会</span>
+<span class="token comment">// 有多个以不同方式实现的生成器变体。</span>
+<span class="token keyword">class</span> <span class="token class-name">CarBuilder</span> <span class="token keyword">implements</span> <span class="token class-name">Builder</span> is
+    <span class="token keyword">private</span> field car<span class="token operator">:</span><span class="token class-name">Car</span>
+
+    <span class="token comment">// 一个新的生成器实例必须包含一个在后续组装过程中使用的空产品对象。</span>
+    constructor <span class="token class-name">CarBuilder</span><span class="token punctuation">(</span><span class="token punctuation">)</span> is
+        <span class="token keyword">this</span><span class="token punctuation">.</span><span class="token function">reset</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
+
+    <span class="token comment">// reset（重置）方法可清除正在生成的对象。</span>
+    method <span class="token function">reset</span><span class="token punctuation">(</span><span class="token punctuation">)</span> is
+        <span class="token keyword">this</span><span class="token punctuation">.</span>car <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">Car</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
+
+    <span class="token comment">// 所有生成步骤都会与同一个产品实例进行交互。</span>
+    method <span class="token function">setSeats</span><span class="token punctuation">(</span>……<span class="token punctuation">)</span> is
+        <span class="token comment">// 设置汽车座位的数量。</span>
+
+    method <span class="token function">setEngine</span><span class="token punctuation">(</span>……<span class="token punctuation">)</span> is
+        <span class="token comment">// 安装指定的引擎。</span>
+
+    method <span class="token function">setTripComputer</span><span class="token punctuation">(</span>……<span class="token punctuation">)</span> is
+        <span class="token comment">// 安装行车电脑。</span>
+
+    method <span class="token function">setGPS</span><span class="token punctuation">(</span>……<span class="token punctuation">)</span> is
+        <span class="token comment">// 安装全球定位系统。</span>
+
+    <span class="token comment">// 具体生成器需要自行提供获取结果的方法。这是因为不同类型的生成器可能</span>
+    <span class="token comment">// 会创建不遵循相同接口的、完全不同的产品。所以也就无法在生成器接口中</span>
+    <span class="token comment">// 声明这些方法（至少在静态类型的编程语言中是这样的）。</span>
+    <span class="token comment">//</span>
+    <span class="token comment">// 通常在生成器实例将结果返回给客户端后，它们应该做好生成另一个产品的</span>
+    <span class="token comment">// 准备。因此生成器实例通常会在 `getProduct（获取产品）`方法主体末尾</span>
+    <span class="token comment">// 调用重置方法。但是该行为并不是必需的，你也可让生成器等待客户端明确</span>
+    <span class="token comment">// 调用重置方法后再去处理之前的结果。</span>
+    method <span class="token function">getProduct</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token operator">:</span><span class="token class-name">Car</span> is
+        product <span class="token operator">=</span> <span class="token keyword">this</span><span class="token punctuation">.</span>car
+        <span class="token keyword">this</span><span class="token punctuation">.</span><span class="token function">reset</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
+        <span class="token keyword">return</span> product
+
+<span class="token comment">// 生成器与其他创建型模式的不同之处在于：它让你能创建不遵循相同接口的产品。</span>
+<span class="token keyword">class</span> <span class="token class-name">CarManualBuilder</span> <span class="token keyword">implements</span> <span class="token class-name">Builder</span> is
+    <span class="token keyword">private</span> field manual<span class="token operator">:</span><span class="token class-name">Manual</span>
+
+    constructor <span class="token class-name">CarManualBuilder</span><span class="token punctuation">(</span><span class="token punctuation">)</span> is
+        <span class="token keyword">this</span><span class="token punctuation">.</span><span class="token function">reset</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
+
+    method <span class="token function">reset</span><span class="token punctuation">(</span><span class="token punctuation">)</span> is
+        <span class="token keyword">this</span><span class="token punctuation">.</span>manual <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">Manual</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
+
+    method <span class="token function">setSeats</span><span class="token punctuation">(</span>……<span class="token punctuation">)</span> is
+        <span class="token comment">// 添加关于汽车座椅功能的文档。</span>
+
+    method <span class="token function">setEngine</span><span class="token punctuation">(</span>……<span class="token punctuation">)</span> is
+        <span class="token comment">// 添加关于引擎的介绍。</span>
+
+    method <span class="token function">setTripComputer</span><span class="token punctuation">(</span>……<span class="token punctuation">)</span> is
+        <span class="token comment">// 添加关于行车电脑的介绍。</span>
+
+    method <span class="token function">setGPS</span><span class="token punctuation">(</span>……<span class="token punctuation">)</span> is
+        <span class="token comment">// 添加关于 GPS 的介绍。</span>
+
+    method <span class="token function">getProduct</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token operator">:</span><span class="token class-name">Manual</span> is
+        <span class="token comment">// 返回使用手册并重置生成器。</span>
+
+
+<span class="token comment">// 主管只负责按照特定顺序执行生成步骤。其在根据特定步骤或配置来生成产品时</span>
+<span class="token comment">// 会很有帮助。由于客户端可以直接控制生成器，所以严格意义上来说，主管类并</span>
+<span class="token comment">// 不是必需的。</span>
+<span class="token keyword">class</span> <span class="token class-name">Director</span> is
+    <span class="token comment">// 主管可同由客户端代码传递给自身的任何生成器实例进行交互。客户端可通</span>
+    <span class="token comment">// 过这种方式改变最新组装完毕的产品的最终类型。主管可使用同样的生成步</span>
+    <span class="token comment">// 骤创建多个产品变体。</span>
+    method <span class="token function">constructSportsCar</span><span class="token punctuation">(</span>builder<span class="token operator">:</span> <span class="token class-name">Builder</span><span class="token punctuation">)</span> is
+        builder<span class="token punctuation">.</span><span class="token function">reset</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
+        builder<span class="token punctuation">.</span><span class="token function">setSeats</span><span class="token punctuation">(</span><span class="token number">2</span><span class="token punctuation">)</span>
+        builder<span class="token punctuation">.</span><span class="token function">setEngine</span><span class="token punctuation">(</span><span class="token keyword">new</span> <span class="token class-name">SportEngine</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
+        builder<span class="token punctuation">.</span><span class="token function">setTripComputer</span><span class="token punctuation">(</span><span class="token boolean">true</span><span class="token punctuation">)</span>
+        builder<span class="token punctuation">.</span><span class="token function">setGPS</span><span class="token punctuation">(</span><span class="token boolean">true</span><span class="token punctuation">)</span>
+
+    method <span class="token function">constructSUV</span><span class="token punctuation">(</span>builder<span class="token operator">:</span> <span class="token class-name">Builder</span><span class="token punctuation">)</span> is
+        <span class="token comment">// ……</span>
+
+
+<span class="token comment">// 客户端代码会创建生成器对象并将其传递给主管，然后执行构造过程。最终结果</span>
+<span class="token comment">// 将需要从生成器对象中获取。</span>
+<span class="token keyword">class</span> <span class="token class-name">Application</span> is
+
+    method <span class="token function">makeCar</span><span class="token punctuation">(</span><span class="token punctuation">)</span> is
+        director <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">Director</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
+
+        <span class="token class-name">CarBuilder</span> builder <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">CarBuilder</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
+        director<span class="token punctuation">.</span><span class="token function">constructSportsCar</span><span class="token punctuation">(</span>builder<span class="token punctuation">)</span>
+        <span class="token class-name">Car</span> car <span class="token operator">=</span> builder<span class="token punctuation">.</span><span class="token function">getProduct</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
+
+        <span class="token class-name">CarManualBuilder</span> builder <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">CarManualBuilder</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
+        director<span class="token punctuation">.</span><span class="token function">constructSportsCar</span><span class="token punctuation">(</span>builder<span class="token punctuation">)</span>
+
+        <span class="token comment">// 最终产品通常需要从生成器对象中获取，因为主管不知晓具体生成器和</span>
+        <span class="token comment">// 产品的存在，也不会对其产生依赖。</span>
+        <span class="token class-name">Manual</span> manual <span class="token operator">=</span> builder<span class="token punctuation">.</span><span class="token function">getProduct</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+
+
+<h2 id="六、适合应用场景"><a href="#六、适合应用场景" class="headerlink" title="六、适合应用场景"></a>六、适合应用场景</h2><p> 使用生成器模式可避免 “重叠构造函数 （tele­scop­ing con­struc­tor）” 的出现。</p>
+<p> 假设你的构造函数中有十个可选参数， 那么调用该函数会非常不方便； 因此， 你需要重载这个构造函数， 新建几个只有较少参数的简化版。 但这些构造函数仍需调用主构造函数， 传递一些默认数值来替代省略掉的参数。</p>
+<pre class="line-numbers language-java" data-language="java"><code class="language-java"><span class="token keyword">class</span> <span class="token class-name">Pizza</span> <span class="token punctuation">&#123;</span>
+    <span class="token class-name">Pizza</span><span class="token punctuation">(</span><span class="token keyword">int</span> size<span class="token punctuation">)</span> <span class="token punctuation">&#123;</span> …… <span class="token punctuation">&#125;</span>
+    <span class="token class-name">Pizza</span><span class="token punctuation">(</span><span class="token keyword">int</span> size<span class="token punctuation">,</span> <span class="token keyword">boolean</span> cheese<span class="token punctuation">)</span> <span class="token punctuation">&#123;</span> …… <span class="token punctuation">&#125;</span>
+    <span class="token class-name">Pizza</span><span class="token punctuation">(</span><span class="token keyword">int</span> size<span class="token punctuation">,</span> <span class="token keyword">boolean</span> cheese<span class="token punctuation">,</span> <span class="token keyword">boolean</span> pepperoni<span class="token punctuation">)</span> <span class="token punctuation">&#123;</span> …… <span class="token punctuation">&#125;</span>
+    <span class="token comment">// ……</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<p>只有在 C# 或 Java 等支持方法重载的编程语言中才能写出如此复杂的构造函数。</p>
+<p>生成器模式让你可以分步骤生成对象， 而且允许你仅使用必须的步骤。 应用该模式后， 你再也不需要将几十个参数塞进构造函数里了。</p>
+<p> 当你希望使用代码创建不同形式的产品 （例如石头或木头房屋） 时， 可使用生成器模式。</p>
+<p> 如果你需要创建的各种形式的产品， 它们的制造过程相似且仅有细节上的差异， 此时可使用生成器模式。</p>
+<p>基本生成器接口中定义了所有可能的制造步骤， 具体生成器将实现这些步骤来制造特定形式的产品。 同时， 主管类将负责管理制造步骤的顺序。</p>
+<p> 使用生成器构造<a target="_blank" rel="noopener" href="https://refactoringguru.cn/design-patterns/composite">组合</a>树或其他复杂对象。</p>
+<p> 生成器模式让你能分步骤构造产品。 你可以延迟执行某些步骤而不会影响最终产品。 你甚至可以递归调用这些步骤， 这在创建对象树时非常方便。</p>
+<p>生成器在执行制造步骤时， 不能对外发布未完成的产品。 这可以避免客户端代码获取到不完整结果对象的情况。</p>
+<h2 id="七、实现方法"><a href="#七、实现方法" class="headerlink" title="七、实现方法"></a>七、实现方法</h2><ol>
+<li><p>清晰地定义通用步骤， 确保它们可以制造所有形式的产品。 否则你将无法进一步实施该模式。</p>
+</li>
+<li><p>在基本生成器接口中声明这些步骤。</p>
+</li>
+<li><p>为每个形式的产品创建具体生成器类， 并实现其构造步骤。</p>
+<p>不要忘记实现获取构造结果对象的方法。 你不能在生成器接口中声明该方法， 因为不同生成器构造的产品可能没有公共接口， 因此你就不知道该方法返回的对象类型。 但是， 如果所有产品都位于单一类层次中， 你就可以安全地在基本接口中添加获取生成对象的方法。</p>
+</li>
+<li><p>考虑创建主管类。 它可以使用同一生成器对象来封装多种构造产品的方式。</p>
+</li>
+<li><p>客户端代码会同时创建生成器和主管对象。 构造开始前， 客户端必须将生成器对象传递给主管对象。 通常情况下， 客户端只需调用主管类构造函数一次即可。 主管类使用生成器对象完成后续所有制造任务。 还有另一种方式， 那就是客户端可以将生成器对象直接传递给主管类的制造方法。</p>
+</li>
+<li><p>只有在所有产品都遵循相同接口的情况下， 构造结果可以直接通过主管类获取。 否则， 客户端应当通过生成器获取构造结果。</p>
+</li>
+</ol>
+<h2 id="八、优缺点"><a href="#八、优缺点" class="headerlink" title="八、优缺点"></a>八、优缺点</h2><ul>
+<li><p>你可以分步创建对象， 暂缓创建步骤或递归运行创建步骤。</p>
+</li>
+<li><p>生成不同形式的产品时， 你可以复用相同的制造代码。</p>
+</li>
+<li><p><strong>单一职责原则</strong>。 你可以将复杂构造代码从产品的业务逻辑中分离出来。</p>
+</li>
+<li><p>由于该模式需要新增多个类， 因此代码整体复杂程度会有所增加。</p>
+</li>
+</ul>
+<h2 id="九、与其他模式的关系"><a href="#九、与其他模式的关系" class="headerlink" title="九、与其他模式的关系"></a>九、与其他模式的关系</h2><ul>
+<li>在许多设计工作的初期都会使用<a target="_blank" rel="noopener" href="https://refactoringguru.cn/design-patterns/factory-method">工厂方法模式</a> （较为简单， 而且可以更方便地通过子类进行定制）， 随后演化为使用<a target="_blank" rel="noopener" href="https://refactoringguru.cn/design-patterns/abstract-factory">抽象工厂模式</a>、 <a target="_blank" rel="noopener" href="https://refactoringguru.cn/design-patterns/prototype">原型模式</a>或<a target="_blank" rel="noopener" href="https://refactoringguru.cn/design-patterns/builder">生成器模式</a> （更灵活但更加复杂）。</li>
+<li><a target="_blank" rel="noopener" href="https://refactoringguru.cn/design-patterns/builder">生成器</a>重点关注如何分步生成复杂对象。 <a target="_blank" rel="noopener" href="https://refactoringguru.cn/design-patterns/abstract-factory">抽象工厂</a>专门用于生产一系列相关对象。 <em>抽象工厂</em>会马上返回产品， <strong>生成器</strong> 则允许你在获取产品前执行一些额外构造步骤。</li>
+<li>你可以在创建复杂<a target="_blank" rel="noopener" href="https://refactoringguru.cn/design-patterns/composite">组合模式</a>树时使用<a target="_blank" rel="noopener" href="https://refactoringguru.cn/design-patterns/builder">生成器</a>， 因为这可使其构造步骤以递归的方式运行。</li>
+<li>你可以结合使用<a target="_blank" rel="noopener" href="https://refactoringguru.cn/design-patterns/builder">生成器</a>和<a target="_blank" rel="noopener" href="https://refactoringguru.cn/design-patterns/bridge">桥接模式</a>： <strong>主管</strong> 类负责抽象工作， 各种不同的 <strong>生成器</strong> 负责 <strong>实现</strong> 工作。</li>
+<li><a target="_blank" rel="noopener" href="https://refactoringguru.cn/design-patterns/abstract-factory">抽象工厂</a>、 <a target="_blank" rel="noopener" href="https://refactoringguru.cn/design-patterns/builder">生成器</a>和<a target="_blank" rel="noopener" href="https://refactoringguru.cn/design-patterns/prototype">原型</a>都可以用<a target="_blank" rel="noopener" href="https://refactoringguru.cn/design-patterns/singleton">单例模式</a>来实现。</li>
+</ul>
+<h2 id="十、应用示例"><a href="#十、应用示例" class="headerlink" title="十、应用示例"></a>十、应用示例</h2><p><strong>生成器</strong>是一种创建型设计模式， 使你能够分步骤创建复杂对象。</p>
+<p>与其他创建型模式不同， 生成器不要求产品拥有通用接口。 这使得用相同的创建过程生成不同的产品成为可能。</p>
+<h3 id="Java-使用示例"><a href="#Java-使用示例" class="headerlink" title="Java 使用示例"></a>Java 使用示例</h3><p>生成器模式是 Java 世界中的一个著名模式。 当你需要创建一个可能有许多配置选项的对象时， 该模式会特别有用。</p>
+<p>生成器在 Java 核心程序库中得到了广泛的应用：</p>
+<ul>
+<li><a target="_blank" rel="noopener" href="http://docs.oracle.com/javase/8/docs/api/java/lang/StringBuilder.html#append-boolean-"><code>java.lang.StringBuilder#append()</code></a> （ <code>非同步</code> ）</li>
+<li><a target="_blank" rel="noopener" href="http://docs.oracle.com/javase/8/docs/api/java/lang/StringBuffer.html#append-boolean-"><code>java.lang.StringBuffer#append()</code></a> （ <code>同步</code> ）</li>
+<li><a target="_blank" rel="noopener" href="http://docs.oracle.com/javase/8/docs/api/java/nio/ByteBuffer.html#put-byte-"><code>java.nio.ByteBuffer#put()</code></a> （还有 <a target="_blank" rel="noopener" href="http://docs.oracle.com/javase/8/docs/api/java/nio/CharBuffer.html#put-char-"><code>Char­Buffer</code></a>、 <a target="_blank" rel="noopener" href="http://docs.oracle.com/javase/8/docs/api/java/nio/ShortBuffer.html#put-short-"><code>Short­Buffer</code></a>、 <a target="_blank" rel="noopener" href="http://docs.oracle.com/javase/8/docs/api/java/nio/IntBuffer.html#put-int-"><code>Int­Buffer</code></a>、 <a target="_blank" rel="noopener" href="http://docs.oracle.com/javase/8/docs/api/java/nio/LongBuffer.html#put-long-"><code>Long­Buffer</code></a>、 <a target="_blank" rel="noopener" href="http://docs.oracle.com/javase/8/docs/api/java/nio/FloatBuffer.html#put-float-"><code>Float­Buffer</code></a> 和 <a target="_blank" rel="noopener" href="http://docs.oracle.com/javase/8/docs/api/java/nio/DoubleBuffer.html#put-double-"><code>Dou­ble­Buffer</code></a>）</li>
+<li><a target="_blank" rel="noopener" href="http://docs.oracle.com/javase/8/docs/api/javax/swing/GroupLayout.Group.html#addComponent-java.awt.Component-"><code>javax.swing.GroupLayout.Group#addComponent()</code></a></li>
+<li><a target="_blank" rel="noopener" href="http://docs.oracle.com/javase/8/docs/api/java/lang/Appendable.html"><code>java.lang.Appendable</code></a>的所有实现</li>
+</ul>
+<p><strong>识别方法：</strong> <strong>生成器模式可以通过类来识别， 它拥有一个构建方法和多个配置结果对象的方法</strong>。 生成器方法通常支持方法链 （例如 <code>someBuilder.setValueA(1).setValueB(2).create()</code>）。</p>
+<h3 id="分步制造汽车"><a href="#分步制造汽车" class="headerlink" title="分步制造汽车"></a>分步制造汽车</h3><p>在本例中， 生成器模式允许你分步骤地制造不同型号的汽车。</p>
+<p>示例还展示了生成器如何使用相同的生产过程制造不同类型的产品 （汽车手册）。</p>
+<p><strong>主管控制着构造顺序</strong>。 它知道制造各种汽车型号需要调用的生产步骤。 它仅与汽车的通用接口进行交互。 这样就能将不同类型的生成器传递给主管了。</p>
+<p>最终结果将从生成器对象中获得， 因为主管不知道最终产品的类型。 只有生成器对象知道自己生成的产品是什么。</p>
+<h4 id="builders"><a href="#builders" class="headerlink" title="builders"></a>builders</h4><p><img src="/medias/loading.gif" data-original="https://raw.githubusercontent.com/luyaguo/pictures-guo/main/design-patterns/202408272139920.png" alt="image-20221021141035780"></p>
+<h5 id="builders-Builder-java-通用生成器接口"><a href="#builders-Builder-java-通用生成器接口" class="headerlink" title="builders&#x2F;Builder.java: 通用生成器接口"></a>builders&#x2F;Builder.java: 通用生成器接口</h5><pre class="line-numbers language-java" data-language="java"><code class="language-java"><span class="token comment">/**
+ * Builder interface defines all possible ways to configure a product.
+ */</span>
+<span class="token keyword">public</span> <span class="token keyword">interface</span> <span class="token class-name">Builder</span> <span class="token punctuation">&#123;</span>
+    <span class="token keyword">void</span> <span class="token function">setCarType</span><span class="token punctuation">(</span><span class="token class-name">CarType</span> type<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token keyword">void</span> <span class="token function">setSeats</span><span class="token punctuation">(</span><span class="token keyword">int</span> seats<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token keyword">void</span> <span class="token function">setEngine</span><span class="token punctuation">(</span><span class="token class-name">Engine</span> engine<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token keyword">void</span> <span class="token function">setTransmission</span><span class="token punctuation">(</span><span class="token class-name">Transmission</span> transmission<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token keyword">void</span> <span class="token function">setTripComputer</span><span class="token punctuation">(</span><span class="token class-name">TripComputer</span> tripComputer<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token keyword">void</span> <span class="token function">setGPSNavigator</span><span class="token punctuation">(</span><span class="token class-name">GPSNavigator</span> gpsNavigator<span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<h5 id="builders-CarBuilder-java-汽车生成器"><a href="#builders-CarBuilder-java-汽车生成器" class="headerlink" title="builders&#x2F;CarBuilder.java: 汽车生成器"></a>builders&#x2F;CarBuilder.java: 汽车生成器</h5><pre class="line-numbers language-java" data-language="java"><code class="language-java"><span class="token comment">/**
+ * Concrete builders implement steps defined in the common interface.
+ */</span>
+<span class="token keyword">public</span> <span class="token keyword">class</span> <span class="token class-name">CarBuilder</span> <span class="token keyword">implements</span> <span class="token class-name">Builder</span> <span class="token punctuation">&#123;</span>
+    <span class="token keyword">private</span> <span class="token class-name">CarType</span> type<span class="token punctuation">;</span>
+    <span class="token keyword">private</span> <span class="token keyword">int</span> seats<span class="token punctuation">;</span>
+    <span class="token keyword">private</span> <span class="token class-name">Engine</span> engine<span class="token punctuation">;</span>
+    <span class="token keyword">private</span> <span class="token class-name">Transmission</span> transmission<span class="token punctuation">;</span>
+    <span class="token keyword">private</span> <span class="token class-name">TripComputer</span> tripComputer<span class="token punctuation">;</span>
+    <span class="token keyword">private</span> <span class="token class-name">GPSNavigator</span> gpsNavigator<span class="token punctuation">;</span>
+
+    <span class="token keyword">public</span> <span class="token keyword">void</span> <span class="token function">setCarType</span><span class="token punctuation">(</span><span class="token class-name">CarType</span> type<span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+        <span class="token keyword">this</span><span class="token punctuation">.</span>type <span class="token operator">=</span> type<span class="token punctuation">;</span>
+    <span class="token punctuation">&#125;</span>
+
+    <span class="token annotation punctuation">@Override</span>
+    <span class="token keyword">public</span> <span class="token keyword">void</span> <span class="token function">setSeats</span><span class="token punctuation">(</span><span class="token keyword">int</span> seats<span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+        <span class="token keyword">this</span><span class="token punctuation">.</span>seats <span class="token operator">=</span> seats<span class="token punctuation">;</span>
+    <span class="token punctuation">&#125;</span>
+
+    <span class="token annotation punctuation">@Override</span>
+    <span class="token keyword">public</span> <span class="token keyword">void</span> <span class="token function">setEngine</span><span class="token punctuation">(</span><span class="token class-name">Engine</span> engine<span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+        <span class="token keyword">this</span><span class="token punctuation">.</span>engine <span class="token operator">=</span> engine<span class="token punctuation">;</span>
+    <span class="token punctuation">&#125;</span>
+
+    <span class="token annotation punctuation">@Override</span>
+    <span class="token keyword">public</span> <span class="token keyword">void</span> <span class="token function">setTransmission</span><span class="token punctuation">(</span><span class="token class-name">Transmission</span> transmission<span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+        <span class="token keyword">this</span><span class="token punctuation">.</span>transmission <span class="token operator">=</span> transmission<span class="token punctuation">;</span>
+    <span class="token punctuation">&#125;</span>
+
+    <span class="token annotation punctuation">@Override</span>
+    <span class="token keyword">public</span> <span class="token keyword">void</span> <span class="token function">setTripComputer</span><span class="token punctuation">(</span><span class="token class-name">TripComputer</span> tripComputer<span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+        <span class="token keyword">this</span><span class="token punctuation">.</span>tripComputer <span class="token operator">=</span> tripComputer<span class="token punctuation">;</span>
+    <span class="token punctuation">&#125;</span>
+
+    <span class="token annotation punctuation">@Override</span>
+    <span class="token keyword">public</span> <span class="token keyword">void</span> <span class="token function">setGPSNavigator</span><span class="token punctuation">(</span><span class="token class-name">GPSNavigator</span> gpsNavigator<span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+        <span class="token keyword">this</span><span class="token punctuation">.</span>gpsNavigator <span class="token operator">=</span> gpsNavigator<span class="token punctuation">;</span>
+    <span class="token punctuation">&#125;</span>
+
+    <span class="token keyword">public</span> <span class="token class-name">Car</span> <span class="token function">getResult</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+        <span class="token keyword">return</span> <span class="token keyword">new</span> <span class="token class-name">Car</span><span class="token punctuation">(</span>type<span class="token punctuation">,</span> seats<span class="token punctuation">,</span> engine<span class="token punctuation">,</span> transmission<span class="token punctuation">,</span> tripComputer<span class="token punctuation">,</span> gpsNavigator<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">&#125;</span>
+<span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<h5 id="builders-CarManualBuilder-java-汽车手册生成器"><a href="#builders-CarManualBuilder-java-汽车手册生成器" class="headerlink" title="builders&#x2F;CarManualBuilder.java: 汽车手册生成器"></a>builders&#x2F;CarManualBuilder.java: 汽车手册生成器</h5><pre class="line-numbers language-java" data-language="java"><code class="language-java"><span class="token comment">/**
+ * Unlike other creational patterns, Builder can construct unrelated products,
+ * which don't have the common interface.
+ *
+ * In this case we build a user manual for a car, using the same steps as we
+ * built a car. This allows to produce manuals for specific car models,
+ * configured with different features.
+ */</span>
+<span class="token keyword">public</span> <span class="token keyword">class</span> <span class="token class-name">CarManualBuilder</span> <span class="token keyword">implements</span> <span class="token class-name">Builder</span><span class="token punctuation">&#123;</span>
+    <span class="token keyword">private</span> <span class="token class-name">CarType</span> type<span class="token punctuation">;</span>
+    <span class="token keyword">private</span> <span class="token keyword">int</span> seats<span class="token punctuation">;</span>
+    <span class="token keyword">private</span> <span class="token class-name">Engine</span> engine<span class="token punctuation">;</span>
+    <span class="token keyword">private</span> <span class="token class-name">Transmission</span> transmission<span class="token punctuation">;</span>
+    <span class="token keyword">private</span> <span class="token class-name">TripComputer</span> tripComputer<span class="token punctuation">;</span>
+    <span class="token keyword">private</span> <span class="token class-name">GPSNavigator</span> gpsNavigator<span class="token punctuation">;</span>
+
+    <span class="token annotation punctuation">@Override</span>
+    <span class="token keyword">public</span> <span class="token keyword">void</span> <span class="token function">setCarType</span><span class="token punctuation">(</span><span class="token class-name">CarType</span> type<span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+        <span class="token keyword">this</span><span class="token punctuation">.</span>type <span class="token operator">=</span> type<span class="token punctuation">;</span>
+    <span class="token punctuation">&#125;</span>
+
+    <span class="token annotation punctuation">@Override</span>
+    <span class="token keyword">public</span> <span class="token keyword">void</span> <span class="token function">setSeats</span><span class="token punctuation">(</span><span class="token keyword">int</span> seats<span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+        <span class="token keyword">this</span><span class="token punctuation">.</span>seats <span class="token operator">=</span> seats<span class="token punctuation">;</span>
+    <span class="token punctuation">&#125;</span>
+
+    <span class="token annotation punctuation">@Override</span>
+    <span class="token keyword">public</span> <span class="token keyword">void</span> <span class="token function">setEngine</span><span class="token punctuation">(</span><span class="token class-name">Engine</span> engine<span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+        <span class="token keyword">this</span><span class="token punctuation">.</span>engine <span class="token operator">=</span> engine<span class="token punctuation">;</span>
+    <span class="token punctuation">&#125;</span>
+
+    <span class="token annotation punctuation">@Override</span>
+    <span class="token keyword">public</span> <span class="token keyword">void</span> <span class="token function">setTransmission</span><span class="token punctuation">(</span><span class="token class-name">Transmission</span> transmission<span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+        <span class="token keyword">this</span><span class="token punctuation">.</span>transmission <span class="token operator">=</span> transmission<span class="token punctuation">;</span>
+    <span class="token punctuation">&#125;</span>
+
+    <span class="token annotation punctuation">@Override</span>
+    <span class="token keyword">public</span> <span class="token keyword">void</span> <span class="token function">setTripComputer</span><span class="token punctuation">(</span><span class="token class-name">TripComputer</span> tripComputer<span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+        <span class="token keyword">this</span><span class="token punctuation">.</span>tripComputer <span class="token operator">=</span> tripComputer<span class="token punctuation">;</span>
+    <span class="token punctuation">&#125;</span>
+
+    <span class="token annotation punctuation">@Override</span>
+    <span class="token keyword">public</span> <span class="token keyword">void</span> <span class="token function">setGPSNavigator</span><span class="token punctuation">(</span><span class="token class-name">GPSNavigator</span> gpsNavigator<span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+        <span class="token keyword">this</span><span class="token punctuation">.</span>gpsNavigator <span class="token operator">=</span> gpsNavigator<span class="token punctuation">;</span>
+    <span class="token punctuation">&#125;</span>
+
+    <span class="token keyword">public</span> <span class="token class-name">Manual</span> <span class="token function">getResult</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+        <span class="token keyword">return</span> <span class="token keyword">new</span> <span class="token class-name">Manual</span><span class="token punctuation">(</span>type<span class="token punctuation">,</span> seats<span class="token punctuation">,</span> engine<span class="token punctuation">,</span> transmission<span class="token punctuation">,</span> tripComputer<span class="token punctuation">,</span> gpsNavigator<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">&#125;</span>
+<span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<h4 id="cars"><a href="#cars" class="headerlink" title="cars"></a>cars</h4><h5 id="cars-Car-java-汽车产品"><a href="#cars-Car-java-汽车产品" class="headerlink" title="cars&#x2F;Car.java: 汽车产品"></a>cars&#x2F;Car.java: 汽车产品</h5><pre class="line-numbers language-java" data-language="java"><code class="language-java"><span class="token comment">/**
+ * Car is a product class.
+ */</span>
+<span class="token keyword">public</span> <span class="token keyword">class</span> <span class="token class-name">Car</span> <span class="token punctuation">&#123;</span>
+    <span class="token keyword">private</span> <span class="token keyword">final</span> <span class="token class-name">CarType</span> carType<span class="token punctuation">;</span>
+    <span class="token keyword">private</span> <span class="token keyword">final</span> <span class="token keyword">int</span> seats<span class="token punctuation">;</span>
+    <span class="token keyword">private</span> <span class="token keyword">final</span> <span class="token class-name">Engine</span> engine<span class="token punctuation">;</span>
+    <span class="token keyword">private</span> <span class="token keyword">final</span> <span class="token class-name">Transmission</span> transmission<span class="token punctuation">;</span>
+    <span class="token keyword">private</span> <span class="token keyword">final</span> <span class="token class-name">TripComputer</span> tripComputer<span class="token punctuation">;</span>
+    <span class="token keyword">private</span> <span class="token keyword">final</span> <span class="token class-name">GPSNavigator</span> gpsNavigator<span class="token punctuation">;</span>
+    <span class="token keyword">private</span> <span class="token keyword">double</span> fuel <span class="token operator">=</span> <span class="token number">0</span><span class="token punctuation">;</span>
+
+    <span class="token keyword">public</span> <span class="token class-name">Car</span><span class="token punctuation">(</span><span class="token class-name">CarType</span> carType<span class="token punctuation">,</span> <span class="token keyword">int</span> seats<span class="token punctuation">,</span> <span class="token class-name">Engine</span> engine<span class="token punctuation">,</span> <span class="token class-name">Transmission</span> transmission<span class="token punctuation">,</span>
+               <span class="token class-name">TripComputer</span> tripComputer<span class="token punctuation">,</span> <span class="token class-name">GPSNavigator</span> gpsNavigator<span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+        <span class="token keyword">this</span><span class="token punctuation">.</span>carType <span class="token operator">=</span> carType<span class="token punctuation">;</span>
+        <span class="token keyword">this</span><span class="token punctuation">.</span>seats <span class="token operator">=</span> seats<span class="token punctuation">;</span>
+        <span class="token keyword">this</span><span class="token punctuation">.</span>engine <span class="token operator">=</span> engine<span class="token punctuation">;</span>
+        <span class="token keyword">this</span><span class="token punctuation">.</span>transmission <span class="token operator">=</span> transmission<span class="token punctuation">;</span>
+        <span class="token keyword">this</span><span class="token punctuation">.</span>tripComputer <span class="token operator">=</span> tripComputer<span class="token punctuation">;</span>
+        <span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token keyword">this</span><span class="token punctuation">.</span>tripComputer <span class="token operator">!=</span> <span class="token keyword">null</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+            <span class="token keyword">this</span><span class="token punctuation">.</span>tripComputer<span class="token punctuation">.</span><span class="token function">setCar</span><span class="token punctuation">(</span><span class="token keyword">this</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token punctuation">&#125;</span>
+        <span class="token keyword">this</span><span class="token punctuation">.</span>gpsNavigator <span class="token operator">=</span> gpsNavigator<span class="token punctuation">;</span>
+    <span class="token punctuation">&#125;</span>
+
+    <span class="token keyword">public</span> <span class="token class-name">CarType</span> <span class="token function">getCarType</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+        <span class="token keyword">return</span> carType<span class="token punctuation">;</span>
+    <span class="token punctuation">&#125;</span>
+
+    <span class="token keyword">public</span> <span class="token keyword">double</span> <span class="token function">getFuel</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+        <span class="token keyword">return</span> fuel<span class="token punctuation">;</span>
+    <span class="token punctuation">&#125;</span>
+
+    <span class="token keyword">public</span> <span class="token keyword">void</span> <span class="token function">setFuel</span><span class="token punctuation">(</span><span class="token keyword">double</span> fuel<span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+        <span class="token keyword">this</span><span class="token punctuation">.</span>fuel <span class="token operator">=</span> fuel<span class="token punctuation">;</span>
+    <span class="token punctuation">&#125;</span>
+
+    <span class="token keyword">public</span> <span class="token keyword">int</span> <span class="token function">getSeats</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+        <span class="token keyword">return</span> seats<span class="token punctuation">;</span>
+    <span class="token punctuation">&#125;</span>
+
+    <span class="token keyword">public</span> <span class="token class-name">Engine</span> <span class="token function">getEngine</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+        <span class="token keyword">return</span> engine<span class="token punctuation">;</span>
+    <span class="token punctuation">&#125;</span>
+
+    <span class="token keyword">public</span> <span class="token class-name">Transmission</span> <span class="token function">getTransmission</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+        <span class="token keyword">return</span> transmission<span class="token punctuation">;</span>
+    <span class="token punctuation">&#125;</span>
+
+    <span class="token keyword">public</span> <span class="token class-name">TripComputer</span> <span class="token function">getTripComputer</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+        <span class="token keyword">return</span> tripComputer<span class="token punctuation">;</span>
+    <span class="token punctuation">&#125;</span>
+
+    <span class="token keyword">public</span> <span class="token class-name">GPSNavigator</span> <span class="token function">getGpsNavigator</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+        <span class="token keyword">return</span> gpsNavigator<span class="token punctuation">;</span>
+    <span class="token punctuation">&#125;</span>
+<span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<h5 id="cars-Manual-java-手册产品"><a href="#cars-Manual-java-手册产品" class="headerlink" title="cars&#x2F;Manual.java: 手册产品"></a>cars&#x2F;Manual.java: 手册产品</h5><pre class="line-numbers language-java" data-language="java"><code class="language-java"><span class="token comment">/**
+ * Car manual is another product. Note that it does not have the same ancestor
+ * as a Car. They are not related.
+ */</span>
+<span class="token keyword">public</span> <span class="token keyword">class</span> <span class="token class-name">Manual</span> <span class="token punctuation">&#123;</span>
+    <span class="token keyword">private</span> <span class="token keyword">final</span> <span class="token class-name">CarType</span> carType<span class="token punctuation">;</span>
+    <span class="token keyword">private</span> <span class="token keyword">final</span> <span class="token keyword">int</span> seats<span class="token punctuation">;</span>
+    <span class="token keyword">private</span> <span class="token keyword">final</span> <span class="token class-name">Engine</span> engine<span class="token punctuation">;</span>
+    <span class="token keyword">private</span> <span class="token keyword">final</span> <span class="token class-name">Transmission</span> transmission<span class="token punctuation">;</span>
+    <span class="token keyword">private</span> <span class="token keyword">final</span> <span class="token class-name">TripComputer</span> tripComputer<span class="token punctuation">;</span>
+    <span class="token keyword">private</span> <span class="token keyword">final</span> <span class="token class-name">GPSNavigator</span> gpsNavigator<span class="token punctuation">;</span>
+
+    <span class="token keyword">public</span> <span class="token class-name">Manual</span><span class="token punctuation">(</span><span class="token class-name">CarType</span> carType<span class="token punctuation">,</span> <span class="token keyword">int</span> seats<span class="token punctuation">,</span> <span class="token class-name">Engine</span> engine<span class="token punctuation">,</span> <span class="token class-name">Transmission</span> transmission<span class="token punctuation">,</span>
+                  <span class="token class-name">TripComputer</span> tripComputer<span class="token punctuation">,</span> <span class="token class-name">GPSNavigator</span> gpsNavigator<span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+        <span class="token keyword">this</span><span class="token punctuation">.</span>carType <span class="token operator">=</span> carType<span class="token punctuation">;</span>
+        <span class="token keyword">this</span><span class="token punctuation">.</span>seats <span class="token operator">=</span> seats<span class="token punctuation">;</span>
+        <span class="token keyword">this</span><span class="token punctuation">.</span>engine <span class="token operator">=</span> engine<span class="token punctuation">;</span>
+        <span class="token keyword">this</span><span class="token punctuation">.</span>transmission <span class="token operator">=</span> transmission<span class="token punctuation">;</span>
+        <span class="token keyword">this</span><span class="token punctuation">.</span>tripComputer <span class="token operator">=</span> tripComputer<span class="token punctuation">;</span>
+        <span class="token keyword">this</span><span class="token punctuation">.</span>gpsNavigator <span class="token operator">=</span> gpsNavigator<span class="token punctuation">;</span>
+    <span class="token punctuation">&#125;</span>
+
+    <span class="token keyword">public</span> <span class="token class-name">String</span> <span class="token function">print</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+        <span class="token class-name">String</span> info <span class="token operator">=</span> <span class="token string">""</span><span class="token punctuation">;</span>
+        info <span class="token operator">+=</span> <span class="token string">"Type of car: "</span> <span class="token operator">+</span> carType <span class="token operator">+</span> <span class="token string">"\n"</span><span class="token punctuation">;</span>
+        info <span class="token operator">+=</span> <span class="token string">"Count of seats: "</span> <span class="token operator">+</span> seats <span class="token operator">+</span> <span class="token string">"\n"</span><span class="token punctuation">;</span>
+        info <span class="token operator">+=</span> <span class="token string">"Engine: volume - "</span> <span class="token operator">+</span> engine<span class="token punctuation">.</span><span class="token function">getVolume</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">+</span> <span class="token string">"; mileage - "</span> <span class="token operator">+</span> engine<span class="token punctuation">.</span><span class="token function">getMileage</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">+</span> <span class="token string">"\n"</span><span class="token punctuation">;</span>
+        info <span class="token operator">+=</span> <span class="token string">"Transmission: "</span> <span class="token operator">+</span> transmission <span class="token operator">+</span> <span class="token string">"\n"</span><span class="token punctuation">;</span>
+        <span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token keyword">this</span><span class="token punctuation">.</span>tripComputer <span class="token operator">!=</span> <span class="token keyword">null</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+            info <span class="token operator">+=</span> <span class="token string">"Trip Computer: Functional"</span> <span class="token operator">+</span> <span class="token string">"\n"</span><span class="token punctuation">;</span>
+        <span class="token punctuation">&#125;</span> <span class="token keyword">else</span> <span class="token punctuation">&#123;</span>
+            info <span class="token operator">+=</span> <span class="token string">"Trip Computer: N/A"</span> <span class="token operator">+</span> <span class="token string">"\n"</span><span class="token punctuation">;</span>
+        <span class="token punctuation">&#125;</span>
+        <span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token keyword">this</span><span class="token punctuation">.</span>gpsNavigator <span class="token operator">!=</span> <span class="token keyword">null</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+            info <span class="token operator">+=</span> <span class="token string">"GPS Navigator: Functional"</span> <span class="token operator">+</span> <span class="token string">"\n"</span><span class="token punctuation">;</span>
+        <span class="token punctuation">&#125;</span> <span class="token keyword">else</span> <span class="token punctuation">&#123;</span>
+            info <span class="token operator">+=</span> <span class="token string">"GPS Navigator: N/A"</span> <span class="token operator">+</span> <span class="token string">"\n"</span><span class="token punctuation">;</span>
+        <span class="token punctuation">&#125;</span>
+        <span class="token keyword">return</span> info<span class="token punctuation">;</span>
+    <span class="token punctuation">&#125;</span>
+<span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<h5 id="cars-CarType-java"><a href="#cars-CarType-java" class="headerlink" title="cars&#x2F;CarType.java"></a>cars&#x2F;CarType.java</h5><pre class="line-numbers language-java" data-language="java"><code class="language-java"><span class="token keyword">public</span> <span class="token keyword">enum</span> <span class="token class-name">CarType</span> <span class="token punctuation">&#123;</span>
+    <span class="token constant">CITY_CAR</span><span class="token punctuation">,</span> <span class="token constant">SPORTS_CAR</span><span class="token punctuation">,</span> <span class="token constant">SUV</span>
+<span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span></span></code></pre>
+
+<h4 id="components"><a href="#components" class="headerlink" title="components"></a>components</h4><h5 id="components-Engine-java-产品特征-1"><a href="#components-Engine-java-产品特征-1" class="headerlink" title="components&#x2F;Engine.java: 产品特征 1"></a>components&#x2F;Engine.java: 产品特征 1</h5><pre class="line-numbers language-java" data-language="java"><code class="language-java"><span class="token comment">/**
+ * Just another feature of a car.
+ */</span>
+<span class="token keyword">public</span> <span class="token keyword">class</span> <span class="token class-name">Engine</span> <span class="token punctuation">&#123;</span>
+    <span class="token keyword">private</span> <span class="token keyword">final</span> <span class="token keyword">double</span> volume<span class="token punctuation">;</span>
+    <span class="token keyword">private</span> <span class="token keyword">double</span> mileage<span class="token punctuation">;</span>
+    <span class="token keyword">private</span> <span class="token keyword">boolean</span> started<span class="token punctuation">;</span>
+
+    <span class="token keyword">public</span> <span class="token class-name">Engine</span><span class="token punctuation">(</span><span class="token keyword">double</span> volume<span class="token punctuation">,</span> <span class="token keyword">double</span> mileage<span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+        <span class="token keyword">this</span><span class="token punctuation">.</span>volume <span class="token operator">=</span> volume<span class="token punctuation">;</span>
+        <span class="token keyword">this</span><span class="token punctuation">.</span>mileage <span class="token operator">=</span> mileage<span class="token punctuation">;</span>
+    <span class="token punctuation">&#125;</span>
+
+    <span class="token keyword">public</span> <span class="token keyword">void</span> <span class="token function">on</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+        started <span class="token operator">=</span> <span class="token boolean">true</span><span class="token punctuation">;</span>
+    <span class="token punctuation">&#125;</span>
+
+    <span class="token keyword">public</span> <span class="token keyword">void</span> <span class="token function">off</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+        started <span class="token operator">=</span> <span class="token boolean">false</span><span class="token punctuation">;</span>
+    <span class="token punctuation">&#125;</span>
+
+    <span class="token keyword">public</span> <span class="token keyword">boolean</span> <span class="token function">isStarted</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+        <span class="token keyword">return</span> started<span class="token punctuation">;</span>
+    <span class="token punctuation">&#125;</span>
+
+    <span class="token keyword">public</span> <span class="token keyword">void</span> <span class="token function">go</span><span class="token punctuation">(</span><span class="token keyword">double</span> mileage<span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+        <span class="token keyword">if</span> <span class="token punctuation">(</span>started<span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+            <span class="token keyword">this</span><span class="token punctuation">.</span>mileage <span class="token operator">+=</span> mileage<span class="token punctuation">;</span>
+        <span class="token punctuation">&#125;</span> <span class="token keyword">else</span> <span class="token punctuation">&#123;</span>
+            <span class="token class-name">System</span><span class="token punctuation">.</span>err<span class="token punctuation">.</span><span class="token function">println</span><span class="token punctuation">(</span><span class="token string">"Cannot go(), you must start engine first!"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token punctuation">&#125;</span>
+    <span class="token punctuation">&#125;</span>
+
+    <span class="token keyword">public</span> <span class="token keyword">double</span> <span class="token function">getVolume</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+        <span class="token keyword">return</span> volume<span class="token punctuation">;</span>
+    <span class="token punctuation">&#125;</span>
+
+    <span class="token keyword">public</span> <span class="token keyword">double</span> <span class="token function">getMileage</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+        <span class="token keyword">return</span> mileage<span class="token punctuation">;</span>
+    <span class="token punctuation">&#125;</span>
+<span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<h5 id="components-GPSNavigator-java-产品特征-2"><a href="#components-GPSNavigator-java-产品特征-2" class="headerlink" title="components&#x2F;GPSNavigator.java: 产品特征 2"></a>components&#x2F;GPSNavigator.java: 产品特征 2</h5><pre class="line-numbers language-java" data-language="java"><code class="language-java"><span class="token comment">/**
+ * Just another feature of a car.
+ */</span>
+<span class="token keyword">public</span> <span class="token keyword">class</span> <span class="token class-name">GPSNavigator</span> <span class="token punctuation">&#123;</span>
+    <span class="token keyword">private</span> <span class="token class-name">String</span> route<span class="token punctuation">;</span>
+
+    <span class="token keyword">public</span> <span class="token class-name">GPSNavigator</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+        <span class="token keyword">this</span><span class="token punctuation">.</span>route <span class="token operator">=</span> <span class="token string">"221b, Baker Street, London  to Scotland Yard, 8-10 Broadway, London"</span><span class="token punctuation">;</span>
+    <span class="token punctuation">&#125;</span>
+
+    <span class="token keyword">public</span> <span class="token class-name">GPSNavigator</span><span class="token punctuation">(</span><span class="token class-name">String</span> manualRoute<span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+        <span class="token keyword">this</span><span class="token punctuation">.</span>route <span class="token operator">=</span> manualRoute<span class="token punctuation">;</span>
+    <span class="token punctuation">&#125;</span>
+
+    <span class="token keyword">public</span> <span class="token class-name">String</span> <span class="token function">getRoute</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+        <span class="token keyword">return</span> route<span class="token punctuation">;</span>
+    <span class="token punctuation">&#125;</span>
+<span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<h5 id="components-Transmission-java-产品特征-3"><a href="#components-Transmission-java-产品特征-3" class="headerlink" title="components&#x2F;Transmission.java: 产品特征 3"></a>components&#x2F;Transmission.java: 产品特征 3</h5><pre class="line-numbers language-java" data-language="java"><code class="language-java"><span class="token comment">/**
+ * Just another feature of a car.
+ */</span>
+<span class="token keyword">public</span> <span class="token keyword">enum</span> <span class="token class-name">Transmission</span> <span class="token punctuation">&#123;</span>
+    <span class="token constant">SINGLE_SPEED</span><span class="token punctuation">,</span> <span class="token constant">MANUAL</span><span class="token punctuation">,</span> <span class="token constant">AUTOMATIC</span><span class="token punctuation">,</span> <span class="token constant">SEMI_AUTOMATIC</span>
+<span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<h5 id="components-TripComputer-java-产品特征-4"><a href="#components-TripComputer-java-产品特征-4" class="headerlink" title="components&#x2F;TripComputer.java: 产品特征 4"></a>components&#x2F;TripComputer.java: 产品特征 4</h5><pre class="line-numbers language-java" data-language="java"><code class="language-java"><span class="token comment">/**
+ * Just another feature of a car.
+ */</span>
+<span class="token keyword">public</span> <span class="token keyword">class</span> <span class="token class-name">TripComputer</span> <span class="token punctuation">&#123;</span>
+
+    <span class="token keyword">private</span> <span class="token class-name">Car</span> car<span class="token punctuation">;</span>
+
+    <span class="token keyword">public</span> <span class="token keyword">void</span> <span class="token function">setCar</span><span class="token punctuation">(</span><span class="token class-name">Car</span> car<span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+        <span class="token keyword">this</span><span class="token punctuation">.</span>car <span class="token operator">=</span> car<span class="token punctuation">;</span>
+    <span class="token punctuation">&#125;</span>
+
+    <span class="token keyword">public</span> <span class="token keyword">void</span> <span class="token function">showFuelLevel</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+        <span class="token class-name">System</span><span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">println</span><span class="token punctuation">(</span><span class="token string">"Fuel level: "</span> <span class="token operator">+</span> car<span class="token punctuation">.</span><span class="token function">getFuel</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">&#125;</span>
+
+    <span class="token keyword">public</span> <span class="token keyword">void</span> <span class="token function">showStatus</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+        <span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token keyword">this</span><span class="token punctuation">.</span>car<span class="token punctuation">.</span><span class="token function">getEngine</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">isStarted</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+            <span class="token class-name">System</span><span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">println</span><span class="token punctuation">(</span><span class="token string">"Car is started"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token punctuation">&#125;</span> <span class="token keyword">else</span> <span class="token punctuation">&#123;</span>
+            <span class="token class-name">System</span><span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">println</span><span class="token punctuation">(</span><span class="token string">"Car isn't started"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token punctuation">&#125;</span>
+    <span class="token punctuation">&#125;</span>
+<span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<h4 id="director"><a href="#director" class="headerlink" title="director"></a>director</h4><h5 id="director-Director-java-主管控制生成器"><a href="#director-Director-java-主管控制生成器" class="headerlink" title="director&#x2F;Director.java: 主管控制生成器"></a>director&#x2F;Director.java: 主管控制生成器</h5><pre class="line-numbers language-java" data-language="java"><code class="language-java"><span class="token comment">/**
+ * Director defines the order of building steps. It works with a builder object
+ * through common Builder interface. Therefore it may not know what product is
+ * being built.
+ */</span>
+<span class="token keyword">public</span> <span class="token keyword">class</span> <span class="token class-name">Director</span> <span class="token punctuation">&#123;</span>
+
+    <span class="token keyword">public</span> <span class="token keyword">void</span> <span class="token function">constructSportsCar</span><span class="token punctuation">(</span><span class="token class-name">Builder</span> builder<span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+        builder<span class="token punctuation">.</span><span class="token function">setCarType</span><span class="token punctuation">(</span><span class="token class-name">CarType</span><span class="token punctuation">.</span><span class="token constant">SPORTS_CAR</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        builder<span class="token punctuation">.</span><span class="token function">setSeats</span><span class="token punctuation">(</span><span class="token number">2</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        builder<span class="token punctuation">.</span><span class="token function">setEngine</span><span class="token punctuation">(</span><span class="token keyword">new</span> <span class="token class-name">Engine</span><span class="token punctuation">(</span><span class="token number">3.0</span><span class="token punctuation">,</span> <span class="token number">0</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        builder<span class="token punctuation">.</span><span class="token function">setTransmission</span><span class="token punctuation">(</span><span class="token class-name">Transmission</span><span class="token punctuation">.</span><span class="token constant">SEMI_AUTOMATIC</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        builder<span class="token punctuation">.</span><span class="token function">setTripComputer</span><span class="token punctuation">(</span><span class="token keyword">new</span> <span class="token class-name">TripComputer</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        builder<span class="token punctuation">.</span><span class="token function">setGPSNavigator</span><span class="token punctuation">(</span><span class="token keyword">new</span> <span class="token class-name">GPSNavigator</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">&#125;</span>
+
+    <span class="token keyword">public</span> <span class="token keyword">void</span> <span class="token function">constructCityCar</span><span class="token punctuation">(</span><span class="token class-name">Builder</span> builder<span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+        builder<span class="token punctuation">.</span><span class="token function">setCarType</span><span class="token punctuation">(</span><span class="token class-name">CarType</span><span class="token punctuation">.</span><span class="token constant">CITY_CAR</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        builder<span class="token punctuation">.</span><span class="token function">setSeats</span><span class="token punctuation">(</span><span class="token number">2</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        builder<span class="token punctuation">.</span><span class="token function">setEngine</span><span class="token punctuation">(</span><span class="token keyword">new</span> <span class="token class-name">Engine</span><span class="token punctuation">(</span><span class="token number">1.2</span><span class="token punctuation">,</span> <span class="token number">0</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        builder<span class="token punctuation">.</span><span class="token function">setTransmission</span><span class="token punctuation">(</span><span class="token class-name">Transmission</span><span class="token punctuation">.</span><span class="token constant">AUTOMATIC</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        builder<span class="token punctuation">.</span><span class="token function">setTripComputer</span><span class="token punctuation">(</span><span class="token keyword">new</span> <span class="token class-name">TripComputer</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        builder<span class="token punctuation">.</span><span class="token function">setGPSNavigator</span><span class="token punctuation">(</span><span class="token keyword">new</span> <span class="token class-name">GPSNavigator</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">&#125;</span>
+
+    <span class="token keyword">public</span> <span class="token keyword">void</span> <span class="token function">constructSUV</span><span class="token punctuation">(</span><span class="token class-name">Builder</span> builder<span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+        builder<span class="token punctuation">.</span><span class="token function">setCarType</span><span class="token punctuation">(</span><span class="token class-name">CarType</span><span class="token punctuation">.</span><span class="token constant">SUV</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        builder<span class="token punctuation">.</span><span class="token function">setSeats</span><span class="token punctuation">(</span><span class="token number">4</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        builder<span class="token punctuation">.</span><span class="token function">setEngine</span><span class="token punctuation">(</span><span class="token keyword">new</span> <span class="token class-name">Engine</span><span class="token punctuation">(</span><span class="token number">2.5</span><span class="token punctuation">,</span> <span class="token number">0</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        builder<span class="token punctuation">.</span><span class="token function">setTransmission</span><span class="token punctuation">(</span><span class="token class-name">Transmission</span><span class="token punctuation">.</span><span class="token constant">MANUAL</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        builder<span class="token punctuation">.</span><span class="token function">setGPSNavigator</span><span class="token punctuation">(</span><span class="token keyword">new</span> <span class="token class-name">GPSNavigator</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">&#125;</span>
+<span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<h4 id="Demo-java-客户端代码"><a href="#Demo-java-客户端代码" class="headerlink" title="Demo.java: 客户端代码"></a>Demo.java: 客户端代码</h4><pre class="line-numbers language-java" data-language="java"><code class="language-java"><span class="token comment">/**
+ * Demo class. Everything comes together here.
+ */</span>
+<span class="token keyword">public</span> <span class="token keyword">class</span> <span class="token class-name">Demo</span> <span class="token punctuation">&#123;</span>
+
+    <span class="token keyword">public</span> <span class="token keyword">static</span> <span class="token keyword">void</span> <span class="token function">main</span><span class="token punctuation">(</span><span class="token class-name">String</span><span class="token punctuation">[</span><span class="token punctuation">]</span> args<span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+        <span class="token class-name">Director</span> director <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">Director</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token comment">// Director gets the concrete builder object from the client</span>
+        <span class="token comment">// (application code). That's because application knows better which</span>
+        <span class="token comment">// builder to use to get a specific product.</span>
+        <span class="token class-name">CarBuilder</span> builder <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">CarBuilder</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        director<span class="token punctuation">.</span><span class="token function">constructSportsCar</span><span class="token punctuation">(</span>builder<span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token comment">// The final product is often retrieved from a builder object, since</span>
+        <span class="token comment">// Director is not aware and not dependent on concrete builders and</span>
+        <span class="token comment">// products.</span>
+        <span class="token class-name">Car</span> car <span class="token operator">=</span> builder<span class="token punctuation">.</span><span class="token function">getResult</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token class-name">System</span><span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">println</span><span class="token punctuation">(</span><span class="token string">"Car built:\n"</span> <span class="token operator">+</span> car<span class="token punctuation">.</span><span class="token function">getCarType</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+        <span class="token class-name">CarManualBuilder</span> manualBuilder <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">CarManualBuilder</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token comment">// Director may know several building recipes.</span>
+        director<span class="token punctuation">.</span><span class="token function">constructSportsCar</span><span class="token punctuation">(</span>manualBuilder<span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token class-name">Manual</span> carManual <span class="token operator">=</span> manualBuilder<span class="token punctuation">.</span><span class="token function">getResult</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token class-name">System</span><span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">println</span><span class="token punctuation">(</span><span class="token string">"\nCar manual built:\n"</span> <span class="token operator">+</span> carManual<span class="token punctuation">.</span><span class="token function">print</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">&#125;</span>
+
+<span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<h4 id="执行过程"><a href="#执行过程" class="headerlink" title="执行过程"></a>执行过程</h4><p><img src="/medias/loading.gif" data-original="https://raw.githubusercontent.com/luyaguo/pictures-guo/main/design-patterns/202408272139480.png" alt="builder.DirectorTest_main"></p>
+<h4 id="执行结果"><a href="#执行结果" class="headerlink" title="执行结果"></a>执行结果</h4><p><img src="/medias/loading.gif" data-original="https://raw.githubusercontent.com/luyaguo/pictures-guo/main/design-patterns/202408272139818.png" alt="image-20221021135025958"></p>
+
+                
+            </div>
+            <hr/>
+
+            
+
+
+
+            <div class="tag_share" style="display: block;">
+                <div class="post-meta__tag-list" style="display: inline-block;">
+                    
+                        <div class="article-tag">
+                            
+                                <a href="/tags/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/">
+                                    <span class="chip bg-color">设计模式</span>
+                                </a>
+                            
+                        </div>
+                    
+                </div>
+                <div class="post_share" style="zoom: 80%; width: fit-content; display: inline-block; float: right; margin: -0.15rem 0;">
+                    <link rel="stylesheet" type="text/css" href="/libs/share/css/share.min.css">
+<div id="article-share">
+
+    
+    <div class="social-share" data-sites="twitter,facebook,google,qq,qzone,wechat,weibo,douban,linkedin" data-wechat-qrcode-helper="<p>微信扫一扫即可分享！</p>"></div>
+    <script src="/libs/share/js/social-share.min.js"></script>
+    
+
+    
+
+</div>
+
+                </div>
+            </div>
+            
+        </div>
+    </div>
+
+    
+
+    
+
+    
+
+    
+
+    
+        <style>
+    .valine-card {
+        margin: 1.5rem auto;
+    }
+
+    .valine-card .card-content {
+        padding: 20px 20px 5px 20px;
+    }
+
+    #vcomments textarea {
+        box-sizing: border-box;
+        background: url("/medias/bg.webp") 100% 100% no-repeat;
+    }
+
+    #vcomments p {
+        margin: 2px 2px 10px;
+        font-size: 1.05rem;
+        line-height: 1.78rem;
+    }
+
+    #vcomments blockquote p {
+        text-indent: 0.2rem;
+    }
+
+    #vcomments a {
+        padding: 0 2px;
+        color: #4cbf30;
+        font-weight: 500;
+        text-decoration: none;
+    }
+
+    #vcomments img {
+        max-width: 100%;
+        height: auto;
+        cursor: pointer;
+    }
+
+    #vcomments ol li {
+        list-style-type: decimal;
+    }
+
+    #vcomments ol,
+    ul {
+        display: block;
+        padding-left: 2em;
+        word-spacing: 0.05rem;
+    }
+
+    #vcomments ul li,
+    ol li {
+        display: list-item;
+        line-height: 1.8rem;
+        font-size: 1rem;
+    }
+
+    #vcomments ul li {
+        list-style-type: disc;
+    }
+
+    #vcomments ul ul li {
+        list-style-type: circle;
+    }
+
+    #vcomments table, th, td {
+        padding: 12px 13px;
+        border: 1px solid #dfe2e5;
+    }
+
+    #vcomments table, th, td {
+        border: 0;
+    }
+
+    table tr:nth-child(2n), thead {
+        background-color: #fafafa;
+    }
+
+    #vcomments table th {
+        background-color: #f2f2f2;
+        min-width: 80px;
+    }
+
+    #vcomments table td {
+        min-width: 80px;
+    }
+
+    #vcomments h1 {
+        font-size: 1.85rem;
+        font-weight: bold;
+        line-height: 2.2rem;
+    }
+
+    #vcomments h2 {
+        font-size: 1.65rem;
+        font-weight: bold;
+        line-height: 1.9rem;
+    }
+
+    #vcomments h3 {
+        font-size: 1.45rem;
+        font-weight: bold;
+        line-height: 1.7rem;
+    }
+
+    #vcomments h4 {
+        font-size: 1.25rem;
+        font-weight: bold;
+        line-height: 1.5rem;
+    }
+
+    #vcomments h5 {
+        font-size: 1.1rem;
+        font-weight: bold;
+        line-height: 1.4rem;
+    }
+
+    #vcomments h6 {
+        font-size: 1rem;
+        line-height: 1.3rem;
+    }
+
+    #vcomments p {
+        font-size: 1rem;
+        line-height: 1.5rem;
+    }
+
+    #vcomments hr {
+        margin: 12px 0;
+        border: 0;
+        border-top: 1px solid #ccc;
+    }
+
+    #vcomments blockquote {
+        margin: 15px 0;
+        border-left: 5px solid #42b983;
+        padding: 1rem 0.8rem 0.3rem 0.8rem;
+        color: #666;
+        background-color: rgba(66, 185, 131, .1);
+    }
+
+    #vcomments pre {
+        font-family: monospace, monospace;
+        padding: 1.2em;
+        margin: .5em 0;
+        background: #272822;
+        overflow: auto;
+        border-radius: 0.3em;
+        tab-size: 4;
+    }
+
+    #vcomments code {
+        font-family: monospace, monospace;
+        padding: 1px 3px;
+        font-size: 0.92rem;
+        color: #e96900;
+        background-color: #f8f8f8;
+        border-radius: 2px;
+    }
+
+    #vcomments pre code {
+        font-family: monospace, monospace;
+        padding: 0;
+        color: #e8eaf6;
+        background-color: #272822;
+    }
+
+    #vcomments pre[class*="language-"] {
+        padding: 1.2em;
+        margin: .5em 0;
+    }
+
+    #vcomments code[class*="language-"],
+    pre[class*="language-"] {
+        color: #e8eaf6;
+    }
+
+    #vcomments [type="checkbox"]:not(:checked), [type="checkbox"]:checked {
+        position: inherit;
+        margin-left: -1.3rem;
+        margin-right: 0.4rem;
+        margin-top: -1px;
+        vertical-align: middle;
+        left: unset;
+        visibility: visible;
+    }
+
+    #vcomments b,
+    strong {
+        font-weight: bold;
+    }
+
+    #vcomments dfn {
+        font-style: italic;
+    }
+
+    #vcomments small {
+        font-size: 85%;
+    }
+
+    #vcomments cite {
+        font-style: normal;
+    }
+
+    #vcomments mark {
+        background-color: #fcf8e3;
+        padding: .2em;
+    }
+
+    #vcomments table, th, td {
+        padding: 12px 13px;
+        border: 1px solid #dfe2e5;
+    }
+
+    table tr:nth-child(2n), thead {
+        background-color: #fafafa;
+    }
+
+    #vcomments table th {
+        background-color: #f2f2f2;
+        min-width: 80px;
+    }
+
+    #vcomments table td {
+        min-width: 80px;
+    }
+
+    #vcomments [type="checkbox"]:not(:checked), [type="checkbox"]:checked {
+        position: inherit;
+        margin-left: -1.3rem;
+        margin-right: 0.4rem;
+        margin-top: -1px;
+        vertical-align: middle;
+        left: unset;
+        visibility: visible;
+    }
+</style>
+
+<div class="card valine-card" data-aos="fade-up">
+    <div class="comment_headling" style="font-size: 20px; font-weight: 700; position: relative; padding-left: 20px; top: 15px; padding-bottom: 5px;">
+        <i class="fas fa-comments fa-fw" aria-hidden="true"></i>
+        <span>评论</span>
+    </div>
+    <div id="vcomments" class="card-content" style="display: grid">
+    </div>
+</div>
+
+<script src="/libs/valine/av-min.js"></script>
+<script src="/libs/valine/Valine.min.js"></script>
+<script>
+    new Valine({
+        el: '#vcomments',
+        appId: 'XGAJufgp6Z2bX17baB3E7enQ-gzGzoHsz',
+        appKey: 'j9yun8pjBYMNT3Gg8ehomdsf',
+        serverURLs: 'https://xgajufgp.lc-cn-n1-shared.com',
+        notify: 'false' === 'true',
+        verify: 'false' === 'true',
+        visitor: 'true' === 'true',
+        avatar: 'wavatar',
+        pageSize: '10',
+        lang: 'en',
+        placeholder: '支持markdown格式以及丰富的小表情，快来留下些记忆吧~'
+    });
+</script>
+
+<!--酷Q推送-->
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+<article id="prenext-posts" class="prev-next articles">
+    <div class="row article-row">
+        
+        <div class="article col s12 m6" data-aos="fade-up">
+            <div class="article-badge left-badge text-color">
+                <i class="fas fa-chevron-left"></i>&nbsp;Previous</div>
+            <div class="card">
+                <a href="/posts/3c7bd6b0.html">
+                    <div class="card-image">
+                        
+                        
+                        <img src="/medias/featureimages/0.jpg" class="responsive-img" alt="七、原型模式">
+                        
+                        <span class="card-title">七、原型模式</span>
+                    </div>
+                </a>
+                <div class="card-content article-content">
+                    <div class="summary block-with-text">
+                        
+                            
+                        
+                    </div>
+                    <div class="publish-info">
+                        <span class="publish-date">
+                            <i class="far fa-clock fa-fw icon-date"></i>2024-06-25
+                        </span>
+                        <span class="publish-author">
+                            
+                            <i class="fas fa-bookmark fa-fw icon-category"></i>
+                            
+                            <a href="/categories/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/" class="post-category">
+                                    设计模式
+                                </a>
+                            
+                            
+                        </span>
+                    </div>
+                </div>
+                
+                <div class="card-action article-tags">
+                    
+                    <a href="/tags/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/">
+                        <span class="chip bg-color">设计模式</span>
+                    </a>
+                    
+                </div>
+                
+            </div>
+        </div>
+        
+        
+        <div class="article col s12 m6" data-aos="fade-up">
+            <div class="article-badge right-badge text-color">
+                Next&nbsp;<i class="fas fa-chevron-right"></i>
+            </div>
+            <div class="card">
+                <a href="/posts/f003db4d.html">
+                    <div class="card-image">
+                        
+                        
+                        <img src="/medias/featureimages/20.jpg" class="responsive-img" alt="五、抽象工厂模式">
+                        
+                        <span class="card-title">五、抽象工厂模式</span>
+                    </div>
+                </a>
+                <div class="card-content article-content">
+                    <div class="summary block-with-text">
+                        
+                            
+                        
+                    </div>
+                    <div class="publish-info">
+                            <span class="publish-date">
+                                <i class="far fa-clock fa-fw icon-date"></i>2024-06-25
+                            </span>
+                        <span class="publish-author">
+                            
+                            <i class="fas fa-bookmark fa-fw icon-category"></i>
+                            
+                            <a href="/categories/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/" class="post-category">
+                                    设计模式
+                                </a>
+                            
+                            
+                        </span>
+                    </div>
+                </div>
+                
+                <div class="card-action article-tags">
+                    
+                    <a href="/tags/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/">
+                        <span class="chip bg-color">设计模式</span>
+                    </a>
+                    
+                </div>
+                
+            </div>
+        </div>
+        
+    </div>
+</article>
+
+</div>
+
+
+<script>
+    $('#articleContent').on('copy', function (e) {
+        // IE8 or earlier browser is 'undefined'
+        if (typeof window.getSelection === 'undefined') return;
+
+        var selection = window.getSelection();
+        // if the selection is short let's not annoy our users.
+        if (('' + selection).length < Number.parseInt('120')) {
+            return;
+        }
+
+        // create a div outside of the visible area and fill it with the selected text.
+        var bodyElement = document.getElementsByTagName('body')[0];
+        var newdiv = document.createElement('div');
+        newdiv.style.position = 'absolute';
+        newdiv.style.left = '-99999px';
+        bodyElement.appendChild(newdiv);
+        newdiv.appendChild(selection.getRangeAt(0).cloneContents());
+
+        // we need a <pre> tag workaround.
+        // otherwise the text inside "pre" loses all the line breaks!
+        if (selection.getRangeAt(0).commonAncestorContainer.nodeName === 'PRE' || selection.getRangeAt(0).commonAncestorContainer.nodeName === 'CODE') {
+            newdiv.innerHTML = "<pre>" + newdiv.innerHTML + "</pre>";
+        }
+
+        var url = document.location.href;
+        newdiv.innerHTML += '<br />'
+            + 'From: 向阳<br />'
+            + 'Author: 向阳<br />'
+            + 'Link: <a href="' + url + '">' + url + '</a><br />'
+            + '本文章著作权归作者所有，任何形式的转载都请注明出处。';
+
+        selection.selectAllChildren(newdiv);
+        window.setTimeout(function () {bodyElement.removeChild(newdiv);}, 200);
+    });
+</script>
+
+
+<!-- 代码块功能依赖 -->
+<script type="text/javascript" src="/libs/codeBlock/codeBlockFuction.js"></script>
+
+
+  <!-- 是否加载使用自带的 prismjs. -->
+  <script type="text/javascript" src="/libs/prism/prism.min.js"></script>
+
+
+<!-- 代码语言 -->
+
+<script type="text/javascript" src="/libs/codeBlock/codeLang.js"></script>
+
+
+<!-- 代码块复制 -->
+
+<script type="text/javascript" src="/libs/codeBlock/codeCopy.js"></script>
+
+
+<!-- 代码块收缩 -->
+
+<script type="text/javascript" src="/libs/codeBlock/codeShrink.js"></script>
+
+
+
+    </div>
+    <div id="toc-aside" class="expanded col l3 hide-on-med-and-down">
+        <div class="toc-widget card" style="background-color: white;">
+            <div class="toc-title"><i class="far fa-list-alt"></i>&nbsp;&nbsp;TOC</div>
+            <div id="toc-content"></div>
+        </div>
+    </div>
+</div>
+
+<!-- TOC 悬浮按钮. -->
+
+<div id="floating-toc-btn" class="hide-on-med-and-down">
+    <a class="btn-floating btn-large bg-color">
+        <i class="fas fa-list-ul"></i>
+    </a>
+</div>
+
+
+<script src="/libs/tocbot/tocbot.min.js"></script>
+<script>
+    $(function () {
+        tocbot.init({
+            tocSelector: '#toc-content',
+            contentSelector: '#articleContent',
+            headingsOffset: -($(window).height() * 0.4 - 45),
+            collapseDepth: Number('0'),
+            headingSelector: 'h2, h3, h4'
+        });
+
+        // Set scroll toc fixed.
+        let tocHeight = parseInt($(window).height() * 0.4 - 64);
+        let $tocWidget = $('.toc-widget');
+        $(window).scroll(function () {
+            let scroll = $(window).scrollTop();
+            /* add post toc fixed. */
+            if (scroll > tocHeight) {
+                $tocWidget.addClass('toc-fixed');
+            } else {
+                $tocWidget.removeClass('toc-fixed');
+            }
+        });
+
+        
+        /* 修复文章卡片 div 的宽度. */
+        let fixPostCardWidth = function (srcId, targetId) {
+            let srcDiv = $('#' + srcId);
+            if (srcDiv.length === 0) {
+                return;
+            }
+
+            let w = srcDiv.width();
+            if (w >= 450) {
+                w = w + 21;
+            } else if (w >= 350 && w < 450) {
+                w = w + 18;
+            } else if (w >= 300 && w < 350) {
+                w = w + 16;
+            } else {
+                w = w + 14;
+            }
+            $('#' + targetId).width(w);
+        };
+
+        // 切换TOC目录展开收缩的相关操作.
+        const expandedClass = 'expanded';
+        let $tocAside = $('#toc-aside');
+        let $mainContent = $('#main-content');
+        $('#floating-toc-btn .btn-floating').click(function () {
+            if ($tocAside.hasClass(expandedClass)) {
+                $tocAside.removeClass(expandedClass).hide();
+                $mainContent.removeClass('l9');
+            } else {
+                $tocAside.addClass(expandedClass).show();
+                $mainContent.addClass('l9');
+            }
+            fixPostCardWidth('artDetail', 'prenext-posts');
+        });
+        
+    });
+</script>
+
+    
+
+</main>
+
+
+
+
+    <footer class="page-footer bg-color">
+    
+        <link rel="stylesheet" href="/libs/aplayer/APlayer.min.css">
+<style>
+    .aplayer .aplayer-lrc p {
+        
+        display: none;
+        
+        font-size: 12px;
+        font-weight: 700;
+        line-height: 16px !important;
+    }
+
+    .aplayer .aplayer-lrc p.aplayer-lrc-current {
+        
+        display: none;
+        
+        font-size: 15px;
+        color: #42b983;
+    }
+
+    
+    .aplayer.aplayer-fixed.aplayer-narrow .aplayer-body {
+        left: -66px !important;
+    }
+
+    .aplayer.aplayer-fixed.aplayer-narrow .aplayer-body:hover {
+        left: 0px !important;
+    }
+
+    
+</style>
+<div class="">
+    
+    <div class="row">
+        <meting-js class="col l8 offset-l2 m10 offset-m1 s12"
+                   server="netease"
+                   type="playlist"
+                   id="8428618004"
+                   fixed='true'
+                   autoplay='false'
+                   theme='#42b983'
+                   loop='all'
+                   order='random'
+                   preload='auto'
+                   volume='0.7'
+                   list-folded='true'
+        >
+        </meting-js>
+    </div>
+</div>
+
+<script src="/libs/aplayer/APlayer.min.js"></script>
+<script src="/libs/aplayer/Meting.min.js"></script>
+
+    
+
+    <div class="container row center-align"
+         style="margin-bottom: 15px !important;">
+        <div class="col s12 m8 l8 copy-right">
+            Copyright&nbsp;&copy;
+            
+                <span id="year">2024-2025</span>
+            
+            <a href="/about" target="_blank">向阳</a>
+            
+            <br>
+            
+                &nbsp;<i class="fas fa-chart-area"></i>&nbsp;Total Words:&nbsp;<span
+                        class="white-color">1457.8k</span>
+            
+            
+            
+                
+            
+            
+                <span id="busuanzi_container_site_pv">
+                &nbsp;|&nbsp;<i class="far fa-eye"></i>&nbsp;Total visits:&nbsp;
+                    <span id="busuanzi_value_site_pv" class="white-color"></span>
+            </span>
+            
+            
+                <span id="busuanzi_container_site_uv">
+                &nbsp;|&nbsp;<i class="fas fa-users"></i>&nbsp;Total visitors:&nbsp;
+                    <span id="busuanzi_value_site_uv" class="white-color"></span>
+            </span>
+            
+            <br>
+
+            <a style="margin-inline:5px" target="_blank" href="https://hexo.io"><img src="https://img.shields.io/badge/Frame-Hexo-blue?style=flat&logo=hexo" title="基于Hexo框架"></a>
+            <a style="margin-inline:5px" target="_blank" href="https://github.com/blinkfox/hexo-theme-matery"><img src="https://img.shields.io/badge/Theme-Matery-7138b6?style=flat&logo=MEGA" title="Themes Matery"></a>
+            <a style="margin-inline:5px" target="_blank" href="https://cloudflare.com"><img src="https://img.shields.io/badge/Hosted-Cloudflare-brightgreen?style=flat&logo=Cloudflare" title="基于Cloudflare Pages托管部署"></a>
+            <a style="margin-inline:5px" target="_blank" href="https://github.com"><img src="https://img.shields.io/badge/Source-Github-67e1fb?style=flat&logo=GitHub" title="静态文件托管于GitHub"></a>
+            <br>
+
+            <!-- 运行天数提醒. -->
+            
+                <span id="sitetime"> Loading ...</span>
+                <script>
+                    var calcSiteTime = function () {
+                        var seconds = 1000;
+                        var minutes = seconds * 60;
+                        var hours = minutes * 60;
+                        var days = hours * 24;
+                        var years = days * 365;
+                        var today = new Date();
+                        var startYear = "2024";
+                        var startMonth = "5";
+                        var startDate = "20";
+                        var startHour = "0";
+                        var startMinute = "0";
+                        var startSecond = "0";
+                        var todayYear = today.getFullYear();
+                        var todayMonth = today.getMonth() + 1;
+                        var todayDate = today.getDate();
+                        var todayHour = today.getHours();
+                        var todayMinute = today.getMinutes();
+                        var todaySecond = today.getSeconds();
+                        var t1 = Date.UTC(startYear, startMonth, startDate, startHour, startMinute, startSecond);
+                        var t2 = Date.UTC(todayYear, todayMonth, todayDate, todayHour, todayMinute, todaySecond);
+                        var diff = t2 - t1;
+                        var diffYears = Math.floor(diff / years);
+                        var diffDays = Math.floor((diff / days) - diffYears * 365);
+
+                        // 区分是否有年份.
+                        var language = 'en';
+                        if (startYear === String(todayYear)) {
+                            document.getElementById("year").innerHTML = todayYear;
+                            var daysTip = 'This site has been running for ' + diffDays + ' days';
+                            if (language === 'zh-CN') {
+                                daysTip = '本站已运行 ' + diffDays + ' 天';
+                            } else if (language === 'zh-HK') {
+                                daysTip = '本站已運行 ' + diffDays + ' 天';
+                            }
+                            document.getElementById("sitetime").innerHTML = daysTip;
+                        } else {
+                            document.getElementById("year").innerHTML = startYear + " - " + todayYear;
+                            var yearsAndDaysTip = 'This site has been running for ' + diffYears + ' years and '
+                                + diffDays + ' days';
+                            if (language === 'zh-CN') {
+                                yearsAndDaysTip = '本站已运行 ' + diffYears + ' 年 ' + diffDays + ' 天';
+                            } else if (language === 'zh-HK') {
+                                yearsAndDaysTip = '本站已運行 ' + diffYears + ' 年 ' + diffDays + ' 天';
+                            }
+                            document.getElementById("sitetime").innerHTML = yearsAndDaysTip;
+                        }
+                    }
+
+                    calcSiteTime();
+                </script>
+            
+            <br>
+            
+        </div>
+        <div class="col s12 m4 l4 social-link social-statis">
+    <a href="https://github.com/luyaguo" class="tooltipped" target="_blank" data-tooltip="访问我的GitHub" data-position="top" data-delay="50">
+        <i class="fab fa-github"></i>
+    </a>
+
+
+
+    <a href="mailto:luyaguo839@gmail.com" class="tooltipped" target="_blank" data-tooltip="邮件联系我" data-position="top" data-delay="50">
+        <i class="fas fa-envelope-open"></i>
+    </a>
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <a href="/atom.xml" class="tooltipped" target="_blank" data-tooltip="RSS 订阅" data-position="top" data-delay="50">
+        <i class="fas fa-rss"></i>
+    </a>
+
+</div>
+    </div>
+</footer>
+
+<div class="progress-bar"></div>
+
+
+    <!-- 搜索遮罩框 -->
+<div id="searchModal" class="modal">
+    <div class="modal-content">
+        <div class="search-header">
+            <span class="title"><i class="fas fa-search"></i>&nbsp;&nbsp;Search</span>
+            <input type="search" id="searchInput" name="s" placeholder="Please enter a search keyword"
+                   class="search-input">
+        </div>
+        <div id="searchResult"></div>
+    </div>
+</div>
+
+<script type="text/javascript">
+$(function () {
+    var searchFunc = function (path, search_id, content_id) {
+        'use strict';
+        $.ajax({
+            url: path,
+            dataType: "xml",
+            success: function (xmlResponse) {
+                // get the contents from search data
+                var datas = $("entry", xmlResponse).map(function () {
+                    return {
+                        title: $("title", this).text(),
+                        content: $("content", this).text(),
+                        url: $("url", this).text()
+                    };
+                }).get();
+                var $input = document.getElementById(search_id);
+                var $resultContent = document.getElementById(content_id);
+                $input.addEventListener('input', function () {
+                    var str = '<ul class=\"search-result-list\">';
+                    var keywords = this.value.trim().toLowerCase().split(/[\s\-]+/);
+                    $resultContent.innerHTML = "";
+                    if (this.value.trim().length <= 0) {
+                        return;
+                    }
+                    // perform local searching
+                    datas.forEach(function (data) {
+                        var isMatch = true;
+                        var data_title = data.title.trim().toLowerCase();
+                        var data_content = data.content.trim().replace(/<[^>]+>/g, "").toLowerCase();
+                        var data_url = data.url;
+                        data_url = data_url.indexOf('/') === 0 ? data.url : '/' + data_url;
+                        var index_title = -1;
+                        var index_content = -1;
+                        var first_occur = -1;
+                        // only match artiles with not empty titles and contents
+                        if (data_title !== '' && data_content !== '') {
+                            keywords.forEach(function (keyword, i) {
+                                index_title = data_title.indexOf(keyword);
+                                index_content = data_content.indexOf(keyword);
+                                if (index_title < 0 && index_content < 0) {
+                                    isMatch = false;
+                                } else {
+                                    if (index_content < 0) {
+                                        index_content = 0;
+                                    }
+                                    if (i === 0) {
+                                        first_occur = index_content;
+                                    }
+                                }
+                            });
+                        }
+                        // show search results
+                        if (isMatch) {
+                            str += "<li><a href='" + data_url + "' class='search-result-title'>" + data_title + "</a>";
+                            var content = data.content.trim().replace(/<[^>]+>/g, "");
+                            if (first_occur >= 0) {
+                                // cut out 100 characters
+                                var start = first_occur - 20;
+                                var end = first_occur + 80;
+                                if (start < 0) {
+                                    start = 0;
+                                }
+                                if (start === 0) {
+                                    end = 100;
+                                }
+                                if (end > content.length) {
+                                    end = content.length;
+                                }
+                                var match_content = content.substr(start, end);
+                                // highlight all keywords
+                                keywords.forEach(function (keyword) {
+                                    var regS = new RegExp(keyword, "gi");
+                                    match_content = match_content.replace(regS, "<em class=\"search-keyword\">" + keyword + "</em>");
+                                });
+
+                                str += "<p class=\"search-result\">" + match_content + "...</p>"
+                            }
+                            str += "</li>";
+                        }
+                    });
+                    str += "</ul>";
+                    $resultContent.innerHTML = str;
+                });
+            }
+        });
+    };
+
+    searchFunc('/search.xml', 'searchInput', 'searchResult');
+});
+</script>
+
+    <!-- 白天和黑夜主题 -->
+<div class="stars-con">
+    <div id="stars"></div>
+    <div id="stars2"></div>
+    <div id="stars3"></div>  
+</div>
+
+<script>
+    function switchNightMode() {
+        $('<div class="Cuteen_DarkSky"><div class="Cuteen_DarkPlanet"></div></div>').appendTo($('body')),
+        setTimeout(function () {
+            $('body').hasClass('DarkMode') 
+            ? ($('body').removeClass('DarkMode'), localStorage.setItem('isDark', '0'), $('#sum-moon-icon').removeClass("fa-sun").addClass('fa-moon')) 
+            : ($('body').addClass('DarkMode'), localStorage.setItem('isDark', '1'), $('#sum-moon-icon').addClass("fa-sun").removeClass('fa-moon')),
+            
+            setTimeout(function () {
+            $('.Cuteen_DarkSky').fadeOut(1e3, function () {
+                $(this).remove()
+            })
+            }, 2e3)
+        })
+    }
+</script>
+
+    <!-- 回到顶部按钮 -->
+<div id="backTop" class="top-scroll">
+    <a class="btn-floating btn-large waves-effect waves-light" href="#!">
+        <i class="fas fa-arrow-up"></i>
+    </a>
+</div>
+
+
+    <script src="/libs/materialize/materialize.min.js"></script>
+    <script src="/libs/masonry/masonry.pkgd.min.js"></script>
+    <script src="/libs/aos/aos.js"></script>
+    <script src="/libs/scrollprogress/scrollProgress.min.js"></script>
+    <script src="/libs/lightGallery/js/lightgallery-all.min.js"></script>
+    <script src="/js/matery.js"></script>
+
+    
+
+    
+    
+    
+
+    <!-- 雪花特效 -->
+    
+
+    <!-- 鼠标星星特效 -->
+     
+        <script type="text/javascript">
+            // 只在桌面版网页启用特效
+            var windowWidth = $(window).width();
+            if (windowWidth > 768) {
+                document.write('<script type="text/javascript" src="/libs/others/star.js"><\/script>');
+            }
+        </script>
+    
+
+     
+        <script src="https://ssl.captcha.qq.com/TCaptcha.js"></script>
+        <script src="/libs/others/TencentCaptcha.js"></script>
+        <button id="TencentCaptcha" data-appid="xxxxxxxxxx" data-cbfn="callback" type="button" hidden></button>
+    
+
+    <!-- Baidu Analytics -->
+
+    <!-- Baidu Push -->
+
+<script>
+    (function () {
+        var bp = document.createElement('script');
+        var curProtocol = window.location.protocol.split(':')[0];
+        if (curProtocol === 'https') {
+            bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+        } else {
+            bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+        }
+        var s = document.getElementsByTagName("script")[0];
+        s.parentNode.insertBefore(bp, s);
+    })();
+</script>
+
+    
+    <script src="/libs/others/clicklove.js" async="async"></script>
+    
+    
+    <script async src="/libs/others/busuanzi.pure.mini.js"></script>
+    
+
+    
+
+    
+
+    <!--腾讯兔小巢-->
+    
+    
+
+    
+
+    
+
+    
+    <script src="/libs/instantpage/instantpage.js" type="module"></script>
+    
+
+    <!-- 冒泡 -->
+    
+
+    <!--全屏-->
+    <script src="/js/fullscreen.js" type="module"></script>
+
+        <style>
+            [bg-lazy] {
+                background-image: none !important;
+                background-color: #eee !important;
+            }
+        </style>
+        <script>
+            window.imageLazyLoadSetting = {
+                isSPA: false,
+                preloadRatio: 1,
+                processImages: null,
+            };
+        </script><script>window.addEventListener("load",function(){var t=/\.(gif|jpg|jpeg|tiff|png)$/i,r=/^data:image\/[a-z\d\-\.\+]+;base64,/;Array.prototype.slice.call(document.querySelectorAll("img[data-original]")).forEach(function(a){var e=a.parentNode;"A"===e.tagName&&(t.test(e.href)||r.test(e.href))&&(e.href=a.dataset.original)})});</script><script>!function(r){r.imageLazyLoadSetting.processImages=t;var a=r.imageLazyLoadSetting.isSPA,n=r.imageLazyLoadSetting.preloadRatio||1,d=o();function o(){var t=Array.prototype.slice.call(document.querySelectorAll("img[data-original]")),e=Array.prototype.slice.call(document.querySelectorAll("[bg-lazy]"));return t.concat(e)}function t(t){(a||t)&&(d=o());for(var e,i=0;i<d.length;i++)0<=(e=(e=d[i]).getBoundingClientRect()).bottom&&0<=e.left&&e.top<=(r.innerHeight*n||document.documentElement.clientHeight*n)&&function(){var t,e,a,n,o=d[i];e=function(){d=d.filter(function(t){return o!==t}),r.imageLazyLoadSetting.onImageLoaded&&r.imageLazyLoadSetting.onImageLoaded(o)},(t=o).dataset.loaded||(t.hasAttribute("bg-lazy")?(t.removeAttribute("bg-lazy"),e&&e()):(a=new Image,n=t.getAttribute("data-original"),a.onload=function(){t.src=n,t.removeAttribute("data-original"),t.setAttribute("data-loaded",!0),e&&e()},a.onerror=function(){t.removeAttribute("data-original"),t.setAttribute("data-loaded",!1),t.src=n},t.src!==n&&(a.src=n)))}()}function e(){clearTimeout(t.tId),t.tId=setTimeout(t,500)}t(),document.addEventListener("scroll",e),r.addEventListener("resize",e),r.addEventListener("orientationchange",e)}(this);</script></body>
+
+</html>
